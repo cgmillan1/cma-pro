@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMA Pro v2, Cristian Millan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{
+  --bg:#faf8f4; --ink:#0e0e0e; --ink-soft:#3a3a3a; --muted:#8a8680;
+  --line:#e6e1d8; --paper:#ffffff; --accent:#1a3a2e; --accent-soft:#e8efea;
+  --warn:#a3502a; --gold:#a88b56;
+  --sold:#1a3a2e; --pending:#a88b56; --active:#a3502a; --subject:#0e0e0e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.01em}
+.eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:10px 12px;border-radius:2px;width:100%;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ink)}
+label{display:block;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--ink);color:var(--bg);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;border-radius:2px;transition:opacity .15s;border:1px solid var(--ink)}
+.btn:hover{opacity:0.85}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink);opacity:1}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-small{padding:6px 12px;font-size:10px}
+
+/* LOGIN GATE */
+.gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;flex-direction:column;padding:24px}
+.gate-card{max-width:420px;width:100%;background:var(--paper);border:1px solid var(--line);padding:48px 40px;text-align:center}
+.gate-mark{font-family:'Fraunces',serif;font-size:36px;letter-spacing:-0.02em;margin-bottom:8px}
+.gate-mark span{font-style:italic;color:var(--gold)}
+.gate-sub{color:var(--muted);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:32px}
+.gate input{margin-bottom:16px;text-align:center;letter-spacing:0.2em}
+.gate .err{color:var(--warn);font-size:12px;margin-top:12px;min-height:16px}
+
+/* APP SHELL */
+.app{display:none;min-height:100vh}
+.app.active{display:block}
+.header{border-bottom:1px solid var(--line);background:var(--paper);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.brand{font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em}
+.brand span{font-style:italic;color:var(--gold)}
+.brand small{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-top:-2px;font-weight:500}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lang-toggle{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.lang-toggle button{padding:8px 12px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--paper)}
+.lang-toggle button.active{background:var(--ink);color:var(--bg)}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--line);background:var(--paper);padding:0 32px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:16px 16px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;font-weight:500;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+.tab-num{font-family:'Fraunces',serif;font-size:14px;color:var(--gold);margin-right:6px;font-style:italic}
+
+/* LAYOUT */
+.workspace{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 120px)}
+.panel{padding:32px;overflow-y:auto}
+.panel-left{border-right:1px solid var(--line);background:var(--paper)}
+.panel-right{background:var(--bg)}
+.section{margin-bottom:36px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
+.section-title{font-family:'Fraunces',serif;font-size:20px;letter-spacing:-0.01em}
+.section-title em{color:var(--gold);font-style:italic;font-weight:300}
+.row{display:grid;gap:14px;margin-bottom:14px}
+.row-2{grid-template-columns:1fr 1fr}
+.row-3{grid-template-columns:1fr 1fr 1fr}
+.row-4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:1100px){.workspace{grid-template-columns:1fr}.panel-left{border-right:none;border-bottom:1px solid var(--line)}}
+@media(max-width:640px){.row-2,.row-3,.row-4{grid-template-columns:1fr}.panel{padding:20px}.header{padding:14px 20px;flex-direction:column;gap:10px;align-items:stretch}.tabs{padding:0 12px}}
+
+/* UPLOAD ZONE */
+.dropzone{border:1px dashed var(--line);background:var(--paper);padding:32px;text-align:center;border-radius:2px;cursor:pointer;transition:all .15s}
+.dropzone:hover,.dropzone.drag{border-color:var(--ink);background:var(--accent-soft)}
+.dropzone-icon{font-family:'Fraunces',serif;font-size:32px;color:var(--gold);font-style:italic;margin-bottom:8px}
+.dropzone-text{font-size:13px;color:var(--ink-soft)}
+.dropzone-sub{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:0.05em}
+
+/* COMP LIST */
+.comp-list{display:flex;flex-direction:column;gap:10px}
+.comp-card{background:var(--paper);border:1px solid var(--line);padding:14px;display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;transition:border-color .15s}
+.comp-card:hover{border-color:var(--ink-soft)}
+.comp-card.excluded{opacity:0.4}
+.comp-toggle{width:18px;height:18px;border:1.5px solid var(--ink);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--paper);flex-shrink:0}
+.comp-toggle.on{background:var(--ink)}
+.comp-toggle.on::after{content:"✓";color:var(--bg);font-size:11px;font-weight:700}
+.comp-photo-thumb{width:48px;height:48px;background:var(--accent-soft);border:1px solid var(--line);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;font-size:10px;color:var(--muted)}
+.comp-photo-thumb img{width:100%;height:100%;object-fit:cover}
+.comp-info{min-width:0}
+.comp-addr{font-size:13px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comp-meta{font-size:11px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.comp-status{display:inline-block;padding:2px 8px;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;font-weight:600}
+.status-sold{background:var(--sold);color:#fff}
+.status-pending{background:var(--pending);color:#fff}
+.status-active{background:var(--active);color:#fff}
+.comp-price{text-align:right;font-family:'Fraunces',serif;font-size:18px;white-space:nowrap}
+.comp-price small{display:block;font-family:'Inter',sans-serif;font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
+.comp-adj{color:var(--accent);font-size:11px;font-weight:500;display:block;margin-top:2px}
+
+/* ADJUSTMENTS PANEL */
+.adj-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.adj-item{background:var(--paper);border:1px solid var(--line);padding:12px}
+.adj-item label{margin-bottom:4px}
+.adj-item input{padding:6px 8px;font-size:13px;border:none;border-bottom:1px solid var(--line);border-radius:0;background:transparent}
+.adj-item input:focus{border-bottom-color:var(--ink)}
+
+/* REPORT (right panel) */
+.report{background:var(--paper);border:1px solid var(--line);padding:48px;max-width:760px;margin:0 auto;font-family:'Inter',sans-serif}
+.report-brand{display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.report-brand img.headshot{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid var(--line)}
+.report-brand .brand-text{text-align:left}
+.report-brand .brand-name{font-family:'Fraunces',serif;font-size:18px;font-style:italic;color:var(--ink);letter-spacing:-0.01em}
+.report-brand .brand-meta{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.report-hero-photo{width:100%;max-height:280px;object-fit:cover;border:1px solid var(--line);margin-bottom:24px;display:block}
+.report-header{text-align:center;padding-bottom:32px;border-bottom:1px solid var(--line);margin-bottom:36px}
+.report-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.report-title{font-family:'Fraunces',serif;font-size:42px;letter-spacing:-0.02em;line-height:1.1;margin-bottom:8px}
+.report-title em{font-style:italic;color:var(--gold);font-weight:300}
+.report-addr{font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft)}
+.price-band{text-align:center;padding:36px 0;margin-bottom:36px;background:var(--accent);color:var(--bg);margin-left:-48px;margin-right:-48px}
+.price-band .lbl{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;opacity:0.7;margin-bottom:12px}
+.price-band .range{font-family:'Fraunces',serif;font-size:36px;letter-spacing:-0.02em}
+.price-band .range em{font-style:italic;color:var(--gold);font-weight:300}
+.price-band .mid{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;opacity:0.7;margin-top:12px}
+.report h3{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-family:'Inter',sans-serif;font-weight:500;margin-top:36px}
+.report h3:first-of-type{margin-top:0}
+.report-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:0}
+.report-stat{padding:20px 12px;text-align:center;border-right:1px solid var(--line)}
+.report-stat:last-child{border-right:none}
+.report-stat .v{font-family:'Fraunces',serif;font-size:24px;letter-spacing:-0.01em;display:block}
+.report-stat .l{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+@media(max-width:640px){.report{padding:24px}.price-band{margin-left:-24px;margin-right:-24px}.report-stats{grid-template-columns:repeat(2,1fr)}.report-stat:nth-child(2){border-right:none}}
+
+.comp-table{width:100%;border-collapse:collapse;margin-bottom:0;font-size:12px}
+.comp-table th{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-weight:500}
+.comp-table td{padding:12px 8px;border-bottom:1px solid var(--line)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table .num{text-align:right;font-feature-settings:"tnum"}
+
+#map{height:340px;margin-bottom:0;border:1px solid var(--line)}
+#roiResult{background:var(--accent-soft);padding:20px;margin-top:14px;border-left:3px solid var(--accent)}
+#roiResult .roi-num{font-family:'Fraunces',serif;font-size:28px;color:var(--accent);display:block;margin-bottom:4px}
+
+.narrative{background:var(--bg);padding:24px;border-left:3px solid var(--gold);margin-bottom:0;font-size:13px;line-height:1.7;font-style:italic;color:var(--ink-soft);font-family:'Fraunces',serif}
+
+.report-footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);text-align:center;font-size:11px;color:var(--muted)}
+.report-footer .name{font-family:'Fraunces',serif;font-size:18px;color:var(--ink);font-style:italic;display:block;margin-bottom:4px}
+
+/* SLIDER */
+.strategy{display:flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:var(--paper)}
+.strategy-opt{flex:1;padding:12px 8px;text-align:center;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all .15s;border-right:1px solid var(--line)}
+.strategy-opt:last-child{border-right:none}
+.strategy-opt.active{background:var(--ink);color:var(--bg)}
+.strategy-opt:hover:not(.active){background:var(--accent-soft)}
+
+/* HIDE TAB CONTENT */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* SMALL HELPERS */
+.hint{font-size:11px;color:var(--muted);margin-top:6px}
+.empty{text-align:center;padding:32px;color:var(--muted);font-style:italic;font-family:'Fraunces',serif}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:11px}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+.summary-pill{display:inline-block;padding:4px 10px;background:var(--accent-soft);color:var(--accent);font-size:11px;letter-spacing:0.08em;font-weight:500;border-radius:2px;margin-right:6px;margin-bottom:6px}
+
+/* CSV TEMPLATE HELPER */
+.csv-help{background:var(--accent-soft);padding:14px;border-left:3px solid var(--accent);margin-top:12px;font-size:12px;line-height:1.6}
+.csv-help code{background:var(--paper);padding:2px 6px;border:1px solid var(--line);font-size:11px}
+
+/* NET SHEET */
+.net-table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);margin-top:12px}
+.net-table td{padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px}
+.net-table tr:last-child td{border-bottom:none}
+.net-table td:last-child{text-align:right;font-feature-settings:"tnum"}
+.net-table .label-cell{color:var(--ink-soft)}
+.net-table .total-row td{font-weight:600;background:var(--accent);color:var(--bg);font-family:'Fraunces',serif;font-size:18px}
+.net-table .subtotal-row td{background:var(--bg);font-weight:500;border-top:2px solid var(--ink)}
+.net-table .deduction td:last-child{color:var(--warn)}
+
+/* SAVED CMA LIBRARY */
+.saved-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.saved-item{background:var(--paper);border:1px solid var(--line);padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:border-color .15s}
+.saved-item:hover{border-color:var(--ink-soft)}
+.saved-info{flex:1;min-width:0}
+.saved-addr{font-size:13px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-meta{font-size:11px;color:var(--muted)}
+.saved-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* PHOTO MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(14,14,14,0.85);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+.modal-backdrop.active{display:flex}
+.modal{background:var(--paper);border:1px solid var(--line);max-width:480px;width:100%;padding:32px}
+.modal h3{font-family:'Fraunces',serif !important;font-size:24px !important;color:var(--ink) !important;text-transform:none !important;letter-spacing:-0.01em !important;margin:0 0 20px !important}
+
+/* SHAREABLE / CLIENT VIEW */
+.client-only{display:none}
+.client-mode .panel-left{display:none}
+.client-mode .panel-right{border:none}
+.client-mode .workspace{grid-template-columns:1fr}
+.client-mode .header-actions .realtor-tool{display:none}
+.client-mode .tabs{display:none}
+.client-mode .client-only{display:block}
+.client-mode .report{max-width:880px}
+
+/* COMP PHOTO IN REPORT */
+.report-comp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:0}
+.report-comp-card{background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.report-comp-card .img{width:100%;height:140px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;letter-spacing:0.1em;text-transform:uppercase}
+.report-comp-card .img img{width:100%;height:100%;object-fit:cover;display:block}
+.report-comp-card .info{padding:12px 14px}
+.report-comp-card .ad{font-size:12px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.report-comp-card .pr{font-family:'Fraunces',serif;font-size:18px;margin-top:6px}
+.report-comp-card .mt{font-size:10px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+
+/* VIDEO EMBED IN REPORT */
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:var(--ink);border:1px solid var(--line);margin-bottom:0}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.video-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;letter-spacing:0.1em;text-transform:uppercase}
+
+@media print{
+  .header,.tabs,.panel-left{display:none}
+  .workspace{grid-template-columns:1fr}
+  .panel-right{padding:0}
+  .report{border:none;max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-mark">CMA<span> Pro</span></div>
+    <div class="gate-sub">Cristian Millan · Real Brokerage</div>
+    <input type="password" id="pwd" placeholder="ENTER ACCESS CODE" autocomplete="off">
+    <button class="btn" style="width:100%" onclick="checkPwd()">Enter Workspace</button>
+    <div class="err" id="pwdErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+
+<header class="header">
+  <div class="brand">
+    CMA<span>Pro</span>
+    <small data-t="tagline">Comparative Market Analysis</small>
+  </div>
+  <div class="header-actions">
+    <div class="lang-toggle">
+      <button class="active" data-lang="en" onclick="setLang('en')">EN</button>
+      <button data-lang="es" onclick="setLang('es')">ES</button>
+    </div>
+    <button class="btn-ghost btn realtor-tool" onclick="openSavedModal()" data-t="library">Library</button>
+    <button class="btn-ghost btn realtor-tool" onclick="saveCurrentCMA()" data-t="save">Save</button>
+    <button class="btn-ghost btn realtor-tool" onclick="resetAll()" data-t="new_cma">New CMA</button>
+    <button class="btn btn-accent" onclick="exportPDF()" data-t="export_pdf">Export PDF</button>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="brand"><span class="tab-num">00</span><span data-t="tab_brand">Branding</span></div>
+  <div class="tab" data-tab="subject"><span class="tab-num">01</span><span data-t="tab_subject">Subject Property</span></div>
+  <div class="tab" data-tab="comps"><span class="tab-num">02</span><span data-t="tab_comps">Comparables</span></div>
+  <div class="tab" data-tab="adjust"><span class="tab-num">03</span><span data-t="tab_adjust">Adjustments</span></div>
+  <div class="tab" data-tab="roi"><span class="tab-num">04</span><span data-t="tab_roi">Pre-Listing ROI</span></div>
+  <div class="tab" data-tab="net"><span class="tab-num">05</span><span data-t="tab_net">Seller Net Sheet</span></div>
+  <div class="tab" data-tab="report"><span class="tab-num">06</span><span data-t="tab_report">Report</span></div>
+</div>
+
+<div class="workspace" id="workspace">
+
+<!-- LEFT PANEL -->
+<div class="panel panel-left">
+
+<!-- TAB 0: BRANDING -->
+<div class="tab-panel active" id="panel-brand">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_0">Step Zero</div>
+        <div class="section-title"><span data-t="brand_title_1">Your</span> <em data-t="brand_title_2">Branding</em></div>
+      </div>
+    </div>
+    <p class="hint" style="margin-bottom:18px" data-t="brand_intro">Set this once, it stays saved on this browser. Shows up on every report.</p>
+    <div class="row row-2">
+      <div><label data-t="agent_name">Agent Name</label><input id="bAgent" value="Cristian Millan"></div>
+      <div><label data-t="brokerage">Brokerage</label><input id="bBrokerage" value="Real Brokerage"></div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="phone">Phone</label><input id="bPhone" placeholder="(555) 555-5555"></div>
+      <div><label data-t="email">Email</label><input id="bEmail" placeholder="you@example.com"></div>
+    </div>
+    <div class="row">
+      <div>
+        <label data-t="headshot">Headshot (optional)</label>
+        <input type="file" id="bPhoto" accept="image/*" onchange="loadHeadshot(event)">
+        <div class="hint" data-t="headshot_hint">Square photo works best. Stored locally in your browser.</div>
+      </div>
+    </div>
+    <div id="headshotPreview" style="margin-top:12px"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title"><span data-t="video_title_1">Video</span> <em data-t="video_title_2">Walkthrough</em></div>
+    </div>
+    <p class="hint" style="margin-bottom:18px" data-t="video_intro">Record a 2-3 min Loom or YouTube video walking through the CMA. Paste the link below and it embeds into the report.</p>
+    <div class="row">
+      <div>
+        <label data-t="video_url">Video URL (Loom, YouTube, Vimeo)</label>
+        <input id="bVideo" placeholder="https://www.loom.com/share/abc123...">
+        <div class="hint" data-t="video_hint">Optional. Sellers love walking through the analysis with you on video before the appointment.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: SUBJECT -->
+<div class="tab-panel" id="panel-subject">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_1">Step One</div>
+        <div class="section-title"><span data-t="subject_title_1">Subject</span> <em data-t="subject_title_2">Property</em></div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label data-t="hero_photo">Hero Photo (optional)</label>
+        <input type="file" id="sHeroPhoto" accept="image/*" onchange="loadHeroPhoto(event)">
+        <div class="hint" data-t="hero_hint">Front exterior shot. Appears at the top of the report.</div>
+      </div>
+    </div>
+    <div id="heroPreview" style="margin-bottom:14px"></div>
+    <div class="row row-2">
+      <div><label data-t="street_addr">Street Address</label><input id="sAddr" placeholder="9142 N Kilkenny Way"></div>
+      <div><label data-t="city">City</label><input id="sCity" placeholder="Eagle Mountain"></div>
+    </div>
+    <div class="row row-3">
+      <div><label data-t="beds">Beds</label><input id="sBeds" type="number" placeholder="4"></div>
+      <div><label data-t="baths">Baths</label><input id="sBaths" type="number" step="0.5" placeholder="2.5"></div>
+      <div><label data-t="sqft_above">Above Grade Sqft</label><input id="sSqft" type="number" placeholder="2400"></div>
+    </div>
+    <div class="row row-3">
+      <div><label data-t="basement_sqft">Finished Basement Sqft</label><input id="sBasement" type="number" placeholder="0"></div>
+      <div><label data-t="garage_stalls">Garage Stalls</label><input id="sGarage" type="number" placeholder="2"></div>
+      <div><label data-t="year_built">Year Built</label><input id="sYear" type="number" placeholder="2018"></div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="lot_size">Lot Size (acres)</label><input id="sLot" type="number" step="0.01" placeholder="0.18"></div>
+      <div>
+        <label data-t="condition">Condition</label>
+        <select id="sCond">
+          <option value="0" data-t="cond_avg">Average</option>
+          <option value="1" data-t="cond_above">Above Average</option>
+          <option value="2" data-t="cond_excellent">Excellent / Upgraded</option>
+          <option value="-1" data-t="cond_below">Below Average / Needs Work</option>
+        </select>
+      </div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="lat">Latitude (for map)</label><input id="sLat" type="number" step="0.000001" placeholder="40.3083"></div>
+      <div><label data-t="lng">Longitude</label><input id="sLng" type="number" step="0.000001" placeholder="-112.0094"></div>
+    </div>
+    <div class="hint" data-t="geocode_hint">Geocode tip: paste address into Google Maps, right-click the pin, copy the lat/lng pair.</div>
+  </div>
+</div>
+
+<!-- TAB 2: COMPS -->
+<div class="tab-panel" id="panel-comps">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_2">Step Two</div>
+        <div class="section-title"><span data-t="comps_title_1">Comparables</span> <em data-t="comps_title_2">Upload</em></div>
+      </div>
+    </div>
+    <div class="dropzone" id="drop" onclick="document.getElementById('csv').click()">
+      <div class="dropzone-icon">↓</div>
+      <div class="dropzone-text"><strong data-t="drop_main">Drop CSV here</strong> <span data-t="drop_or">or click to upload</span></div>
+      <div class="dropzone-sub" data-t="drop_sub">Export from UtahRealEstate.com / Paragon</div>
+    </div>
+    <input type="file" id="csv" accept=".csv" style="display:none">
+    <div class="csv-help">
+      <strong data-t="csv_cols">Expected columns</strong> (any order, header row required):<br>
+      <code>address</code> <code>status</code> <code>price</code> <code>beds</code> <code>baths</code> <code>sqft</code> <code>basement_sqft</code> <code>garage</code> <code>year</code> <code>lot</code> <code>condition</code> <code>distance</code> <code>lat</code> <code>lng</code> <code>sold_date</code>
+      <br><br>
+      <code>status</code> <span data-t="csv_status_values">values: sold, pending, active</span>
+      <br>
+      <a href="#" onclick="downloadTemplate();return false" style="color:var(--accent);text-decoration:underline" data-t="csv_template">Download CSV template</a>
+       · 
+      <a href="#" onclick="loadSampleData();return false" style="color:var(--accent);text-decoration:underline" data-t="csv_sample">Load sample Utah County data</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title"><span data-t="comp_select_1">Comp</span> <em data-t="comp_select_2">Selection</em></div>
+      <button class="btn-ghost btn btn-small" onclick="addManualComp()">+ <span data-t="add_manual">Add Manually</span></button>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--sold)"></div><span data-t="legend_sold">Sold</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pending)"></div><span data-t="legend_pending">Pending</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--active)"></div><span data-t="legend_active">Active</span></div>
+    </div>
+    <div class="comp-list" id="compList">
+      <div class="empty" data-t="no_comps">No comparables loaded yet</div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: ADJUSTMENTS -->
+<div class="tab-panel" id="panel-adjust">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_3">Step Three</div>
+        <div class="section-title"><span data-t="adj_title_1">Adjustment</span> <em data-t="adj_title_2">Values</em></div>
+      </div>
+    </div>
+    <div class="hint" style="margin-bottom:18px" data-t="adj_intro">Utah County defaults. Applied to each comp relative to the subject property. Edit any value to override.</div>
+    <div class="adj-grid">
+      <div class="adj-item"><label data-t="adj_sqft">Above Grade ($/sqft)</label><input id="adjSqft" type="number" value="155"></div>
+      <div class="adj-item"><label data-t="adj_basement">Finished Basement ($/sqft)</label><input id="adjBasement" type="number" value="65"></div>
+      <div class="adj-item"><label data-t="adj_bed">Per Bedroom</label><input id="adjBed" type="number" value="4500"></div>
+      <div class="adj-item"><label data-t="adj_bath">Per Bathroom</label><input id="adjBath" type="number" value="3500"></div>
+      <div class="adj-item"><label data-t="adj_garage">Per Garage Stall</label><input id="adjGarage" type="number" value="5000"></div>
+      <div class="adj-item"><label data-t="adj_lot">Per Acre Lot</label><input id="adjLot" type="number" value="40000"></div>
+      <div class="adj-item"><label data-t="adj_year">Per Year Newer/Older</label><input id="adjYear" type="number" value="800"></div>
+      <div class="adj-item"><label data-t="adj_cond">Condition Tier</label><input id="adjCond" type="number" value="8000"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title"><span data-t="strat_title_1">Pricing</span> <em data-t="strat_title_2">Strategy</em></div>
+    </div>
+    <div class="strategy">
+      <div class="strategy-opt" data-strategy="conservative" data-t="strat_cons">Conservative</div>
+      <div class="strategy-opt active" data-strategy="market" data-t="strat_market">Market</div>
+      <div class="strategy-opt" data-strategy="aggressive" data-t="strat_agg">Aggressive</div>
+    </div>
+    <div class="hint" data-t="strat_hint">Conservative skews to the lower comps for faster sale. Aggressive pushes toward top comps for max value. Market sits at the median.</div>
+  </div>
+</div>
+
+<!-- TAB 4: ROI -->
+<div class="tab-panel" id="panel-roi">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_4">Step Four</div>
+        <div class="section-title"><span data-t="roi_title_1">Pre-Listing</span> <em data-t="roi_title_2">ROI</em></div>
+      </div>
+    </div>
+    <div class="hint" style="margin-bottom:18px" data-t="roi_intro">Estimate the return on improvements before listing. Conservative ROI multipliers based on typical Utah County resale impact.</div>
+
+    <div class="row row-2">
+      <div><label data-t="roi_paint">Interior Paint ($)</label><input id="roiPaint" type="number" value="0"></div>
+      <div><label data-t="roi_floor">Carpet / Flooring ($)</label><input id="roiFloor" type="number" value="0"></div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="roi_curb">Landscaping / Curb Appeal ($)</label><input id="roiCurb" type="number" value="0"></div>
+      <div><label data-t="roi_stage">Deep Clean / Staging ($)</label><input id="roiStage" type="number" value="0"></div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="roi_kitchen">Minor Kitchen Updates ($)</label><input id="roiKitchen" type="number" value="0"></div>
+      <div><label data-t="roi_bath">Minor Bath Updates ($)</label><input id="roiBath" type="number" value="0"></div>
+    </div>
+    <div class="row">
+      <div><label data-t="roi_other">Other Repairs ($)</label><input id="roiOther" type="number" value="0"></div>
+    </div>
+    <button class="btn" onclick="calculateROI()" style="margin-top:8px"><span data-t="roi_calc">Calculate Return</span></button>
+    <div id="roiResult" style="display:none"></div>
+  </div>
+</div>
+
+<!-- TAB 5: NET SHEET -->
+<div class="tab-panel" id="panel-net">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_5">Step Five</div>
+        <div class="section-title"><span data-t="net_title_1">Seller</span> <em data-t="net_title_2">Net Sheet</em></div>
+      </div>
+    </div>
+    <div class="hint" style="margin-bottom:18px" data-t="net_intro">Estimate walk-away proceeds based on the suggested list price. Edit any field to customize. All values are estimates only.</div>
+
+    <h4 style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:500" data-t="net_pricing">Pricing</h4>
+    <div class="row row-2">
+      <div><label data-t="net_list_price">Estimated Sale Price</label><input id="netSale" type="number" placeholder="auto-fills from suggested"></div>
+      <div><label data-t="net_concessions">Seller Concessions ($)</label><input id="netConc" type="number" value="0"></div>
+    </div>
+
+    <h4 style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;font-weight:500" data-t="net_commissions">Commissions</h4>
+    <div class="row row-2">
+      <div><label data-t="net_list_comm">Listing Side (%)</label><input id="netListComm" type="number" step="0.1" value="3"></div>
+      <div><label data-t="net_buy_comm">Buyer Side (%)</label><input id="netBuyComm" type="number" step="0.1" value="2.5"></div>
+    </div>
+
+    <h4 style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;font-weight:500" data-t="net_closing">Closing Costs</h4>
+    <div class="row row-2">
+      <div><label data-t="net_title">Title / Escrow ($)</label><input id="netTitle" type="number" value="1800"></div>
+      <div><label data-t="net_transfer">Recording / Misc Fees ($)</label><input id="netRec" type="number" value="350"></div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="net_warranty">Home Warranty ($)</label><input id="netWarr" type="number" value="600"></div>
+      <div><label data-t="net_misc">Other Fees ($)</label><input id="netMisc" type="number" value="0"></div>
+    </div>
+
+    <h4 style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;font-weight:500" data-t="net_payoff">Loan Payoff</h4>
+    <div class="row row-2">
+      <div><label data-t="net_payoff_amt">Current Mortgage Balance ($)</label><input id="netPayoff" type="number" value="0"></div>
+      <div><label data-t="net_payoff_other">2nd Lien / HELOC ($)</label><input id="netHeloc" type="number" value="0"></div>
+    </div>
+    <div class="row row-2">
+      <div><label data-t="net_taxes">Prorated Taxes ($)</label><input id="netTax" type="number" value="0"></div>
+      <div><label data-t="net_hoa">Prorated HOA ($)</label><input id="netHoa" type="number" value="0"></div>
+    </div>
+
+    <button class="btn btn-accent" onclick="calculateNet()" style="margin-top:18px"><span data-t="net_calc">Calculate Net Proceeds</span></button>
+    <div id="netResult" style="display:none;margin-top:18px"></div>
+  </div>
+</div>
+
+<!-- TAB 6: REPORT -->
+<div class="tab-panel" id="panel-report">
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" data-t="step_6">Step Six</div>
+        <div class="section-title"><span data-t="report_title_1">Report</span> <em data-t="report_title_2">Notes</em></div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label data-t="narrative_label">Personal Narrative (shown on report)</label>
+        <textarea id="narrative" rows="5" data-t-placeholder="narrative_ph" placeholder="Based on our analysis of seven recent transactions within a half-mile radius, this home is positioned competitively..."></textarea>
+      </div>
+    </div>
+    <div class="row row-2">
+      <div>
+        <label data-t="dom_label">Days on Market (avg for area)</label>
+        <input id="daysOnMarket" type="number" placeholder="18">
+      </div>
+      <div>
+        <label data-t="trend_label">Market Trend Note</label>
+        <input id="trendNote" data-t-placeholder="trend_ph" placeholder="Inventory tightening, multi-offer scenarios returning">
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- RIGHT PANEL: LIVE REPORT -->
+<div class="panel panel-right">
+  <div class="report" id="report">
+
+    <div class="report-brand" id="reportBrand">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;color:var(--gold);font-style:italic">CM</div>
+      <div class="brand-text">
+        <div class="brand-name">Cristian Millan</div>
+        <div class="brand-meta">Real Brokerage · Utah</div>
+      </div>
+    </div>
+
+    <div id="heroSlot"></div>
+
+    <div class="report-header">
+      <div class="report-eyebrow" data-t="report_eyebrow">Comparative Market Analysis</div>
+      <div class="report-title"><span data-t="report_title_main_1">Your Home's</span> <em data-t="report_title_main_2">Position</em></div>
+      <div class="report-addr" id="rAddr">— <span data-t="address_placeholder">Address</span> —</div>
+    </div>
+
+    <div class="price-band">
+      <div class="lbl" data-t="rec_price_range">Recommended Price Range</div>
+      <div class="range" id="rRange">$— <em data-t="to_word">to</em> $—</div>
+      <div class="mid" id="rMid"><span data-t="suggested_list">Suggested List</span>: $—</div>
+    </div>
+
+    <div class="narrative" id="rNarrative" data-t="narrative_default">Enter property details and load comparables to generate your custom market position analysis.</div>
+
+    <h3 data-t="property_glance">Property at a Glance</h3>
+    <div class="report-stats">
+      <div class="report-stat"><span class="v" id="rBeds">—</span><div class="l" data-t="beds_label">Beds</div></div>
+      <div class="report-stat"><span class="v" id="rBaths">—</span><div class="l" data-t="baths_label">Baths</div></div>
+      <div class="report-stat"><span class="v" id="rSqft">—</span><div class="l" data-t="sqft_label">Sqft</div></div>
+      <div class="report-stat"><span class="v" id="rYear">—</span><div class="l" data-t="year_label">Year Built</div></div>
+    </div>
+
+    <div id="videoSection" style="display:none">
+      <h3 data-t="video_walkthrough">Video Walkthrough</h3>
+      <div class="video-wrap" id="videoWrap"></div>
+    </div>
+
+    <h3 data-t="comp_props">Comparable Properties</h3>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--sold)"></div><span data-t="legend_sold">Sold</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pending)"></div><span data-t="legend_pending">Pending</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--active)"></div><span data-t="legend_active">Active Listing</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--subject);border:2px solid var(--gold)"></div><span data-t="legend_subject">Subject</span></div>
+    </div>
+    <div id="map"></div>
+
+    <h3 data-t="comp_details">Comparable Details</h3>
+    <div class="report-comp-grid" id="rCompGrid"></div>
+
+    <h3 data-t="comp_summary">Comparable Summary</h3>
+    <table class="comp-table" id="rTable">
+      <thead><tr>
+        <th data-t="th_addr">Address</th>
+        <th data-t="th_status">Status</th>
+        <th class="num" data-t="th_sqft">Sqft</th>
+        <th class="num" data-t="th_sold">Sold/List</th>
+        <th class="num" data-t="th_adj">Adjusted</th>
+      </tr></thead>
+      <tbody><tr><td colspan="5" style="text-align:center;color:var(--muted);font-style:italic;padding:24px" data-t="add_comps_msg">Add comparables to populate this table</td></tr></tbody>
+    </table>
+
+    <h3 data-t="market_conditions">Market Conditions</h3>
+    <div style="margin-bottom:24px">
+      <span class="summary-pill" id="rDOM">— <span data-t="days_on_market">days on market</span></span>
+      <span class="summary-pill" id="rTrend">— <span data-t="trend_word">trend</span> —</span>
+    </div>
+
+    <div id="roiSection" style="display:none">
+      <h3 data-t="roi_heading">Pre-Listing Improvements ROI</h3>
+      <div id="rROI"></div>
+    </div>
+
+    <div id="netSection" style="display:none">
+      <h3 data-t="net_heading">Your Estimated Net Proceeds</h3>
+      <div id="rNet"></div>
+    </div>
+
+    <div class="report-footer">
+      <span class="name" id="rAgentName">Cristian Millan</span>
+      <span id="rBrokerage">Real Brokerage</span> · <span data-t="licensed">Licensed Real Estate Agent · Utah</span><br>
+      <span id="rContact"></span>
+      <span data-t="prepared">Prepared</span> <span id="rDate"></span>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- COMP PHOTO MODAL -->
+<div class="modal-backdrop" id="photoModal">
+  <div class="modal">
+    <h3 data-t="upload_photo">Upload Photo</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px" id="photoModalAddr"></p>
+    <input type="file" id="photoUpload" accept="image/*" style="margin-bottom:16px">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-ghost btn btn-small" onclick="closePhotoModal()" data-t="cancel">Cancel</button>
+      <button class="btn btn-small" onclick="savePhotoModal()" data-t="save_photo">Save Photo</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED CMA MODAL -->
+<div class="modal-backdrop" id="savedModal">
+  <div class="modal" style="max-width:600px">
+    <h3 data-t="library_title">CMA Library</h3>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px" data-t="library_intro">Saved CMAs. Click to load. Stored locally in your browser only.</p>
+    <div class="saved-list" id="savedList">
+      <div class="empty" style="padding:20px" data-t="no_saved">No saved CMAs yet</div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button class="btn-ghost btn btn-small" onclick="closeSavedModal()" data-t="close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========== TRANSLATIONS =========== */
+const T = {
+  en: {
+    tagline:'Comparative Market Analysis',
+    library:'Library', save:'Save', new_cma:'New CMA', export_pdf:'Export PDF',
+    tab_brand:'Branding', tab_subject:'Subject Property', tab_comps:'Comparables',
+    tab_adjust:'Adjustments', tab_roi:'Pre-Listing ROI', tab_net:'Seller Net Sheet', tab_report:'Report',
+    step_0:'Step Zero', step_1:'Step One', step_2:'Step Two', step_3:'Step Three',
+    step_4:'Step Four', step_5:'Step Five', step_6:'Step Six',
+    brand_title_1:'Your', brand_title_2:'Branding',
+    brand_intro:'Set this once, it stays saved on this browser. Shows up on every report.',
+    agent_name:'Agent Name', brokerage:'Brokerage', phone:'Phone', email:'Email',
+    headshot:'Headshot (optional)', headshot_hint:'Square photo works best. Stored locally in your browser.',
+    video_title_1:'Video', video_title_2:'Walkthrough',
+    video_intro:'Record a 2-3 min Loom or YouTube video walking through the CMA. Paste the link below and it embeds into the report.',
+    video_url:'Video URL (Loom, YouTube, Vimeo)',
+    video_hint:'Optional. Sellers love walking through the analysis with you on video before the appointment.',
+    subject_title_1:'Subject', subject_title_2:'Property',
+    hero_photo:'Hero Photo (optional)', hero_hint:'Front exterior shot. Appears at the top of the report.',
+    street_addr:'Street Address', city:'City', beds:'Beds', baths:'Baths',
+    sqft_above:'Above Grade Sqft', basement_sqft:'Finished Basement Sqft',
+    garage_stalls:'Garage Stalls', year_built:'Year Built', lot_size:'Lot Size (acres)',
+    condition:'Condition', cond_avg:'Average', cond_above:'Above Average',
+    cond_excellent:'Excellent / Upgraded', cond_below:'Below Average / Needs Work',
+    lat:'Latitude (for map)', lng:'Longitude',
+    geocode_hint:'Geocode tip: paste address into Google Maps, right-click the pin, copy the lat/lng pair.',
+    comps_title_1:'Comparables', comps_title_2:'Upload',
+    drop_main:'Drop CSV here', drop_or:'or click to upload',
+    drop_sub:'Export from UtahRealEstate.com / Paragon',
+    csv_cols:'Expected columns', csv_status_values:'values: sold, pending, active',
+    csv_template:'Download CSV template', csv_sample:'Load sample Utah County data',
+    comp_select_1:'Comp', comp_select_2:'Selection', add_manual:'Add Manually',
+    legend_sold:'Sold', legend_pending:'Pending', legend_active:'Active',
+    no_comps:'No comparables loaded yet',
+    adj_title_1:'Adjustment', adj_title_2:'Values',
+    adj_intro:'Utah County defaults. Applied to each comp relative to the subject property. Edit any value to override.',
+    adj_sqft:'Above Grade ($/sqft)', adj_basement:'Finished Basement ($/sqft)',
+    adj_bed:'Per Bedroom', adj_bath:'Per Bathroom', adj_garage:'Per Garage Stall',
+    adj_lot:'Per Acre Lot', adj_year:'Per Year Newer/Older', adj_cond:'Condition Tier',
+    strat_title_1:'Pricing', strat_title_2:'Strategy',
+    strat_cons:'Conservative', strat_market:'Market', strat_agg:'Aggressive',
+    strat_hint:'Conservative skews to the lower comps for faster sale. Aggressive pushes toward top comps for max value. Market sits at the median.',
+    roi_title_1:'Pre-Listing', roi_title_2:'ROI',
+    roi_intro:'Estimate the return on improvements before listing. Conservative ROI multipliers based on typical Utah County resale impact.',
+    roi_paint:'Interior Paint ($)', roi_floor:'Carpet / Flooring ($)',
+    roi_curb:'Landscaping / Curb Appeal ($)', roi_stage:'Deep Clean / Staging ($)',
+    roi_kitchen:'Minor Kitchen Updates ($)', roi_bath:'Minor Bath Updates ($)',
+    roi_other:'Other Repairs ($)', roi_calc:'Calculate Return',
+    net_title_1:'Seller', net_title_2:'Net Sheet',
+    net_intro:'Estimate walk-away proceeds based on the suggested list price. Edit any field to customize. All values are estimates only.',
+    net_pricing:'Pricing', net_list_price:'Estimated Sale Price',
+    net_concessions:'Seller Concessions ($)', net_commissions:'Commissions',
+    net_list_comm:'Listing Side (%)', net_buy_comm:'Buyer Side (%)',
+    net_closing:'Closing Costs', net_title:'Title / Escrow ($)',
+    net_transfer:'Recording / Misc Fees ($)', net_warranty:'Home Warranty ($)',
+    net_misc:'Other Fees ($)', net_payoff:'Loan Payoff',
+    net_payoff_amt:'Current Mortgage Balance ($)', net_payoff_other:'2nd Lien / HELOC ($)',
+    net_taxes:'Prorated Taxes ($)', net_hoa:'Prorated HOA ($)',
+    net_calc:'Calculate Net Proceeds',
+    report_title_1:'Report', report_title_2:'Notes',
+    narrative_label:'Personal Narrative (shown on report)',
+    narrative_ph:'Based on our analysis of seven recent transactions within a half-mile radius, this home is positioned competitively...',
+    dom_label:'Days on Market (avg for area)', trend_label:'Market Trend Note',
+    trend_ph:'Inventory tightening, multi-offer scenarios returning',
+    report_eyebrow:'Comparative Market Analysis',
+    report_title_main_1:"Your Home's", report_title_main_2:'Position',
+    address_placeholder:'Address', rec_price_range:'Recommended Price Range',
+    to_word:'to', suggested_list:'Suggested List',
+    narrative_default:'Enter property details and load comparables to generate your custom market position analysis.',
+    property_glance:'Property at a Glance',
+    beds_label:'Beds', baths_label:'Baths', sqft_label:'Sqft', year_label:'Year Built',
+    video_walkthrough:'Video Walkthrough', comp_props:'Comparable Properties',
+    legend_subject:'Subject', comp_details:'Comparable Details',
+    comp_summary:'Comparable Summary',
+    th_addr:'Address', th_status:'Status', th_sqft:'Sqft',
+    th_sold:'Sold/List', th_adj:'Adjusted',
+    add_comps_msg:'Add comparables to populate this table',
+    market_conditions:'Market Conditions', days_on_market:'days on market',
+    trend_word:'trend', roi_heading:'Pre-Listing Improvements ROI',
+    net_heading:'Your Estimated Net Proceeds',
+    licensed:'Licensed Real Estate Agent · Utah', prepared:'Prepared',
+    upload_photo:'Upload Photo', cancel:'Cancel', save_photo:'Save Photo',
+    library_title:'CMA Library',
+    library_intro:'Saved CMAs. Click to load. Stored locally in your browser only.',
+    no_saved:'No saved CMAs yet', close:'Close',
+    net_label_sale:'Sale Price', net_label_less:'Less:',
+    net_label_listing_comm:'Listing Commission', net_label_buyer_comm:'Buyer Commission',
+    net_label_concessions:'Seller Concessions', net_label_title:'Title & Escrow',
+    net_label_rec:'Recording / Misc', net_label_warranty:'Home Warranty',
+    net_label_misc:'Other Fees', net_label_payoff:'Mortgage Payoff',
+    net_label_heloc:'2nd Lien / HELOC', net_label_tax:'Prorated Taxes',
+    net_label_hoa:'Prorated HOA', net_label_subtotal:'Subtotal',
+    net_label_net:'Estimated Net to Seller',
+    roi_recommended:'Recommended Pre-Listing Investment',
+    roi_projected:'Projected sale price increase of approximately',
+    roi_resulting:'resulting in an estimated net gain of',
+    roi_after:'after improvement costs. This represents a',
+    roi_return:'return on the work performed before listing.'
+  },
+  es: {
+    tagline:'Análisis Comparativo de Mercado',
+    library:'Biblioteca', save:'Guardar', new_cma:'Nuevo CMA', export_pdf:'Exportar PDF',
+    tab_brand:'Marca', tab_subject:'Propiedad', tab_comps:'Comparables',
+    tab_adjust:'Ajustes', tab_roi:'ROI Pre-Venta', tab_net:'Hoja Neta', tab_report:'Reporte',
+    step_0:'Paso Cero', step_1:'Paso Uno', step_2:'Paso Dos', step_3:'Paso Tres',
+    step_4:'Paso Cuatro', step_5:'Paso Cinco', step_6:'Paso Seis',
+    brand_title_1:'Tu', brand_title_2:'Marca',
+    brand_intro:'Configura esto una vez, se guarda en tu navegador. Aparece en cada reporte.',
+    agent_name:'Nombre del Agente', brokerage:'Corretaje', phone:'Teléfono', email:'Correo',
+    headshot:'Foto (opcional)', headshot_hint:'Foto cuadrada funciona mejor. Se guarda localmente.',
+    video_title_1:'Video', video_title_2:'Recorrido',
+    video_intro:'Graba un video de 2-3 min en Loom o YouTube explicando el CMA. Pega el enlace y se incrusta en el reporte.',
+    video_url:'URL del Video (Loom, YouTube, Vimeo)',
+    video_hint:'Opcional. A los vendedores les encanta ver el análisis contigo en video antes de la cita.',
+    subject_title_1:'Propiedad', subject_title_2:'a Vender',
+    hero_photo:'Foto Principal (opcional)', hero_hint:'Foto exterior frontal. Aparece arriba del reporte.',
+    street_addr:'Dirección', city:'Ciudad', beds:'Recámaras', baths:'Baños',
+    sqft_above:'Pies² Sobre Nivel', basement_sqft:'Pies² Sótano Terminado',
+    garage_stalls:'Lugares de Cochera', year_built:'Año de Construcción', lot_size:'Tamaño del Lote (acres)',
+    condition:'Condición', cond_avg:'Promedio', cond_above:'Sobre Promedio',
+    cond_excellent:'Excelente / Renovada', cond_below:'Bajo Promedio / Requiere Trabajo',
+    lat:'Latitud (para el mapa)', lng:'Longitud',
+    geocode_hint:'Tip: pega la dirección en Google Maps, clic derecho en el pin, copia las coordenadas.',
+    comps_title_1:'Comparables', comps_title_2:'Subir',
+    drop_main:'Suelta el CSV aquí', drop_or:'o haz clic para subir',
+    drop_sub:'Exporta desde UtahRealEstate.com / Paragon',
+    csv_cols:'Columnas Esperadas', csv_status_values:'valores: vendido, pendiente, activo',
+    csv_template:'Descargar plantilla CSV', csv_sample:'Cargar datos de muestra de Utah County',
+    comp_select_1:'Selección', comp_select_2:'de Comparables', add_manual:'Agregar Manual',
+    legend_sold:'Vendido', legend_pending:'Pendiente', legend_active:'Activo',
+    no_comps:'Aún no hay comparables cargados',
+    adj_title_1:'Valores', adj_title_2:'de Ajuste',
+    adj_intro:'Valores predeterminados de Utah County. Aplicados a cada comparable relativo a la propiedad. Edita cualquier valor.',
+    adj_sqft:'Sobre Nivel ($/pie²)', adj_basement:'Sótano Terminado ($/pie²)',
+    adj_bed:'Por Recámara', adj_bath:'Por Baño', adj_garage:'Por Lugar de Cochera',
+    adj_lot:'Por Acre de Lote', adj_year:'Por Año Más Nuevo/Viejo', adj_cond:'Por Nivel de Condición',
+    strat_title_1:'Estrategia', strat_title_2:'de Precio',
+    strat_cons:'Conservadora', strat_market:'Mercado', strat_agg:'Agresiva',
+    strat_hint:'Conservadora apunta a los comparables más bajos para venta rápida. Agresiva busca el valor máximo. Mercado es la mediana.',
+    roi_title_1:'ROI', roi_title_2:'Pre-Venta',
+    roi_intro:'Estima el retorno de mejoras antes de listar. Multiplicadores conservadores basados en el impacto de reventa típico en Utah County.',
+    roi_paint:'Pintura Interior ($)', roi_floor:'Alfombra / Pisos ($)',
+    roi_curb:'Jardinería / Frente ($)', roi_stage:'Limpieza Profunda / Staging ($)',
+    roi_kitchen:'Actualizaciones de Cocina ($)', roi_bath:'Actualizaciones de Baño ($)',
+    roi_other:'Otras Reparaciones ($)', roi_calc:'Calcular Retorno',
+    net_title_1:'Hoja Neta', net_title_2:'del Vendedor',
+    net_intro:'Estima las ganancias netas basado en el precio sugerido. Edita cualquier campo. Todos los valores son estimados.',
+    net_pricing:'Precio', net_list_price:'Precio de Venta Estimado',
+    net_concessions:'Concesiones al Comprador ($)', net_commissions:'Comisiones',
+    net_list_comm:'Lado del Listing (%)', net_buy_comm:'Lado del Comprador (%)',
+    net_closing:'Costos de Cierre', net_title:'Título / Escrow ($)',
+    net_transfer:'Registro / Tarifas Varias ($)', net_warranty:'Garantía de Hogar ($)',
+    net_misc:'Otras Tarifas ($)', net_payoff:'Pago del Préstamo',
+    net_payoff_amt:'Saldo Actual de Hipoteca ($)', net_payoff_other:'2do Gravamen / HELOC ($)',
+    net_taxes:'Impuestos Prorrateados ($)', net_hoa:'HOA Prorrateado ($)',
+    net_calc:'Calcular Ganancia Neta',
+    report_title_1:'Notas', report_title_2:'del Reporte',
+    narrative_label:'Narrativa Personal (aparece en el reporte)',
+    narrative_ph:'Basado en nuestro análisis de transacciones recientes en un radio de media milla, esta casa está posicionada competitivamente...',
+    dom_label:'Días en el Mercado (promedio)', trend_label:'Nota de Tendencia del Mercado',
+    trend_ph:'Inventario reduciéndose, escenarios de múltiples ofertas regresando',
+    report_eyebrow:'Análisis Comparativo de Mercado',
+    report_title_main_1:'La Posición', report_title_main_2:'de Tu Hogar',
+    address_placeholder:'Dirección', rec_price_range:'Rango de Precio Recomendado',
+    to_word:'a', suggested_list:'Precio Sugerido',
+    narrative_default:'Ingresa los detalles de la propiedad y carga comparables para generar tu análisis personalizado.',
+    property_glance:'Propiedad de un Vistazo',
+    beds_label:'Recámaras', baths_label:'Baños', sqft_label:'Pies²', year_label:'Año',
+    video_walkthrough:'Recorrido en Video', comp_props:'Propiedades Comparables',
+    legend_subject:'Tu Propiedad', comp_details:'Detalles de Comparables',
+    comp_summary:'Resumen de Comparables',
+    th_addr:'Dirección', th_status:'Estado', th_sqft:'Pies²',
+    th_sold:'Vendido/Listado', th_adj:'Ajustado',
+    add_comps_msg:'Agrega comparables para llenar esta tabla',
+    market_conditions:'Condiciones del Mercado', days_on_market:'días en el mercado',
+    trend_word:'tendencia', roi_heading:'ROI de Mejoras Pre-Venta',
+    net_heading:'Tu Ganancia Neta Estimada',
+    licensed:'Agente Inmobiliario Licenciado · Utah', prepared:'Preparado',
+    upload_photo:'Subir Foto', cancel:'Cancelar', save_photo:'Guardar Foto',
+    library_title:'Biblioteca de CMAs',
+    library_intro:'CMAs guardados. Haz clic para cargar. Solo guardados en este navegador.',
+    no_saved:'Aún no hay CMAs guardados', close:'Cerrar',
+    net_label_sale:'Precio de Venta', net_label_less:'Menos:',
+    net_label_listing_comm:'Comisión del Listing', net_label_buyer_comm:'Comisión del Comprador',
+    net_label_concessions:'Concesiones al Comprador', net_label_title:'Título y Escrow',
+    net_label_rec:'Registro / Varios', net_label_warranty:'Garantía de Hogar',
+    net_label_misc:'Otras Tarifas', net_label_payoff:'Pago de Hipoteca',
+    net_label_heloc:'2do Gravamen / HELOC', net_label_tax:'Impuestos Prorrateados',
+    net_label_hoa:'HOA Prorrateado', net_label_subtotal:'Subtotal',
+    net_label_net:'Ganancia Neta Estimada',
+    roi_recommended:'Inversión Pre-Venta Recomendada',
+    roi_projected:'Aumento estimado en precio de venta de aproximadamente',
+    roi_resulting:'resultando en una ganancia neta estimada de',
+    roi_after:'después de costos. Esto representa un',
+    roi_return:'de retorno sobre el trabajo realizado antes de listar.'
+  }
+};
+let lang = localStorage.getItem('cma_lang') || 'en';
+
+function setLang(l){
+  lang = l;
+  localStorage.setItem('cma_lang', l);
+  document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
+  applyTranslations();
+  renderComps();
+  renderReport();
+}
+
+function applyTranslations(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key = el.dataset.t;
+    if(T[lang][key]) el.textContent = T[lang][key];
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(el=>{
+    const key = el.dataset.tPlaceholder;
+    if(T[lang][key]) el.placeholder = T[lang][key];
+  });
+}
+
+/* =========== AUTH =========== */
+const ACCESS = "millan2026";
+function checkPwd(){
+  const v = document.getElementById('pwd').value;
+  if(v === ACCESS){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    localStorage.setItem('cma_auth','1');
+    initApp();
+  } else {
+    document.getElementById('pwdErr').textContent = lang==='es'?'Código incorrecto':'Incorrect access code';
+  }
+}
+document.getElementById('pwd').addEventListener('keypress',e=>{if(e.key==='Enter')checkPwd()});
+if(localStorage.getItem('cma_auth')==='1'){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').classList.add('active');
+}
+
+/* =========== STATE =========== */
+let comps = [];
+let strategy = 'market';
+let map, markersLayer;
+let heroPhoto = null;
+let headshot = null;
+let currentPhotoCompId = null;
+
+/* =========== TABS =========== */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+/* =========== STRATEGY =========== */
+document.querySelectorAll('.strategy-opt').forEach(s=>{
+  s.addEventListener('click',()=>{
+    document.querySelectorAll('.strategy-opt').forEach(x=>x.classList.remove('active'));
+    s.classList.add('active');
+    strategy = s.dataset.strategy;
+    renderReport();
+  });
+});
+
+/* =========== INIT =========== */
+function initApp(){
+  // Load saved branding
+  const brand = JSON.parse(localStorage.getItem('cma_branding')||'{}');
+  if(brand.agent) document.getElementById('bAgent').value = brand.agent;
+  if(brand.brokerage) document.getElementById('bBrokerage').value = brand.brokerage;
+  if(brand.phone) document.getElementById('bPhone').value = brand.phone;
+  if(brand.email) document.getElementById('bEmail').value = brand.email;
+  if(brand.video) document.getElementById('bVideo').value = brand.video;
+  if(brand.headshot){
+    headshot = brand.headshot;
+    document.getElementById('headshotPreview').innerHTML = `<img src="${headshot}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:1px solid var(--line)">`;
+  }
+
+  applyTranslations();
+
+  if(!map){
+    map = L.map('map',{scrollWheelZoom:false}).setView([40.3,-111.85],10);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+      attribution:'&copy; OpenStreetMap &copy; CARTO',
+      maxZoom:19
+    }).addTo(map);
+    markersLayer = L.layerGroup().addTo(map);
+  }
+  renderReport();
+
+  // Check for client view mode in URL
+  if(window.location.hash === '#view'){
+    document.body.classList.add('client-mode');
+  }
+}
+
+/* =========== BRANDING / PHOTOS =========== */
+function loadHeadshot(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    headshot = ev.target.result;
+    document.getElementById('headshotPreview').innerHTML = `<img src="${headshot}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:1px solid var(--line)">`;
+    saveBranding();
+    renderReport();
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadHeroPhoto(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    heroPhoto = ev.target.result;
+    document.getElementById('heroPreview').innerHTML = `<img src="${heroPhoto}" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--line);margin-top:8px">`;
+    renderReport();
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveBranding(){
+  const data = {
+    agent: document.getElementById('bAgent').value,
+    brokerage: document.getElementById('bBrokerage').value,
+    phone: document.getElementById('bPhone').value,
+    email: document.getElementById('bEmail').value,
+    video: document.getElementById('bVideo').value,
+    headshot: headshot
+  };
+  try{
+    localStorage.setItem('cma_branding', JSON.stringify(data));
+  } catch(e){
+    console.warn('Branding too large for localStorage, headshot may not persist');
+  }
+}
+
+/* =========== CSV UPLOAD =========== */
+const drop = document.getElementById('drop');
+const csvInput = document.getElementById('csv');
+['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('drag')}));
+['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('drag')}));
+drop.addEventListener('drop',ev=>{
+  const f = ev.dataTransfer.files[0];
+  if(f) parseCSV(f);
+});
+csvInput.addEventListener('change',e=>{
+  const f = e.target.files[0];
+  if(f) parseCSV(f);
+});
+
+function parseCSV(file){
+  Papa.parse(file,{
+    header:true,
+    skipEmptyLines:true,
+    complete:res=>{
+      const rows = res.data.map(r=>normalizeRow(r)).filter(r=>r.address);
+      comps = comps.concat(rows);
+      renderComps();
+      renderReport();
+    }
+  });
+}
+
+function normalizeRow(r){
+  const get = (...keys)=>{ for(const k of keys){ if(r[k]!==undefined && r[k]!=='') return r[k] } return '' };
+  return {
+    id: Math.random().toString(36).slice(2,9),
+    included: true, photo: null,
+    address: get('address','Address','ADDRESS','street','Street'),
+    status: (get('status','Status','STATUS')||'sold').toLowerCase().trim(),
+    price: parseFloat(get('price','Price','PRICE','sold_price','list_price'))||0,
+    beds: parseFloat(get('beds','Beds','BEDS','bedrooms'))||0,
+    baths: parseFloat(get('baths','Baths','BATHS','bathrooms'))||0,
+    sqft: parseFloat(get('sqft','Sqft','SQFT','square_feet','above_grade'))||0,
+    basement_sqft: parseFloat(get('basement_sqft','basement','Basement','finished_basement'))||0,
+    garage: parseFloat(get('garage','Garage','garage_stalls'))||0,
+    year: parseInt(get('year','Year','year_built','YearBuilt'))||0,
+    lot: parseFloat(get('lot','Lot','lot_size','acres'))||0,
+    condition: parseInt(get('condition','Condition'))||0,
+    distance: parseFloat(get('distance','Distance','miles'))||0,
+    lat: parseFloat(get('lat','Lat','latitude'))||null,
+    lng: parseFloat(get('lng','Lng','longitude','lon'))||null,
+    sold_date: get('sold_date','SoldDate','date')
+  };
+}
+
+/* =========== SAMPLE DATA =========== */
+function loadSampleData(){
+  document.getElementById('sAddr').value = '9142 N Kilkenny Way';
+  document.getElementById('sCity').value = 'Eagle Mountain';
+  document.getElementById('sBeds').value = 4;
+  document.getElementById('sBaths').value = 2.5;
+  document.getElementById('sSqft').value = 2400;
+  document.getElementById('sBasement').value = 0;
+  document.getElementById('sGarage').value = 2;
+  document.getElementById('sYear').value = 2018;
+  document.getElementById('sLot').value = 0.18;
+  document.getElementById('sLat').value = 40.3683;
+  document.getElementById('sLng').value = -112.0094;
+
+  comps = [
+    {id:'s1',included:true,photo:null,address:'8902 N Lakeshire Dr',status:'sold',price:585000,beds:4,baths:2.5,sqft:2380,basement_sqft:0,garage:2,year:2017,lot:0.17,condition:0,distance:0.3,lat:40.371,lng:-112.012,sold_date:'2026-02-15'},
+    {id:'s2',included:true,photo:null,address:'9215 N Eastlake Pkwy',status:'sold',price:612000,beds:4,baths:3,sqft:2550,basement_sqft:400,garage:2,year:2019,lot:0.19,condition:1,distance:0.5,lat:40.367,lng:-112.005,sold_date:'2026-01-28'},
+    {id:'s3',included:true,photo:null,address:'8754 N Westview Ct',status:'sold',price:560000,beds:3,baths:2.5,sqft:2280,basement_sqft:0,garage:2,year:2016,lot:0.16,condition:0,distance:0.4,lat:40.373,lng:-112.018,sold_date:'2026-03-02'},
+    {id:'s4',included:true,photo:null,address:'9301 N Mount Airey',status:'pending',price:599000,beds:4,baths:2.5,sqft:2420,basement_sqft:0,garage:2,year:2018,lot:0.18,condition:1,distance:0.2,lat:40.369,lng:-112.008,sold_date:''},
+    {id:'s5',included:true,photo:null,address:'8645 N Foothill Blvd',status:'pending',price:625000,beds:4,baths:3,sqft:2600,basement_sqft:600,garage:3,year:2020,lot:0.22,condition:1,distance:0.7,lat:40.375,lng:-112.022,sold_date:''},
+    {id:'s6',included:true,photo:null,address:'9088 N Pony Express',status:'active',price:615000,beds:4,baths:2.5,sqft:2440,basement_sqft:0,garage:2,year:2018,lot:0.18,condition:0,distance:0.3,lat:40.366,lng:-112.011,sold_date:''},
+    {id:'s7',included:true,photo:null,address:'8830 N Wagonwheel Dr',status:'active',price:639000,beds:4,baths:3,sqft:2500,basement_sqft:300,garage:2,year:2019,lot:0.20,condition:1,distance:0.6,lat:40.372,lng:-112.016,sold_date:''}
+  ];
+  document.getElementById('daysOnMarket').value = 18;
+  document.getElementById('trendNote').value = lang==='es'
+    ? 'Inventario reduciéndose, mayor velocidad de absorción en primavera'
+    : 'Inventory tightening, faster absorption in spring window';
+  document.getElementById('narrative').value = lang==='es'
+    ? 'Basado en siete transacciones recientes en un radio de media milla, esta casa está en el rango de precios más activo de Eagle Mountain. El mercado está respondiendo bien a casas entre $580K y $625K.'
+    : 'Based on seven recent transactions within a half-mile radius, this home sits in the heart of Eagle Mountain\'s most active price band. The market is responding well to homes between $580K and $625K.';
+  document.getElementById('netPayoff').value = 320000;
+  document.getElementById('netSale').value = 605000;
+  renderComps();
+  renderReport();
+}
+
+/* =========== TEMPLATE DOWNLOAD =========== */
+function downloadTemplate(){
+  const headers = 'address,status,price,beds,baths,sqft,basement_sqft,garage,year,lot,condition,distance,lat,lng,sold_date';
+  const example = '"123 N Example Way, City, UT",sold,585000,4,2.5,2380,0,2,2018,0.17,0,0.3,40.371,-112.012,2026-02-15';
+  const blob = new Blob([headers+'\n'+example],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cma_comp_template.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* =========== MANUAL ADD =========== */
+function addManualComp(){
+  const newComp = {
+    id: Math.random().toString(36).slice(2,9),
+    included: true, photo: null,
+    address: 'New Comp '+(comps.length+1),
+    status: 'sold',
+    price: 0, beds: 0, baths: 0, sqft: 0, basement_sqft: 0,
+    garage: 0, year: 0, lot: 0, condition: 0, distance: 0,
+    lat: null, lng: null, sold_date: ''
+  };
+  comps.push(newComp);
+  renderComps();
+}
+
+/* =========== PHOTO MODAL =========== */
+function openPhotoModal(id){
+  currentPhotoCompId = id;
+  const c = comps.find(x=>x.id===id);
+  document.getElementById('photoModalAddr').textContent = c?.address || '';
+  document.getElementById('photoUpload').value = '';
+  document.getElementById('photoModal').classList.add('active');
+}
+function closePhotoModal(){
+  document.getElementById('photoModal').classList.remove('active');
+  currentPhotoCompId = null;
+}
+function savePhotoModal(){
+  const file = document.getElementById('photoUpload').files[0];
+  if(!file || !currentPhotoCompId){ closePhotoModal(); return; }
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    const c = comps.find(x=>x.id===currentPhotoCompId);
+    if(c){ c.photo = ev.target.result; renderComps(); renderReport(); }
+    closePhotoModal();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* =========== ADJUSTMENT MATH =========== */
+function getAdjustments(){
+  return {
+    sqft: parseFloat(document.getElementById('adjSqft').value)||0,
+    basement: parseFloat(document.getElementById('adjBasement').value)||0,
+    bed: parseFloat(document.getElementById('adjBed').value)||0,
+    bath: parseFloat(document.getElementById('adjBath').value)||0,
+    garage: parseFloat(document.getElementById('adjGarage').value)||0,
+    lot: parseFloat(document.getElementById('adjLot').value)||0,
+    year: parseFloat(document.getElementById('adjYear').value)||0,
+    cond: parseFloat(document.getElementById('adjCond').value)||0
+  };
+}
+
+function getSubject(){
+  return {
+    sqft: parseFloat(document.getElementById('sSqft').value)||0,
+    basement: parseFloat(document.getElementById('sBasement').value)||0,
+    beds: parseFloat(document.getElementById('sBeds').value)||0,
+    baths: parseFloat(document.getElementById('sBaths').value)||0,
+    garage: parseFloat(document.getElementById('sGarage').value)||0,
+    lot: parseFloat(document.getElementById('sLot').value)||0,
+    year: parseInt(document.getElementById('sYear').value)||0,
+    cond: parseInt(document.getElementById('sCond').value)||0
+  };
+}
+
+function adjustComp(comp){
+  const adj = getAdjustments();
+  const subj = getSubject();
+  let delta = 0;
+  delta += (subj.sqft - comp.sqft) * adj.sqft;
+  delta += (subj.basement - comp.basement_sqft) * adj.basement;
+  delta += (subj.beds - comp.beds) * adj.bed;
+  delta += (subj.baths - comp.baths) * adj.bath;
+  delta += (subj.garage - comp.garage) * adj.garage;
+  delta += (subj.lot - comp.lot) * adj.lot;
+  if(subj.year && comp.year) delta += (subj.year - comp.year) * adj.year;
+  delta += (subj.cond - comp.condition) * adj.cond;
+  return {delta, adjusted: comp.price + delta};
+}
+
+/* =========== RENDER COMPS =========== */
+function renderComps(){
+  const list = document.getElementById('compList');
+  if(comps.length === 0){
+    list.innerHTML = `<div class="empty">${T[lang].no_comps}</div>`;
+    return;
+  }
+  list.innerHTML = comps.map(c=>{
+    const {adjusted} = adjustComp(c);
+    const photoHtml = c.photo
+      ? `<div class="comp-photo-thumb" onclick="openPhotoModal('${c.id}')"><img src="${c.photo}"></div>`
+      : `<div class="comp-photo-thumb" onclick="openPhotoModal('${c.id}')">+</div>`;
+    const statusLabel = T[lang]['legend_'+c.status] || c.status;
+    return `
+      <div class="comp-card ${c.included?'':'excluded'}" data-id="${c.id}">
+        <div class="comp-toggle ${c.included?'on':''}" onclick="toggleComp('${c.id}')"></div>
+        ${photoHtml}
+        <div class="comp-info">
+          <div class="comp-addr">${c.address}</div>
+          <div class="comp-meta">
+            <span class="comp-status status-${c.status}">${statusLabel}</span>
+            <span>${c.beds}bd / ${c.baths}ba</span>
+            <span>${c.sqft.toLocaleString()} sqft</span>
+            ${c.basement_sqft?`<span>+${c.basement_sqft} bsmt</span>`:''}
+            ${c.distance?`<span>${c.distance} mi</span>`:''}
+          </div>
+        </div>
+        <div class="comp-price">
+          $${c.price.toLocaleString('en-US',{maximumFractionDigits:0})}
+          <small>${lang==='es'?'precio':'list/sold'}</small>
+          <span class="comp-adj">${lang==='es'?'Aj':'Adj'}: $${adjusted.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleComp(id){
+  const c = comps.find(x=>x.id===id);
+  if(c){ c.included = !c.included; renderComps(); renderReport(); }
+}
+
+/* =========== PRICE RANGE =========== */
+function calculatePriceRange(){
+  const included = comps.filter(c=>c.included);
+  if(included.length === 0) return null;
+  const adjustedPrices = included.map(c=>adjustComp(c).adjusted).sort((a,b)=>a-b);
+  const low = adjustedPrices[0];
+  const high = adjustedPrices[adjustedPrices.length-1];
+  const median = adjustedPrices[Math.floor(adjustedPrices.length/2)];
+  const avg = adjustedPrices.reduce((s,p)=>s+p,0)/adjustedPrices.length;
+
+  let suggested;
+  if(strategy === 'conservative') suggested = (low + median)/2;
+  else if(strategy === 'aggressive') suggested = (median + high)/2;
+  else suggested = (median + avg)/2;
+
+  return {
+    low: Math.round(low/1000)*1000,
+    high: Math.round(high/1000)*1000,
+    suggested: Math.round(suggested/1000)*1000,
+    median: Math.round(median/1000)*1000,
+    avg: Math.round(avg/1000)*1000,
+    count: included.length
+  };
+}
+
+/* =========== ROI =========== */
+const roiMultipliers = {paint:1.6, floor:1.4, curb:2.2, stage:3.0, kitchen:1.8, bath:1.7, other:1.0};
+
+function calculateROI(){
+  const inputs = {
+    paint: parseFloat(document.getElementById('roiPaint').value)||0,
+    floor: parseFloat(document.getElementById('roiFloor').value)||0,
+    curb: parseFloat(document.getElementById('roiCurb').value)||0,
+    stage: parseFloat(document.getElementById('roiStage').value)||0,
+    kitchen: parseFloat(document.getElementById('roiKitchen').value)||0,
+    bath: parseFloat(document.getElementById('roiBath').value)||0,
+    other: parseFloat(document.getElementById('roiOther').value)||0
+  };
+  const totalSpend = Object.values(inputs).reduce((s,v)=>s+v,0);
+  if(totalSpend === 0){
+    document.getElementById('roiResult').style.display = 'none';
+    document.getElementById('roiSection').style.display = 'none';
+    return;
+  }
+  const totalReturn = Object.keys(inputs).reduce((s,k)=>s + inputs[k]*roiMultipliers[k], 0);
+  const netGain = totalReturn - totalSpend;
+  const roiPct = ((netGain/totalSpend)*100).toFixed(0);
+
+  const result = document.getElementById('roiResult');
+  result.style.display = 'block';
+  result.innerHTML = `
+    <span class="roi-num">+$${Math.round(netGain).toLocaleString()}</span>
+    <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px">${lang==='es'?'Ganancia neta estimada sobre':'Estimated net gain on'} $${totalSpend.toLocaleString()} ${lang==='es'?'invertidos':'invested'}</div>
+    <div style="font-size:11px;color:var(--muted)">${lang==='es'?'Retorno proyectado':'Projected return'}: $${Math.round(totalReturn).toLocaleString()} · ROI ${roiPct}%</div>
+  `;
+
+  document.getElementById('roiSection').style.display = 'block';
+  document.getElementById('rROI').innerHTML = `
+    <div style="background:var(--accent-soft);padding:20px;border-left:3px solid var(--accent)">
+      <div style="font-family:'Fraunces',serif;font-size:24px;color:var(--accent);margin-bottom:6px">${T[lang].roi_recommended}: $${totalSpend.toLocaleString()}</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--ink-soft)">${T[lang].roi_projected} <strong>$${Math.round(totalReturn).toLocaleString()}</strong>, ${T[lang].roi_resulting} <strong>$${Math.round(netGain).toLocaleString()}</strong> ${T[lang].roi_after} ${roiPct}% ${T[lang].roi_return}</div>
+    </div>
+  `;
+}
+
+/* =========== NET SHEET =========== */
+function calculateNet(){
+  let sale = parseFloat(document.getElementById('netSale').value);
+  if(!sale){
+    const range = calculatePriceRange();
+    if(range){ sale = range.suggested; document.getElementById('netSale').value = sale; }
+  }
+  if(!sale) return;
+
+  const conc = parseFloat(document.getElementById('netConc').value)||0;
+  const listCommPct = parseFloat(document.getElementById('netListComm').value)||0;
+  const buyCommPct = parseFloat(document.getElementById('netBuyComm').value)||0;
+  const title = parseFloat(document.getElementById('netTitle').value)||0;
+  const rec = parseFloat(document.getElementById('netRec').value)||0;
+  const warr = parseFloat(document.getElementById('netWarr').value)||0;
+  const misc = parseFloat(document.getElementById('netMisc').value)||0;
+  const payoff = parseFloat(document.getElementById('netPayoff').value)||0;
+  const heloc = parseFloat(document.getElementById('netHeloc').value)||0;
+  const tax = parseFloat(document.getElementById('netTax').value)||0;
+  const hoa = parseFloat(document.getElementById('netHoa').value)||0;
+
+  const listComm = sale * (listCommPct/100);
+  const buyComm = sale * (buyCommPct/100);
+  const totalDeductions = listComm + buyComm + conc + title + rec + warr + misc + payoff + heloc + tax + hoa;
+  const net = sale - totalDeductions;
+
+  const fmt = n=>'$'+Math.round(n).toLocaleString();
+
+  const html = `
+    <table class="net-table">
+      <tr><td class="label-cell"><strong>${T[lang].net_label_sale}</strong></td><td><strong>${fmt(sale)}</strong></td></tr>
+      <tr><td colspan="2" style="background:var(--bg);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px">${T[lang].net_label_less}</td></tr>
+      <tr class="deduction"><td class="label-cell">${T[lang].net_label_listing_comm} (${listCommPct}%)</td><td>−${fmt(listComm)}</td></tr>
+      <tr class="deduction"><td class="label-cell">${T[lang].net_label_buyer_comm} (${buyCommPct}%)</td><td>−${fmt(buyComm)}</td></tr>
+      ${conc?`<tr class="deduction"><td class="label-cell">${T[lang].net_label_concessions}</td><td>−${fmt(conc)}</td></tr>`:''}
+      <tr class="deduction"><td class="label-cell">${T[lang].net_label_title}</td><td>−${fmt(title)}</td></tr>
+      <tr class="deduction"><td class="label-cell">${T[lang].net_label_rec}</td><td>−${fmt(rec)}</td></tr>
+      <tr class="deduction"><td class="label-cell">${T[lang].net_label_warranty}</td><td>−${fmt(warr)}</td></tr>
+      ${misc?`<tr class="deduction"><td class="label-cell">${T[lang].net_label_misc}</td><td>−${fmt(misc)}</td></tr>`:''}
+      ${payoff?`<tr class="deduction"><td class="label-cell">${T[lang].net_label_payoff}</td><td>−${fmt(payoff)}</td></tr>`:''}
+      ${heloc?`<tr class="deduction"><td class="label-cell">${T[lang].net_label_heloc}</td><td>−${fmt(heloc)}</td></tr>`:''}
+      ${tax?`<tr class="deduction"><td class="label-cell">${T[lang].net_label_tax}</td><td>−${fmt(tax)}</td></tr>`:''}
+      ${hoa?`<tr class="deduction"><td class="label-cell">${T[lang].net_label_hoa}</td><td>−${fmt(hoa)}</td></tr>`:''}
+      <tr class="total-row"><td>${T[lang].net_label_net}</td><td>${fmt(net)}</td></tr>
+    </table>
+  `;
+  document.getElementById('netResult').style.display = 'block';
+  document.getElementById('netResult').innerHTML = html;
+  document.getElementById('netSection').style.display = 'block';
+  document.getElementById('rNet').innerHTML = html;
+}
+
+/* =========== VIDEO EMBED =========== */
+function getVideoEmbed(url){
+  if(!url) return null;
+  // Loom
+  const loomMatch = url.match(/loom\.com\/share\/([a-zA-Z0-9]+)/);
+  if(loomMatch) return `https://www.loom.com/embed/${loomMatch[1]}`;
+  // YouTube
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+  if(ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if(vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  return null;
+}
+
+/* =========== RENDER REPORT =========== */
+function renderReport(){
+  const addr = document.getElementById('sAddr').value;
+  const city = document.getElementById('sCity').value;
+  document.getElementById('rAddr').textContent = [addr,city].filter(x=>x).join(', ') || `— ${T[lang].address_placeholder} —`;
+  document.getElementById('rBeds').textContent = document.getElementById('sBeds').value || '—';
+  document.getElementById('rBaths').textContent = document.getElementById('sBaths').value || '—';
+  const sqft = parseFloat(document.getElementById('sSqft').value);
+  document.getElementById('rSqft').textContent = sqft ? sqft.toLocaleString() : '—';
+  document.getElementById('rYear').textContent = document.getElementById('sYear').value || '—';
+
+  // Branding
+  const agentName = document.getElementById('bAgent').value || 'Cristian Millan';
+  const brokerage = document.getElementById('bBrokerage').value || 'Real Brokerage';
+  const phone = document.getElementById('bPhone').value;
+  const email = document.getElementById('bEmail').value;
+  document.getElementById('rAgentName').textContent = agentName;
+  document.getElementById('rBrokerage').textContent = brokerage;
+  document.getElementById('rContact').innerHTML = (phone||email)
+    ? `${phone||''}${phone&&email?' · ':''}${email||''}<br>`
+    : '';
+
+  // Brand block in report
+  const initials = agentName.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+  const brandBlock = headshot
+    ? `<img class="headshot" src="${headshot}">`
+    : `<div style="width:56px;height:56px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;color:var(--gold);font-style:italic">${initials}</div>`;
+  document.getElementById('reportBrand').innerHTML = `
+    ${brandBlock}
+    <div class="brand-text">
+      <div class="brand-name">${agentName}</div>
+      <div class="brand-meta">${brokerage} · Utah</div>
+    </div>
+  `;
+
+  // Hero photo
+  const heroSlot = document.getElementById('heroSlot');
+  if(heroPhoto){
+    heroSlot.innerHTML = `<img class="report-hero-photo" src="${heroPhoto}">`;
+  } else {
+    heroSlot.innerHTML = '';
+  }
+
+  // Price range
+  const range = calculatePriceRange();
+  if(range){
+    document.getElementById('rRange').innerHTML = `$${range.low.toLocaleString()} <em>${T[lang].to_word}</em> $${range.high.toLocaleString()}`;
+    document.getElementById('rMid').innerHTML = `${T[lang].suggested_list}: $${range.suggested.toLocaleString()}`;
+    // Auto-populate net sheet sale price if empty
+    if(!document.getElementById('netSale').value){
+      document.getElementById('netSale').value = range.suggested;
+    }
+  } else {
+    document.getElementById('rRange').innerHTML = `$— <em>${T[lang].to_word}</em> $—`;
+    document.getElementById('rMid').innerHTML = `${T[lang].suggested_list}: $—`;
+  }
+
+  // Narrative
+  const userNarrative = document.getElementById('narrative').value;
+  if(userNarrative){
+    document.getElementById('rNarrative').textContent = userNarrative;
+  } else if(range){
+    if(lang==='es'){
+      document.getElementById('rNarrative').textContent = `Basado en ${range.count} ${range.count===1?'propiedad comparable':'propiedades comparables'} en el área inmediata, esta casa está posicionada en una banda de precios de ${((range.high-range.low)/range.low*100).toFixed(0)}%. La estrategia ${strategy==='conservative'?'conservadora':strategy==='aggressive'?'agresiva':'de mercado'} sugiere listar a $${range.suggested.toLocaleString()}.`;
+    } else {
+      document.getElementById('rNarrative').textContent = `Based on ${range.count} comparable ${range.count===1?'property':'properties'} within the immediate market area, this home is positioned within a ${((range.high-range.low)/range.low*100).toFixed(0)}% price band. The ${strategy} pricing strategy suggests listing at $${range.suggested.toLocaleString()}, calibrated to current absorption rates and recent transaction velocity.`;
+    }
+  } else {
+    document.getElementById('rNarrative').textContent = T[lang].narrative_default;
+  }
+
+  // DOM and trend
+  const dom = document.getElementById('daysOnMarket').value;
+  const trend = document.getElementById('trendNote').value;
+  document.getElementById('rDOM').innerHTML = dom ? `${dom} ${T[lang].days_on_market}` : `— ${T[lang].days_on_market}`;
+  document.getElementById('rTrend').textContent = trend || `— ${T[lang].trend_word} —`;
+
+  // Video
+  const videoUrl = document.getElementById('bVideo').value;
+  const embed = getVideoEmbed(videoUrl);
+  if(embed){
+    document.getElementById('videoSection').style.display = 'block';
+    document.getElementById('videoWrap').innerHTML = `<iframe src="${embed}" frameborder="0" allowfullscreen></iframe>`;
+  } else {
+    document.getElementById('videoSection').style.display = 'none';
+  }
+
+  // Comp cards grid
+  const inc = comps.filter(c=>c.included);
+  const grid = document.getElementById('rCompGrid');
+  if(inc.length === 0){
+    grid.innerHTML = '';
+  } else {
+    grid.innerHTML = inc.map(c=>{
+      const {adjusted} = adjustComp(c);
+      const statusLabel = T[lang]['legend_'+c.status] || c.status;
+      const photoHtml = c.photo
+        ? `<img src="${c.photo}">`
+        : `<div>${lang==='es'?'Sin Foto':'No Photo'}</div>`;
+      return `
+        <div class="report-comp-card">
+          <div class="img">${photoHtml}</div>
+          <div class="info">
+            <div class="ad">${c.address}</div>
+            <div class="mt">
+              <span class="comp-status status-${c.status}" style="font-size:8px">${statusLabel}</span>
+              <span>${c.beds}bd/${c.baths}ba</span>
+              <span>${c.sqft.toLocaleString()} sqft</span>
+            </div>
+            <div class="pr">$${c.price.toLocaleString('en-US',{maximumFractionDigits:0})}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Table
+  const tbody = document.querySelector('#rTable tbody');
+  if(inc.length === 0){
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);font-style:italic;padding:24px">${T[lang].add_comps_msg}</td></tr>`;
+  } else {
+    tbody.innerHTML = inc.map(c=>{
+      const {adjusted} = adjustComp(c);
+      const statusLabel = T[lang]['legend_'+c.status] || c.status;
+      return `<tr>
+        <td>${c.address}</td>
+        <td><span class="comp-status status-${c.status}">${statusLabel}</span></td>
+        <td class="num">${c.sqft.toLocaleString()}</td>
+        <td class="num">$${c.price.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+        <td class="num"><strong>$${Math.round(adjusted).toLocaleString()}</strong></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Date
+  const dateOpts = {year:'numeric',month:'long',day:'numeric'};
+  document.getElementById('rDate').textContent = new Date().toLocaleDateString(lang==='es'?'es-MX':'en-US',dateOpts);
+
+  updateMap();
+  saveBranding();
+}
+
+/* =========== MAP =========== */
+function updateMap(){
+  if(!map) return;
+  markersLayer.clearLayers();
+  const subjLat = parseFloat(document.getElementById('sLat').value);
+  const subjLng = parseFloat(document.getElementById('sLng').value);
+  const bounds = [];
+
+  if(subjLat && subjLng){
+    const subjIcon = L.divIcon({
+      className:'',
+      html:`<div style="width:24px;height:24px;background:#0e0e0e;border:3px solid #a88b56;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>`,
+      iconSize:[24,24],iconAnchor:[12,12]
+    });
+    L.marker([subjLat,subjLng],{icon:subjIcon})
+      .bindPopup(`<strong>${T[lang].legend_subject}</strong><br>${document.getElementById('sAddr').value}`)
+      .addTo(markersLayer);
+    bounds.push([subjLat,subjLng]);
+  }
+
+  comps.filter(c=>c.included && c.lat && c.lng).forEach(c=>{
+    const colors = {sold:'#1a3a2e',pending:'#a88b56',active:'#a3502a'};
+    const icon = L.divIcon({
+      className:'',
+      html:`<div style="width:16px;height:16px;background:${colors[c.status]||'#666'};border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`,
+      iconSize:[16,16],iconAnchor:[8,8]
+    });
+    L.marker([c.lat,c.lng],{icon})
+      .bindPopup(`<strong>${c.address}</strong><br>${c.status.toUpperCase()} · $${c.price.toLocaleString()}<br>${c.beds}bd/${c.baths}ba · ${c.sqft.toLocaleString()} sqft`)
+      .addTo(markersLayer);
+    bounds.push([c.lat,c.lng]);
+  });
+
+  if(bounds.length > 0) map.fitBounds(bounds,{padding:[40,40],maxZoom:14});
+}
+
+/* =========== SAVE / LOAD CMAS =========== */
+function getAllSavedCMAs(){
+  return JSON.parse(localStorage.getItem('cma_library')||'[]');
+}
+
+function saveCurrentCMA(){
+  const addr = document.getElementById('sAddr').value;
+  if(!addr){
+    alert(lang==='es'?'Agrega una dirección antes de guardar':'Add an address before saving');
+    return;
+  }
+  const cma = {
+    id: Math.random().toString(36).slice(2,10),
+    saved_at: new Date().toISOString(),
+    address: addr,
+    city: document.getElementById('sCity').value,
+    subject: {
+      beds: document.getElementById('sBeds').value,
+      baths: document.getElementById('sBaths').value,
+      sqft: document.getElementById('sSqft').value,
+      basement: document.getElementById('sBasement').value,
+      garage: document.getElementById('sGarage').value,
+      year: document.getElementById('sYear').value,
+      lot: document.getElementById('sLot').value,
+      cond: document.getElementById('sCond').value,
+      lat: document.getElementById('sLat').value,
+      lng: document.getElementById('sLng').value
+    },
+    comps: comps,
+    adjustments: getAdjustments(),
+    strategy: strategy,
+    narrative: document.getElementById('narrative').value,
+    dom: document.getElementById('daysOnMarket').value,
+    trend: document.getElementById('trendNote').value,
+    netInputs: {
+      sale: document.getElementById('netSale').value,
+      conc: document.getElementById('netConc').value,
+      listComm: document.getElementById('netListComm').value,
+      buyComm: document.getElementById('netBuyComm').value,
+      title: document.getElementById('netTitle').value,
+      rec: document.getElementById('netRec').value,
+      warr: document.getElementById('netWarr').value,
+      misc: document.getElementById('netMisc').value,
+      payoff: document.getElementById('netPayoff').value,
+      heloc: document.getElementById('netHeloc').value,
+      tax: document.getElementById('netTax').value,
+      hoa: document.getElementById('netHoa').value
+    },
+    heroPhoto: heroPhoto
+  };
+  const library = getAllSavedCMAs();
+  library.unshift(cma);
+  // Cap at 20 to avoid localStorage blowout
+  if(library.length > 20) library.length = 20;
+  try{
+    localStorage.setItem('cma_library', JSON.stringify(library));
+    alert(lang==='es'?'CMA guardado':'CMA saved');
+  } catch(e){
+    alert(lang==='es'?'Almacenamiento lleno. Borra CMAs antiguos.':'Storage full. Delete old CMAs.');
+  }
+}
+
+function loadCMA(id){
+  const cma = getAllSavedCMAs().find(c=>c.id===id);
+  if(!cma) return;
+  document.getElementById('sAddr').value = cma.address;
+  document.getElementById('sCity').value = cma.city||'';
+  Object.keys(cma.subject).forEach(k=>{
+    const map = {beds:'sBeds',baths:'sBaths',sqft:'sSqft',basement:'sBasement',garage:'sGarage',year:'sYear',lot:'sLot',cond:'sCond',lat:'sLat',lng:'sLng'};
+    if(map[k]) document.getElementById(map[k]).value = cma.subject[k]||'';
+  });
+  comps = cma.comps || [];
+  if(cma.adjustments){
+    document.getElementById('adjSqft').value = cma.adjustments.sqft;
+    document.getElementById('adjBasement').value = cma.adjustments.basement;
+    document.getElementById('adjBed').value = cma.adjustments.bed;
+    document.getElementById('adjBath').value = cma.adjustments.bath;
+    document.getElementById('adjGarage').value = cma.adjustments.garage;
+    document.getElementById('adjLot').value = cma.adjustments.lot;
+    document.getElementById('adjYear').value = cma.adjustments.year;
+    document.getElementById('adjCond').value = cma.adjustments.cond;
+  }
+  strategy = cma.strategy || 'market';
+  document.querySelectorAll('.strategy-opt').forEach(x=>x.classList.toggle('active', x.dataset.strategy===strategy));
+  document.getElementById('narrative').value = cma.narrative||'';
+  document.getElementById('daysOnMarket').value = cma.dom||'';
+  document.getElementById('trendNote').value = cma.trend||'';
+  if(cma.netInputs){
+    const ni = cma.netInputs;
+    document.getElementById('netSale').value = ni.sale||'';
+    document.getElementById('netConc').value = ni.conc||0;
+    document.getElementById('netListComm').value = ni.listComm||3;
+    document.getElementById('netBuyComm').value = ni.buyComm||2.5;
+    document.getElementById('netTitle').value = ni.title||1800;
+    document.getElementById('netRec').value = ni.rec||350;
+    document.getElementById('netWarr').value = ni.warr||600;
+    document.getElementById('netMisc').value = ni.misc||0;
+    document.getElementById('netPayoff').value = ni.payoff||0;
+    document.getElementById('netHeloc').value = ni.heloc||0;
+    document.getElementById('netTax').value = ni.tax||0;
+    document.getElementById('netHoa').value = ni.hoa||0;
+  }
+  heroPhoto = cma.heroPhoto || null;
+  if(heroPhoto){
+    document.getElementById('heroPreview').innerHTML = `<img src="${heroPhoto}" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--line);margin-top:8px">`;
+  } else {
+    document.getElementById('heroPreview').innerHTML = '';
+  }
+  renderComps();
+  renderReport();
+  closeSavedModal();
+}
+
+function deleteCMA(id, e){
+  e.stopPropagation();
+  if(!confirm(lang==='es'?'¿Borrar este CMA?':'Delete this CMA?')) return;
+  const lib = getAllSavedCMAs().filter(c=>c.id!==id);
+  localStorage.setItem('cma_library', JSON.stringify(lib));
+  renderSavedList();
+}
+
+function openSavedModal(){
+  renderSavedList();
+  document.getElementById('savedModal').classList.add('active');
+}
+function closeSavedModal(){
+  document.getElementById('savedModal').classList.remove('active');
+}
+
+function renderSavedList(){
+  const list = document.getElementById('savedList');
+  const lib = getAllSavedCMAs();
+  if(lib.length === 0){
+    list.innerHTML = `<div class="empty" style="padding:20px">${T[lang].no_saved}</div>`;
+    return;
+  }
+  list.innerHTML = lib.map(c=>{
+    const date = new Date(c.saved_at).toLocaleDateString(lang==='es'?'es-MX':'en-US');
+    return `
+      <div class="saved-item" onclick="loadCMA('${c.id}')">
+        <div class="saved-info">
+          <div class="saved-addr">${c.address}${c.city?', '+c.city:''}</div>
+          <div class="saved-meta">${date} · ${(c.comps||[]).length} comps</div>
+        </div>
+        <div class="saved-actions">
+          <button class="btn-ghost btn btn-small" onclick="deleteCMA('${c.id}', event)">×</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* =========== LIVE UPDATES =========== */
+['sAddr','sCity','sBeds','sBaths','sSqft','sBasement','sGarage','sYear','sLot','sLat','sLng','sCond','adjSqft','adjBasement','adjBed','adjBath','adjGarage','adjLot','adjYear','adjCond','narrative','daysOnMarket','trendNote','bAgent','bBrokerage','bPhone','bEmail','bVideo']
+.forEach(id=>{
+  const el = document.getElementById(id);
+  if(el){
+    el.addEventListener('input',()=>{ renderComps(); renderReport(); });
+    el.addEventListener('change',()=>{ renderComps(); renderReport(); });
+  }
+});
+
+/* =========== EXPORT PDF =========== */
+function exportPDF(){
+  const report = document.getElementById('report');
+  const addr = document.getElementById('sAddr').value || 'Subject';
+  const filename = `CMA_${addr.replace(/[^a-z0-9]/gi,'_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+  if(map) map.invalidateSize();
+  setTimeout(()=>{
+    html2pdf().set({
+      margin:[10,10,10,10],
+      filename:filename,
+      image:{type:'jpeg',quality:0.96},
+      html2canvas:{scale:2,useCORS:true,letterRendering:true,backgroundColor:'#ffffff'},
+      jsPDF:{unit:'mm',format:'letter',orientation:'portrait'},
+      pagebreak:{mode:['avoid-all','css','legacy']}
+    }).from(report).save();
+  },500);
+}
+
+/* =========== RESET =========== */
+function resetAll(){
+  if(!confirm(lang==='es'?'¿Borrar todos los datos y empezar nuevo?':'Clear all data and start a new CMA?')) return;
+  document.querySelectorAll('input,textarea').forEach(el=>{
+    if(el.id!=='pwd' && !el.id.startsWith('adj') && !el.id.startsWith('b')) el.value = '';
+  });
+  // Reset net sheet defaults
+  document.getElementById('netListComm').value = 3;
+  document.getElementById('netBuyComm').value = 2.5;
+  document.getElementById('netTitle').value = 1800;
+  document.getElementById('netRec').value = 350;
+  document.getElementById('netWarr').value = 600;
+  document.querySelectorAll('.strategy-opt').forEach(x=>x.classList.remove('active'));
+  document.querySelector('[data-strategy="market"]').classList.add('active');
+  strategy = 'market';
+  comps = [];
+  heroPhoto = null;
+  document.getElementById('heroPreview').innerHTML = '';
+  document.getElementById('roiResult').style.display = 'none';
+  document.getElementById('roiSection').style.display = 'none';
+  document.getElementById('netResult').style.display = 'none';
+  document.getElementById('netSection').style.display = 'none';
+  renderComps();
+  renderReport();
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+  document.querySelector('[data-tab="brand"]').classList.add('active');
+  document.getElementById('panel-brand').classList.add('active');
+}
+
+/* Init if already authed */
+if(document.getElementById('app').classList.contains('active')){
+  setLang(lang);
+  initApp();
+}
+</script>
+</body>
+</html>
