@@ -80,6 +80,79 @@ section.narrow{max-width:920px}
 .strategy-toggle button:last-child{border-right:none}
 .strategy-toggle button.active{background:var(--gold);color:var(--ink)}
 
+/* PRICE EXPLAINER */
+.price-explainer{margin-top:32px;border:1px solid var(--line);background:var(--paper);border-radius:2px;overflow:hidden}
+.price-explainer summary{padding:18px 24px;cursor:pointer;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink-soft);list-style:none;display:flex;align-items:center;justify-content:space-between;transition:background .15s}
+.price-explainer summary::-webkit-details-marker{display:none}
+.price-explainer summary:hover{background:var(--accent-soft)}
+.price-explainer summary::after{content:'+';font-family:'Fraunces',serif;font-size:24px;color:var(--gold);font-weight:300;line-height:1;transition:transform .2s}
+.price-explainer[open] summary::after{content:'−'}
+.price-explainer .explainer-body{padding:0 24px 24px;font-size:14px;line-height:1.7;color:var(--ink-soft);font-family:'Fraunces',serif;font-style:italic}
+.price-explainer .explainer-body strong{font-family:'Inter',sans-serif;font-style:normal;color:var(--ink);font-weight:600}
+.price-explainer .explainer-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;font-style:normal;font-family:'Inter',sans-serif}
+.explainer-step{background:var(--bg);padding:14px;border-left:2px solid var(--gold)}
+.explainer-step .num{font-family:'Fraunces',serif;font-size:11px;font-style:italic;color:var(--gold);letter-spacing:0.08em;margin-bottom:4px}
+.explainer-step .lbl{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink);font-weight:600;margin-bottom:4px}
+.explainer-step .desc{font-size:12px;color:var(--ink-soft);line-height:1.5}
+@media(max-width:640px){.price-explainer .explainer-steps{grid-template-columns:1fr}.price-explainer summary{padding:14px 18px;font-size:10px}}
+
+/* NET SHEET */
+.net-sheet{background:var(--paper);border:1px solid var(--line);padding:0;margin-top:32px;overflow:hidden}
+.net-summary{background:var(--accent);color:var(--bg);padding:36px 32px;text-align:center;position:relative;overflow:hidden}
+.net-summary::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.12;pointer-events:none}
+.net-summary .net-lbl{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:12px;position:relative;z-index:1}
+.net-summary .net-amount{font-family:'Fraunces',serif;font-size:clamp(36px,7vw,56px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
+.net-summary .net-amount em{color:var(--gold);font-style:italic}
+.net-summary .net-context{font-size:13px;color:rgba(255,255,255,0.7);margin-top:14px;letter-spacing:0.05em;position:relative;z-index:1}
+.net-summary .net-context strong{font-family:'Fraunces',serif;color:var(--gold);font-weight:400;font-style:italic;letter-spacing:-0.01em}
+
+.net-breakdown{padding:24px 32px}
+.net-breakdown summary{cursor:pointer;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:6px 0}
+.net-breakdown summary::-webkit-details-marker{display:none}
+.net-breakdown summary::after{content:'+';font-family:'Fraunces',serif;font-size:22px;color:var(--gold);font-weight:300}
+.net-breakdown[open] summary::after{content:'−'}
+.net-breakdown-body{margin-top:20px}
+.net-line{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;font-feature-settings:"tnum"}
+.net-line:last-child{border-bottom:none}
+.net-line .label{color:var(--ink-soft);display:flex;flex-direction:column;gap:2px}
+.net-line .label small{font-size:10px;color:var(--muted);letter-spacing:0.05em;font-weight:400}
+.net-line .value{font-family:'Fraunces',serif;font-size:16px;letter-spacing:-0.005em}
+.net-line.deduction .value{color:var(--warn)}
+.net-line.subtotal{border-top:2px solid var(--ink);border-bottom:none;margin-top:8px;padding-top:14px;font-weight:600}
+.net-line.subtotal .value{font-size:18px;color:var(--ink)}
+.net-disclaimer{font-size:11px;color:var(--muted);font-style:italic;margin-top:18px;line-height:1.6;padding:12px;background:var(--bg);border-left:2px solid var(--line)}
+
+/* NET SHEET INTERACTIVE INPUTS */
+.net-inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;padding:18px;background:var(--bg);border-radius:2px}
+.net-input{display:flex;flex-direction:column;gap:6px}
+.net-input label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.net-input input{padding:10px 12px;border:1px solid var(--line);background:var(--paper);font-family:inherit;font-size:14px;font-feature-settings:"tnum";border-radius:2px;width:100%}
+.net-input input:focus{outline:none;border-color:var(--ink)}
+@media(max-width:640px){.net-summary{padding:28px 20px}.net-breakdown{padding:20px}.net-inputs{grid-template-columns:1fr;padding:14px}.net-line{font-size:13px}.net-line .value{font-size:15px}}
+
+/* TIMELINE */
+.timeline{margin-top:48px;position:relative}
+.timeline-line{position:absolute;left:24px;top:30px;bottom:30px;width:2px;background:linear-gradient(to bottom,var(--gold) 0%,var(--accent) 50%,var(--line) 100%)}
+.timeline-step{display:grid;grid-template-columns:48px 1fr;gap:24px;padding:16px 0;align-items:start;position:relative;z-index:1}
+.timeline-dot{width:48px;height:48px;border-radius:50%;background:var(--paper);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:18px;font-style:italic;color:var(--gold);font-weight:300;flex-shrink:0;box-shadow:0 2px 8px rgba(168,139,86,0.15)}
+.timeline-step:nth-child(3) .timeline-dot,.timeline-step:nth-child(4) .timeline-dot{border-color:var(--accent);color:var(--accent)}
+.timeline-step:nth-child(5) .timeline-dot,.timeline-step:nth-child(6) .timeline-dot{border-color:var(--ink);color:var(--ink);background:var(--ink);color:var(--gold)}
+.timeline-content{background:var(--paper);border:1px solid var(--line);padding:20px 24px;border-radius:2px;transition:border-color .15s}
+.timeline-step:hover .timeline-content{border-color:var(--ink-soft)}
+.timeline-week{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:4px;display:block}
+.timeline-title{font-family:'Fraunces',serif;font-size:20px;letter-spacing:-0.01em;margin-bottom:6px;line-height:1.2}
+.timeline-title em{color:var(--gold)}
+.timeline-desc{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.timeline-desc strong{color:var(--ink);font-weight:600}
+@media(max-width:640px){
+  .timeline-line{left:18px;top:24px;bottom:24px}
+  .timeline-step{grid-template-columns:36px 1fr;gap:16px}
+  .timeline-dot{width:36px;height:36px;font-size:14px}
+  .timeline-content{padding:16px 18px}
+  .timeline-title{font-size:17px}
+  .timeline-desc{font-size:12px}
+}
+
 /* MARKET STATS */
 .market-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:48px;background:var(--paper)}
 .market-stat{padding:32px 20px;text-align:center;border-right:1px solid var(--line)}
@@ -294,6 +367,31 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
     </div>
   </div>
 
+  <!-- PRICE EXPLAINER -->
+  <details class="price-explainer">
+    <summary>How we got to this number</summary>
+    <div class="explainer-body">
+      Pricing a condo is part science, part instinct. Here's the honest version — I averaged the recent nearby sales, weighted Newport Village (your literal neighbor at $325K) as the anchor, and adjusted for differences in size, age, and amenities. The Italian Villages comps sold higher because they have a clubhouse and pool yours doesn't have, so they set a soft ceiling. The three strategy options let you see the same data through different lenses.
+      <div class="explainer-steps">
+        <div class="explainer-step">
+          <div class="num">i.</div>
+          <div class="lbl">Conservative</div>
+          <div class="desc">Skews toward the lower comps. Faster sale, less negotiation. Best if you need certainty over maximum value.</div>
+        </div>
+        <div class="explainer-step">
+          <div class="num">ii.</div>
+          <div class="lbl">Market</div>
+          <div class="desc">Sits at the median. Balanced approach. This is where most listings land.</div>
+        </div>
+        <div class="explainer-step">
+          <div class="num">iii.</div>
+          <div class="lbl">Aggressive</div>
+          <div class="desc">Pushes toward the top comps. Maximum value potential but longer days on market expected.</div>
+        </div>
+      </div>
+    </div>
+  </details>
+
   <div class="market-stats">
     <div class="market-stat"><span class="v" id="statHigh">—</span><div class="l">Highest Sale</div></div>
     <div class="market-stat"><span class="v" id="statAvg">—</span><div class="l">Average Sale</div></div>
@@ -302,60 +400,140 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
   </div>
 </section>
 
-<!-- THE COMP STRATEGY NARRATIVE -->
-<div class="lifestyle">
-  <div class="lifestyle-inner">
-    <div class="section-eyebrow">The strategy</div>
-    <h2 class="section-title">Three condo clusters. Only <em>one</em> tells your real story.</h2>
-    <p class="section-lead">Not every "comparable" is actually comparable. Here's how each cluster relates to your unit — and which ones we'll lean on when we talk to buyers and their appraisers.</p>
+<!-- YOUR WALK-AWAY NUMBER (NET SHEET) -->
+<section id="net" class="narrow">
+  <div class="section-eyebrow">Your walk-away number</div>
+  <h2 class="section-title">After everything is paid, here's what you <em>actually pocket</em>.</h2>
+  <p class="section-lead">List price is what buyers pay. Net proceeds is what you walk away with. This is what really matters — and here are the numbers based on your suggested list price.</p>
 
-    <div class="lifestyle-grid">
-      <div class="lifestyle-card" style="border-left:3px solid var(--accent)">
-        <h4>Newport Village <em>— your true comp</em></h4>
-        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6">181 N 1200 W #103 sold for $325K in 19 days. Same complex, same year built, similar size (1,340 sqft). This is your anchor. Buyers and appraisers will start here.</p>
-        <ul>
-          <li><strong>Sold price:</strong> $325,000</li>
-          <li><strong>Sold per sqft:</strong> $243</li>
-          <li><strong>Days on market:</strong> 19</li>
-          <li><strong>Implied value at 1,310 sqft:</strong> ~$318K–$330K</li>
-        </ul>
-      </div>
-      <div class="lifestyle-card" style="border-left:3px solid var(--gold)">
-        <h4>Italian Villages <em>— your ceiling</em></h4>
-        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6">Milano and Torino Villages comps sold for $333K–$345K. They're slightly larger (1,420–1,450 sqft) AND have a resort-style clubhouse with pool, gym, and theater. That amenity premium sets a soft cap on what Newport Village can ask.</p>
-        <ul>
-          <li><strong>Avg sold price:</strong> $337K</li>
-          <li><strong>Avg sold per sqft:</strong> $233</li>
-          <li><strong>Median DOM:</strong> 20 days</li>
-          <li><strong>What they have:</strong> pool, gym, theater, clubhouse</li>
-        </ul>
+  <div class="net-sheet">
+    <div class="net-summary">
+      <div class="net-lbl">Estimated Net to You</div>
+      <div class="net-amount" id="netAmount">$—</div>
+      <div class="net-context">After all costs, at a sale price of <strong id="netSalePrice">$—</strong></div>
+    </div>
+
+    <div class="net-breakdown">
+      <details>
+        <summary>See the breakdown</summary>
+        <div class="net-breakdown-body">
+          <div class="net-line">
+            <span class="label">Sale Price</span>
+            <span class="value" id="lineSale">$—</span>
+          </div>
+          <div class="net-line deduction">
+            <span class="label">Listing Side Commission <small>3.0%</small></span>
+            <span class="value" id="lineListComm">−$—</span>
+          </div>
+          <div class="net-line deduction">
+            <span class="label">Buyer Side Commission <small>2.5%</small></span>
+            <span class="value" id="lineBuyComm">−$—</span>
+          </div>
+          <div class="net-line deduction">
+            <span class="label">Title &amp; Escrow <small>Estimated</small></span>
+            <span class="value" id="lineTitle">−$1,800</span>
+          </div>
+          <div class="net-line deduction">
+            <span class="label">Recording &amp; Misc Fees</span>
+            <span class="value" id="lineRec">−$350</span>
+          </div>
+          <div class="net-line deduction">
+            <span class="label">Home Warranty <small>For buyer</small></span>
+            <span class="value" id="lineWarr">−$600</span>
+          </div>
+          <div class="net-line deduction" id="linePayoffRow" style="display:none">
+            <span class="label">Mortgage Payoff</span>
+            <span class="value" id="linePayoff">−$0</span>
+          </div>
+          <div class="net-line subtotal">
+            <span class="label">Estimated Net Proceeds</span>
+            <span class="value" id="lineNet">$—</span>
+          </div>
+
+          <div class="net-inputs">
+            <div class="net-input">
+              <label>Mortgage Payoff (optional)</label>
+              <input type="number" id="payoffInput" placeholder="e.g. 180000" oninput="updateNet()">
+            </div>
+            <div class="net-input">
+              <label>Adjust Sale Price (optional)</label>
+              <input type="number" id="saleOverride" placeholder="auto-fills from suggested" oninput="updateNet()">
+            </div>
+          </div>
+
+          <div class="net-disclaimer">
+            <strong>Heads up Garrett:</strong> These are good-faith estimates based on typical Utah closing costs for condos. Your actual numbers will vary slightly based on your closing date, title company, and any negotiated buyer concessions. We'll tighten these up before we list.
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline" class="narrow">
+  <div class="section-eyebrow">The next 60 days</div>
+  <h2 class="section-title">Here's how this <em>actually goes</em>.</h2>
+  <p class="section-lead">Selling a home shouldn't feel like a mystery. Here's the realistic timeline if we listed in the next two weeks, based on what your comps actually did.</p>
+
+  <div class="timeline">
+    <div class="timeline-line"></div>
+
+    <div class="timeline-step">
+      <div class="timeline-dot">1</div>
+      <div class="timeline-content">
+        <span class="timeline-week">Week 1 · Pre-listing prep</span>
+        <h3 class="timeline-title">Get the unit <em>photo-ready</em></h3>
+        <p class="timeline-desc">Light declutter, deep clean, minor paint touch-ups if needed. <strong>I cover staging consultation at no cost.</strong> Plan for 4–6 hours of your time over a weekend. Most of the work is editing what's already there.</p>
       </div>
     </div>
 
-    <div class="lifestyle-grid">
-      <div class="lifestyle-card">
-        <h4>What works in your <em>favor</em></h4>
-        <ul>
-          <li>Top-floor (third floor) units historically sell at a small premium for privacy and noise</li>
-          <li>Granite countertops, updated kitchen, walk-in closet, jetted tub in master</li>
-          <li>HOA covers cable, insurance, water, sewer, trash — lower out-of-pocket than Italian Villages</li>
-          <li>4 minutes to UVU, walkable to grocery and restaurants</li>
-          <li>Newport Village inventory has been thin — fewer competitors means more pricing power</li>
-        </ul>
+    <div class="timeline-step">
+      <div class="timeline-dot">2</div>
+      <div class="timeline-content">
+        <span class="timeline-week">Week 2 · Photos &amp; listing prep</span>
+        <h3 class="timeline-title">Professional photos, listing description, MLS upload</h3>
+        <p class="timeline-desc">Pro photographer captures the unit (90 minutes), I write the listing copy and upload to MLS within 48 hours. <strong>You don't need to be present</strong> for the photo session — I'll handle access.</p>
       </div>
-      <div class="lifestyle-card">
-        <h4>What we'll need to <em>address</em></h4>
-        <ul>
-          <li>No resort-style clubhouse — we lean into "lower HOA, smaller community" as a feature</li>
-          <li>Third-floor walk-up (no elevator) — we'll highlight this honestly in marketing</li>
-          <li>Listing photos: the August comp had professional photos. Ours will too.</li>
-          <li>Pre-listing prep: paint touch-ups, deep clean, staging the master bedroom</li>
-          <li>Timing: spring buyer pool in Orem is strong right now</li>
-        </ul>
+    </div>
+
+    <div class="timeline-step">
+      <div class="timeline-dot">3</div>
+      <div class="timeline-content">
+        <span class="timeline-week">Week 3 · Live on market</span>
+        <h3 class="timeline-title">Listing goes <em>active</em></h3>
+        <p class="timeline-desc">Listing hits MLS Tuesday morning, syndicates to Zillow, Realtor.com, Redfin within 24 hours. Open house the first weekend. <strong>Expect 6–12 showings in the first 7 days</strong> based on Newport Village comp activity.</p>
+      </div>
+    </div>
+
+    <div class="timeline-step">
+      <div class="timeline-dot">4</div>
+      <div class="timeline-content">
+        <span class="timeline-week">Weeks 3–5 · Offer window</span>
+        <h3 class="timeline-title">Offers come in, we <em>negotiate</em></h3>
+        <p class="timeline-desc">Your closest comp (181 N 1200 W) went pending in 19 days. Realistic target: <strong>offer accepted within 19–28 days</strong>. I review every offer with you, we counter strategically, you decide.</p>
+      </div>
+    </div>
+
+    <div class="timeline-step">
+      <div class="timeline-dot">5</div>
+      <div class="timeline-content">
+        <span class="timeline-week">Weeks 5–8 · Under contract</span>
+        <h3 class="timeline-title">Inspection, appraisal, financing</h3>
+        <p class="timeline-desc">Buyer's inspection within 7 days of accepted offer. Appraisal usually clears within 2 weeks. <strong>Most condo closings happen 30–35 days after accepted offer</strong>. I project-manage everything.</p>
+      </div>
+    </div>
+
+    <div class="timeline-step">
+      <div class="timeline-dot">★</div>
+      <div class="timeline-content" style="background:var(--accent);color:var(--bg);border-color:var(--accent)">
+        <span class="timeline-week" style="color:var(--gold)">Day 50–60 · Close</span>
+        <h3 class="timeline-title" style="color:var(--bg)">Sign, get the wire, <em style="color:var(--gold)">move on</em></h3>
+        <p class="timeline-desc" style="color:rgba(255,255,255,0.8)">Signing at the title company takes ~45 minutes. Wire transfer of your net proceeds typically hits your account within 24 hours of recording. <strong style="color:var(--gold)">Most clients celebrate that night.</strong></p>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- COMPS -->
 <section id="comps">
@@ -405,14 +583,35 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
   </div>
 </section>
 
-<!-- CTA BLOCK -->
-<div class="cta-block">
-  <div class="cta-eyebrow">What happens next</div>
-  <h2 class="cta-title">Let's get your condo on the market with a <em>strategy</em>, not a guess.</h2>
-  <p class="cta-sub">When you're ready to talk through this analysis, the staging plan, the photography timeline, and your walk-away number — I'm one call away.</p>
-  <div class="cta-actions">
-    <button class="btn btn-primary" onclick="scheduleClick()">Schedule a 30-min call</button>
-    <button class="btn btn-ghost" onclick="textClick()">Text me a question</button>
+<!-- THE STRATEGY (moved to bottom for the deeper-context reader) -->
+<div class="lifestyle">
+  <div class="lifestyle-inner">
+    <div class="section-eyebrow">The deeper strategy</div>
+    <h2 class="section-title">Three condo clusters. Only <em>one</em> tells your real story.</h2>
+    <p class="section-lead">For the data-curious — here's how each cluster relates to your unit, and which ones we'll lean on when talking to buyers and appraisers.</p>
+
+    <div class="lifestyle-grid">
+      <div class="lifestyle-card" style="border-left:3px solid var(--accent)">
+        <h4>Newport Village <em>— your true comp</em></h4>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6">181 N 1200 W #103 sold for $325K in 19 days. Same complex, same year built, similar size (1,340 sqft). This is your anchor.</p>
+        <ul>
+          <li><strong>Sold price:</strong> $325,000</li>
+          <li><strong>Sold per sqft:</strong> $243</li>
+          <li><strong>Days on market:</strong> 19</li>
+          <li><strong>Implied value at 1,310 sqft:</strong> ~$318K–$330K</li>
+        </ul>
+      </div>
+      <div class="lifestyle-card" style="border-left:3px solid var(--gold)">
+        <h4>Italian Villages <em>— your ceiling</em></h4>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6">Milano and Torino comps sold for $333K–$345K. Slightly larger units (1,420–1,450 sqft) AND a resort-style clubhouse. That amenity premium sets a soft cap.</p>
+        <ul>
+          <li><strong>Avg sold price:</strong> $337K</li>
+          <li><strong>Avg sold per sqft:</strong> $233</li>
+          <li><strong>Median DOM:</strong> 20 days</li>
+          <li><strong>What they have:</strong> pool, gym, theater, clubhouse</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -442,7 +641,7 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
 <script>
 /* =========== GARRETT'S COMP DATA (from CloudCMA feed) =========== */
 const COMPS = [
-  {id:1, address:'1018 N 985 W #516', subdivision:'Milano Villages', cluster:'italian', status:'sold', price:345000, listPrice:344900, beds:3, baths:2, sqft:1442, year:2008, dom:26, lat:40.315833, lng:-111.719836, soldDate:'2026-01-16', photo:'https://assets.utahrealestate.com/photos/2048x1536/2124299_42353c2a8002538630d4d3210e41f371_691b253a98ec0.jpg', remarks:"This centrally located Italian-style condo is located on the top floor in the coveted community of Italian Villages. It offers a spacious open floor plan with 3 bedrooms and 2 baths and vaulted ceilings. Just minutes away from UVU, I-15, within walking distance to several restaurants and a grocery store. The community clubhouse has a pool, hot tub, theater room, barbecues, exercise room, and gathering room for private social events.", features:'Vaulted Ceilings · Granite Countertops · Top Floor · Mountain Views', included:true},
+  {id:1, address:'1018 N 985 W #516', subdivision:'Milano Villages', cluster:'italian', status:'sold', price:345000, listPrice:344900, beds:3, baths:2, sqft:1442, year:2008, dom:39, lat:40.315833, lng:-111.719836, soldDate:'2026-01-16', photo:'https://assets.utahrealestate.com/photos/2048x1536/2124299_42353c2a8002538630d4d3210e41f371_691b253a98ec0.jpg', remarks:"This centrally located Italian-style condo is located on the top floor in the coveted community of Italian Villages. It offers a spacious open floor plan with 3 bedrooms and 2 baths and vaulted ceilings. Just minutes away from UVU, I-15, within walking distance to several restaurants and a grocery store. The community clubhouse has a pool, hot tub, theater room, barbecues, exercise room, and gathering room for private social events.", features:'Vaulted Ceilings · Granite Countertops · Top Floor · Mountain Views', included:true},
   {id:2, address:'1030 N 995 W #905', subdivision:'Torino Village', cluster:'italian', status:'sold', price:339900, listPrice:339900, beds:3, baths:2, sqft:1450, year:2008, dom:21, lat:40.315933, lng:-111.720115, soldDate:'2026-01-09', photo:'https://assets.utahrealestate.com/photos/2048x1536/2124891_f4e0e98c312d5a4eb7e0a61ed89b19c4_692a406ede71e.jpg', remarks:"Welcome to your charming, Italian-themed condo! This beautiful main-floor condo offers convenience and comfort, perfectly situated for an effortless lifestyle. Enjoy unparalleled walkability to nearby grocery stores and a variety of restaurants. The community clubhouse enhances your living experience with a fitness center, pool and a theater room.", features:'Main Floor · Granite Countertops · Walk-in Closet · Italian Theme', included:true},
   {id:3, address:'1030 N 995 W #915', subdivision:'Torino Village', cluster:'italian', status:'sold', price:333000, listPrice:339900, beds:3, baths:2, sqft:1442, year:2008, dom:19, lat:40.316107, lng:-111.720031, soldDate:'2026-01-05', photo:'https://assets.utahrealestate.com/photos/2048x1536/2120955_ad2884cda82c135a079a844b2414f779_69090c55489b3.jpg', remarks:"This beautiful, fully updated condo features new carpet, fresh paint, and new blinds. Unique to this condo are the stunning views of the lake and mountains with an unbeatable location with quick access to I-15. You'll love the luxury clubhouse with movie room, pool, hot tub, gym and yoga room.", features:'Lake & Mountain Views · New Carpet · Top Floor · French Doors', included:true},
   {id:4, address:'982 W 960 N #109', subdivision:'Milano Village', cluster:'italian', status:'sold', price:334000, listPrice:339000, beds:3, baths:2, sqft:1420, year:2007, dom:121, lat:40.315534, lng:-111.719816, soldDate:'2025-12-19', photo:'https://assets.utahrealestate.com/photos/2048x1536/2107091_043b805dce9faa44b4dd67d03b8257d5_68a9cc29d1419.jpg', remarks:"Possibility of an assumable loan. This inviting 3 bedroom, 2 bath condo is perfectly positioned near top shopping centers, restaurants, and just minutes from the breathtaking mountains. The resort-style amenities include a swimming pool, fitness center, and clubhouse.", features:'Possible Assumable Loan · Granite · Mountain Views · Open Concept', included:true},
@@ -522,7 +721,56 @@ function renderAll(){
 
   renderComps();
   renderTable();
+  updateNet();
   if(map) updateMap();
+}
+
+/* =========== NET SHEET CALCULATION =========== */
+function updateNet(){
+  const r = calculate();
+  if(!r) return;
+
+  // Check for sale price override, otherwise use suggested
+  const overrideEl = document.getElementById('saleOverride');
+  const override = overrideEl ? parseFloat(overrideEl.value) : NaN;
+  const salePrice = (!isNaN(override) && override > 0) ? override : r.suggested;
+
+  // Fixed-rate inputs (Utah condo defaults)
+  const listCommPct = 3.0;
+  const buyCommPct = 2.5;
+  const titleEscrow = 1800;
+  const recordingMisc = 350;
+  const homeWarranty = 600;
+
+  // Payoff (optional input from Garrett)
+  const payoffEl = document.getElementById('payoffInput');
+  const payoff = payoffEl ? (parseFloat(payoffEl.value) || 0) : 0;
+
+  // Calculations
+  const listComm = salePrice * (listCommPct/100);
+  const buyComm = salePrice * (buyCommPct/100);
+  const totalDeductions = listComm + buyComm + titleEscrow + recordingMisc + homeWarranty + payoff;
+  const net = salePrice - totalDeductions;
+
+  // Update DOM
+  document.getElementById('netAmount').textContent = fmt(net);
+  document.getElementById('netSalePrice').textContent = fmt(salePrice);
+  document.getElementById('lineSale').textContent = fmt(salePrice);
+  document.getElementById('lineListComm').textContent = '−' + fmt(listComm);
+  document.getElementById('lineBuyComm').textContent = '−' + fmt(buyComm);
+  document.getElementById('lineTitle').textContent = '−' + fmt(titleEscrow);
+  document.getElementById('lineRec').textContent = '−' + fmt(recordingMisc);
+  document.getElementById('lineWarr').textContent = '−' + fmt(homeWarranty);
+  document.getElementById('lineNet').textContent = fmt(net);
+
+  // Show/hide payoff row based on input
+  const payoffRow = document.getElementById('linePayoffRow');
+  if(payoff > 0){
+    payoffRow.style.display = 'flex';
+    document.getElementById('linePayoff').textContent = '−' + fmt(payoff);
+  } else {
+    payoffRow.style.display = 'none';
+  }
 }
 
 function renderComps(){
