@@ -226,6 +226,139 @@ section.narrow{max-width:920px}
   .timeline-desc{font-size:12px}
 }
 
+/* SELLER FINANCING SECTION */
+.sf-intro{background:var(--ink);color:var(--bg);padding:48px;border-radius:2px;margin-top:48px;position:relative;overflow:hidden}
+.sf-intro::after{content:'';position:absolute;top:-150px;right:-150px;width:400px;height:400px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.1;pointer-events:none}
+.sf-intro-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;position:relative;z-index:1}
+.sf-intro-title{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:-0.02em;line-height:1.15;margin-bottom:16px;position:relative;z-index:1}
+.sf-intro-title em{color:var(--gold);font-style:italic}
+.sf-intro p{font-family:'Fraunces',serif;font-size:16px;line-height:1.6;color:rgba(250,248,244,0.75);font-style:italic;max-width:640px;position:relative;z-index:1}
+
+.sf-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px;padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:2px}
+.sf-input{display:flex;flex-direction:column;gap:6px}
+.sf-input label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.sf-input input{padding:10px 12px;border:1px solid var(--line);background:var(--bg);font-family:inherit;font-size:14px;font-feature-settings:"tnum";border-radius:2px;width:100%;transition:border-color .15s}
+.sf-input input:focus{outline:none;border-color:var(--ink);background:var(--paper)}
+.sf-input .suffix{position:relative}
+.sf-input .suffix::after{content:attr(data-suffix);position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
+.sf-input .suffix input{padding-right:32px}
+@media(max-width:768px){.sf-inputs{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.sf-inputs{grid-template-columns:1fr}}
+
+.sf-comparison{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+@media(max-width:768px){.sf-comparison{grid-template-columns:1fr}}
+
+.sf-card{background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.sf-card-header{padding:20px 24px;border-bottom:1px solid var(--line);background:var(--bg)}
+.sf-card-header .sf-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
+.sf-card-header h3{font-family:'Fraunces',serif;font-size:24px;letter-spacing:-0.01em;font-weight:400}
+.sf-card-header h3 em{color:var(--gold);font-style:italic}
+.sf-card.featured .sf-card-header{background:var(--accent);color:var(--bg)}
+.sf-card.featured .sf-card-header .sf-eyebrow{color:var(--gold)}
+.sf-card.featured{border-color:var(--accent);box-shadow:0 4px 24px rgba(26,58,46,0.12)}
+
+.sf-card-body{padding:24px;flex:1;display:flex;flex-direction:column;gap:14px}
+.sf-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.sf-row:last-child{border-bottom:none}
+.sf-row .label{color:var(--ink-soft);display:flex;flex-direction:column;gap:2px}
+.sf-row .label small{font-size:10px;color:var(--muted);letter-spacing:0.04em;font-weight:400}
+.sf-row .value{font-family:'Fraunces',serif;font-size:17px;letter-spacing:-0.005em;font-feature-settings:"tnum"}
+.sf-row.highlight{background:var(--accent-soft);padding:14px 16px;border-bottom:none;border-radius:2px;margin:6px -16px}
+.sf-row.highlight .value{color:var(--accent);font-size:22px}
+.sf-row.total{border-top:2px solid var(--ink);border-bottom:none;margin-top:8px;padding-top:14px;font-weight:600}
+.sf-row.total .value{font-size:22px}
+.sf-row.deduction .value{color:var(--warn)}
+
+.sf-headline{background:var(--ink);color:var(--bg);padding:32px 24px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.sf-headline::after{content:'';position:absolute;bottom:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
+.sf-headline .label{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(250,248,244,0.6);margin-bottom:8px;position:relative;z-index:1}
+.sf-headline .num{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,44px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
+.sf-headline .num em{color:var(--gold);font-style:italic}
+.sf-headline .sub{font-size:11px;color:rgba(250,248,244,0.6);margin-top:8px;letter-spacing:0.08em;position:relative;z-index:1}
+
+/* SUMMARY WIN BANNER */
+.sf-summary{background:linear-gradient(135deg,var(--ink) 0%,var(--accent) 100%);color:var(--bg);padding:36px;margin-top:32px;border-radius:2px;position:relative;overflow:hidden;text-align:center}
+.sf-summary::after{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
+.sf-summary-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;position:relative;z-index:1}
+.sf-summary-num{font-family:'Fraunces',serif;font-size:clamp(36px,7vw,60px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
+.sf-summary-num em{color:var(--gold);font-style:italic}
+.sf-summary-context{font-family:'Fraunces',serif;font-size:15px;color:rgba(250,248,244,0.8);margin-top:14px;font-style:italic;max-width:520px;margin-left:auto;margin-right:auto;position:relative;z-index:1}
+
+/* SF DISCLAIMER */
+.sf-disclaimer{margin-top:24px;padding:16px 20px;background:var(--bg);border-left:3px solid var(--gold);font-size:12px;color:var(--ink-soft);line-height:1.6;font-style:italic;font-family:'Fraunces',serif}
+.sf-disclaimer strong{font-family:'Inter',sans-serif;font-style:normal;color:var(--accent);font-weight:600;letter-spacing:0.05em;font-size:11px;text-transform:uppercase}
+
+/* SF PROS/CONS */
+.sf-pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+@media(max-width:640px){.sf-pros-cons{grid-template-columns:1fr}}
+.sf-pc-card{background:var(--paper);border:1px solid var(--line);padding:24px}
+.sf-pc-card h4{font-family:'Fraunces',serif;font-size:18px;letter-spacing:-0.01em;margin-bottom:14px;font-weight:400}
+.sf-pc-card h4 em{font-style:italic}
+.sf-pc-card.pros h4 em{color:var(--accent)}
+.sf-pc-card.cons h4 em{color:var(--warn)}
+.sf-pc-card ul{list-style:none;padding:0}
+.sf-pc-card li{padding:8px 0;font-size:13px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.sf-pc-card li::before{font-family:'Fraunces',serif;font-size:14px;line-height:1.4;flex-shrink:0}
+.sf-pc-card.pros li::before{content:'✓';color:var(--accent);font-weight:600}
+.sf-pc-card.cons li::before{content:'!';color:var(--warn);font-weight:600;font-style:italic}
+
+/* MONTHLY CASH FLOW WATERFALL */
+.cashflow{background:var(--paper);border:1px solid var(--gold);margin-top:32px;overflow:hidden;border-radius:2px}
+.cashflow-header{background:var(--ink);color:var(--bg);padding:28px 32px;position:relative;overflow:hidden}
+.cashflow-header::after{content:'';position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
+.cashflow-eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;position:relative;z-index:1}
+.cashflow-title{font-family:'Fraunces',serif;font-size:clamp(22px,3.5vw,32px);font-weight:300;letter-spacing:-0.015em;line-height:1.2;position:relative;z-index:1}
+.cashflow-title em{color:var(--gold);font-style:italic}
+.cashflow-sub{font-size:13px;color:rgba(250,248,244,0.7);margin-top:10px;line-height:1.5;position:relative;z-index:1;font-style:italic;font-family:'Fraunces',serif;max-width:540px}
+
+.cashflow-body{padding:28px 32px}
+.cf-row{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.cf-row:last-of-type{border-bottom:none}
+.cf-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;font-weight:300;flex-shrink:0}
+.cf-row.income .cf-icon{background:var(--accent-soft);color:var(--accent)}
+.cf-row.income .cf-icon::before{content:'+'}
+.cf-row.expense .cf-icon{background:#f5e8df;color:var(--warn)}
+.cf-row.expense .cf-icon::before{content:'−'}
+.cf-row .cf-label{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cf-row .cf-lbl-main{font-size:15px;color:var(--ink);font-weight:600;line-height:1.3}
+.cf-row .cf-lbl-sub{font-size:12px;color:var(--muted);letter-spacing:0.02em;line-height:1.4}
+.cf-row .cf-amount{font-family:'Fraunces',serif;font-size:26px;letter-spacing:-0.01em;font-feature-settings:"tnum";line-height:1;text-align:right;white-space:nowrap}
+.cf-row.income .cf-amount{color:var(--accent)}
+.cf-row.expense .cf-amount{color:var(--warn)}
+
+.cf-result-wrap{margin:0 -32px -28px;background:linear-gradient(135deg,var(--accent) 0%,var(--ink) 100%);color:var(--bg);padding:28px 32px;position:relative;overflow:hidden}
+.cf-result-wrap::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.18;pointer-events:none}
+.cf-result-main{display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;z-index:1;flex-wrap:wrap}
+.cf-result-label{flex:1;min-width:200px}
+.cf-result-label .lbl{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px}
+.cf-result-label .sub{font-size:13px;color:rgba(250,248,244,0.75);font-style:italic;font-family:'Fraunces',serif;line-height:1.5}
+.cf-result-label .sub strong{font-family:'Inter',sans-serif;font-style:normal;color:var(--gold);font-weight:600}
+.cf-result-amount{font-family:'Fraunces',serif;font-size:clamp(36px,7vw,52px);letter-spacing:-0.02em;font-weight:300;line-height:1;color:var(--bg)}
+.cf-result-amount em{color:var(--gold);font-style:italic}
+.cf-annual{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:18px;border-top:1px solid rgba(250,248,244,0.15);position:relative;z-index:1;gap:14px;flex-wrap:wrap}
+.cf-annual .lbl{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(250,248,244,0.6);font-weight:500}
+.cf-annual .amt{font-family:'Fraunces',serif;font-size:24px;color:var(--gold);font-style:italic;font-weight:300;letter-spacing:-0.01em}
+
+@media(max-width:640px){
+  .cashflow-header{padding:22px 20px}
+  .cashflow-body{padding:20px}
+  .cf-row{grid-template-columns:32px 1fr;grid-template-rows:auto auto;gap:8px 12px;padding:16px 0}
+  .cf-icon{width:32px;height:32px;font-size:18px;grid-row:1;grid-column:1}
+  .cf-row .cf-label{grid-row:1;grid-column:2}
+  .cf-row .cf-lbl-main{font-size:14px}
+  .cf-row .cf-lbl-sub{font-size:11px}
+  .cf-row .cf-amount{font-size:24px;grid-row:2;grid-column:1 / 3;text-align:left;padding-left:44px;margin-top:-4px}
+  .cf-result-wrap{margin:0 -20px -20px;padding:22px 20px}
+  .cf-result-main{flex-direction:column;align-items:flex-start;gap:10px}
+  .cf-result-label{min-width:0;width:100%}
+  .cf-result-amount{font-size:38px;align-self:flex-start}
+  .cf-annual{flex-direction:row;justify-content:space-between;margin-top:14px;padding-top:14px}
+  .cf-annual .amt{font-size:20px}
+}
+
+/* Helper text under down payment input */
+.sf-input .helper{font-size:10px;color:var(--gold);font-style:italic;letter-spacing:0.05em;margin-top:4px;font-family:'Fraunces',serif}
+
 /* MARKET STATS */
 .market-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:48px;background:var(--paper)}
 .market-stat{padding:32px 20px;text-align:center;border-right:1px solid var(--line)}
@@ -495,24 +628,24 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
             <span class="value" id="lineSale">$—</span>
           </div>
           <div class="net-line deduction">
-            <span class="label">Listing Side Commission <small>3.0%</small></span>
+            <span class="label">Listing Side Commission <small>2.0%</small></span>
             <span class="value" id="lineListComm">−$—</span>
           </div>
           <div class="net-line deduction">
-            <span class="label">Buyer Side Commission <small>2.5%</small></span>
+            <span class="label">Buyer Side Commission <small>2.0%</small></span>
             <span class="value" id="lineBuyComm">−$—</span>
           </div>
           <div class="net-line deduction">
             <span class="label">Title &amp; Escrow <small>Estimated</small></span>
-            <span class="value" id="lineTitle">−$1,800</span>
+            <span class="value" id="lineTitle">−$3,500</span>
           </div>
           <div class="net-line deduction">
             <span class="label">Recording &amp; Misc Fees</span>
-            <span class="value" id="lineRec">−$350</span>
+            <span class="value" id="lineRec">−$1,200</span>
           </div>
           <div class="net-line deduction">
             <span class="label">Home Warranty <small>For buyer</small></span>
-            <span class="value" id="lineWarr">−$600</span>
+            <span class="value" id="lineWarr">−$800</span>
           </div>
           <div class="net-line deduction" id="linePayoffRow" style="display:none">
             <span class="label">Mortgage Payoff</span>
@@ -525,8 +658,8 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
 
           <div class="net-inputs">
             <div class="net-input">
-              <label>Mortgage Payoff (optional)</label>
-              <input type="number" id="payoffInput" placeholder="e.g. 180000" oninput="updateNet()">
+              <label>Mortgage Payoff</label>
+              <input type="number" id="payoffInput" value="295091.66" step="0.01" oninput="updateNet()">
             </div>
             <div class="net-input">
               <label>Adjust Sale Price (optional)</label>
@@ -540,6 +673,315 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
         </div>
       </details>
     </div>
+  </div>
+</section>
+
+<!-- SELLER FINANCING ALTERNATIVE -->
+<section id="seller-financing" class="narrow">
+  <div class="sf-intro">
+    <div class="sf-intro-eyebrow">Alternative path · Built around your 3.5% mortgage</div>
+    <h2 class="sf-intro-title">Your 3.5% rate is a hidden <em>asset</em>.</h2>
+    <p>You locked in a 3.5% mortgage in 2022. Today's rates are 7%+. That 3.5-point gap is yours to capture — by selling the home at one rate and continuing to owe at another. Here's exactly what that looks like with your real numbers.</p>
+  </div>
+
+  <!-- GARRETT'S ACTUAL MORTGAGE INFO -->
+  <div style="background:var(--paper);border:1px solid var(--gold);padding:24px;margin-top:24px;border-radius:2px">
+    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:14px">Your Current Mortgage · As of Today</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em">$295,091.66</div>
+        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Principal Balance</div>
+      </div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em;color:var(--accent)"><em style="font-style:italic;color:var(--gold)">3.5%</em></div>
+        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Your Locked Rate</div>
+      </div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em">$1,647</div>
+        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Monthly Payment (PITI)</div>
+      </div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em">$1,450</div>
+        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Principal &amp; Interest</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--ink-soft);margin-top:16px;line-height:1.6;font-style:italic;font-family:'Fraunces',serif">
+      <strong style="font-family:'Inter',sans-serif;font-style:normal;color:var(--accent);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Why this matters</strong><br>
+      Today's market rates are around 7%. If you carry seller financing at 6.8% while still paying your 3.5% mortgage underneath, you're earning the spread — about <strong style="font-family:'Inter',sans-serif;font-style:normal;color:var(--ink);font-weight:600">3.3 points of pure interest arbitrage</strong> on the financed portion, plus a higher sale price than a cash buyer would offer.
+    </div>
+  </div>
+
+  <div class="sf-inputs">
+    <div class="sf-input">
+      <label>Sale Price</label>
+      <div class="suffix" data-suffix="$">
+        <input type="number" id="sfSalePrice" value="340000" oninput="updateSF()">
+      </div>
+    </div>
+    <div class="sf-input">
+      <label>Down Payment</label>
+      <div class="suffix" data-suffix="$">
+        <input type="number" id="sfDownAmount" value="15000" step="500" min="0" oninput="updateSF()">
+      </div>
+      <span class="helper" id="sfDownHelper">4.4% of sale price</span>
+    </div>
+    <div class="sf-input">
+      <label>Interest Rate to Buyer</label>
+      <div class="suffix" data-suffix="%">
+        <input type="number" id="sfRate" value="6.8" step="0.125" min="0" max="20" oninput="updateSF()">
+      </div>
+    </div>
+    <div class="sf-input">
+      <label>Amortization (yrs)</label>
+      <div class="suffix" data-suffix="yr">
+        <input type="number" id="sfAmort" value="30" min="5" max="40" oninput="updateSF()">
+      </div>
+    </div>
+    <div class="sf-input">
+      <label>Balloon At (yrs)</label>
+      <div class="suffix" data-suffix="yr">
+        <input type="number" id="sfBalloon" value="5" min="1" max="30" oninput="updateSF()">
+      </div>
+    </div>
+    <div class="sf-input">
+      <label>Your Mortgage Payoff</label>
+      <div class="suffix" data-suffix="$">
+        <input type="number" id="sfPayoff" value="295091.66" step="0.01" oninput="updateSF()">
+      </div>
+    </div>
+    <div class="sf-input">
+      <label>Your Mortgage Rate</label>
+      <div class="suffix" data-suffix="%">
+        <input type="number" id="sfMortgageRate" value="3.5" step="0.125" min="0" max="20" oninput="updateSF()">
+      </div>
+    </div>
+    <div class="sf-input">
+      <label>Your Monthly P&amp;I</label>
+      <div class="suffix" data-suffix="$">
+        <input type="number" id="sfMortgagePI" value="1647.33" step="0.01" oninput="updateSF()">
+      </div>
+      <span class="helper" style="color:var(--muted);font-style:normal">P&amp;I: $1,450.41 + Escrow: $196.92</span>
+    </div>
+  </div>
+
+  <!-- Hidden inputs for advanced fields -->
+  <input type="hidden" id="sfClosingCosts" value="5500">
+  <input type="hidden" id="sfCommission" value="4">
+
+  <!-- STRATEGY SELECTOR -->
+  <div style="margin-top:24px;padding:18px 24px;background:var(--bg);border:1px solid var(--line);border-radius:2px">
+    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500">Choose your strategy</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="filter-btn" id="strategyClean" onclick="setSFStrategy('clean')">A · Clean Payoff</button>
+      <button class="filter-btn active" id="strategyWrap" onclick="setSFStrategy('wrap')">B · Wrap (Keep Cash Flow)</button>
+      <button class="filter-btn" id="strategyReinvest" onclick="setSFStrategy('reinvest')">C · Wrap + Accelerate Payoff</button>
+    </div>
+    <div id="strategyExplainer" style="margin-top:14px;font-size:12px;line-height:1.6;color:var(--ink-soft);font-style:italic;font-family:'Fraunces',serif"></div>
+  </div>
+
+  <!-- MONTHLY CASH FLOW WATERFALL (the centerpiece) -->
+  <div class="cashflow">
+    <div class="cashflow-header">
+      <div class="cashflow-eyebrow">Your monthly cash flow</div>
+      <h3 class="cashflow-title">Every month, here's what hits <em>your bank account</em>.</h3>
+      <p class="cashflow-sub" id="cfStrategyNote">You collect the buyer's payment, continue paying your mortgage, and pocket the difference.</p>
+    </div>
+    <div class="cashflow-body">
+      <div class="cf-row income">
+        <div class="cf-icon"></div>
+        <div class="cf-label">
+          <div class="cf-lbl-main">Buyer pays you</div>
+          <div class="cf-lbl-sub">Their monthly P&amp;I at the agreed rate</div>
+        </div>
+        <div class="cf-amount" id="cfBuyerPmt">$—</div>
+      </div>
+      <div class="cf-row expense" id="cfMortgageRow">
+        <div class="cf-icon"></div>
+        <div class="cf-label">
+          <div class="cf-lbl-main">You pay your bank</div>
+          <div class="cf-lbl-sub">Your locked 3.5% mortgage continues</div>
+        </div>
+        <div class="cf-amount" id="cfMortgagePmt">−$—</div>
+      </div>
+      <div class="cf-result-wrap">
+        <div class="cf-result-main">
+          <div class="cf-result-label">
+            <div class="lbl">You keep, every month</div>
+            <div class="sub">For <strong><span id="sfBalloonYrs2">5</span> years</strong> — that's <strong><span id="cfTotalMonthsLbl">60</span> monthly checks</strong> in your pocket</div>
+          </div>
+          <div class="cf-result-amount" id="cfNetMonthly">$—</div>
+        </div>
+        <div class="cf-annual">
+          <span class="lbl">Adds up to per year</span>
+          <span class="amt" id="cfAnnual">$—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE BY SIDE COMPARISON -->
+  <div class="sf-comparison">
+    <!-- TRADITIONAL SALE -->
+    <div class="sf-card">
+      <div class="sf-card-header">
+        <div class="sf-eyebrow">Option A</div>
+        <h3>Traditional <em>Cash Sale</em></h3>
+      </div>
+      <div class="sf-headline">
+        <div class="label">Day 1 Walk-Away</div>
+        <div class="num" id="sfTradNet">$—</div>
+        <div class="sub">One lump sum, deal is done.</div>
+      </div>
+      <div class="sf-card-body">
+        <div class="sf-row">
+          <span class="label">Sale Price</span>
+          <span class="value" id="sfTradSale">$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Less: Commission</span>
+          <span class="value" id="sfTradComm">−$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Less: Closing Costs</span>
+          <span class="value" id="sfTradClosing">−$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Less: Mortgage Payoff</span>
+          <span class="value" id="sfTradPayoff">−$—</span>
+        </div>
+        <div class="sf-row total">
+          <span class="label">Net at Closing</span>
+          <span class="value" id="sfTradTotal">$—</span>
+        </div>
+        <div style="margin-top:14px;padding:14px;background:var(--bg);border-left:2px solid var(--line);font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+          <strong style="font-style:normal;color:var(--ink);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:4px">Future earnings</strong>
+          After Day 1, you have $0 of ongoing income from this property. What you invest the proceeds in determines your future return.
+        </div>
+      </div>
+    </div>
+
+    <!-- SELLER FINANCED -->
+    <div class="sf-card featured">
+      <div class="sf-card-header">
+        <div class="sf-eyebrow">Option B · Featured</div>
+        <h3>Seller <em>Financed</em></h3>
+      </div>
+      <div class="sf-headline">
+        <div class="label">Day 1 Cash + Total Return</div>
+        <div class="num" id="sfSellerTotal">$—</div>
+        <div class="sub">Over the full <span id="sfBalloonYrs">5</span>-year term</div>
+      </div>
+      <div class="sf-card-body">
+        <!-- PHASE 1: AT CLOSING -->
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 1 · At Closing (Day 1)</div>
+        <div class="sf-row">
+          <span class="label">Sale Price <small>negotiated price</small></span>
+          <span class="value" id="sfSFSale">$—</span>
+        </div>
+        <div class="sf-row highlight">
+          <span class="label">Down Payment You Receive <small>cash in your hand at closing</small></span>
+          <span class="value" id="sfDownAmt">$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Commission &amp; Closing Costs <small>4% commission + $2,750 fees</small></span>
+          <span class="value" id="sfSFCosts">−$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Mortgage Payoff <small>only applies if you pay it off at closing</small></span>
+          <span class="value" id="sfSFPayoff">−$—</span>
+        </div>
+        <div class="sf-row" style="border-bottom:1px dashed var(--line)">
+          <span class="label">Your Cash at Closing <small id="sfClosingNote">down payment minus costs</small></span>
+          <span class="value" id="sfNetClosing">$—</span>
+        </div>
+
+        <!-- PHASE 2: MONTHLY INCOME -->
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 2 · For 5 Years (Months 1–60)</div>
+        <div class="sf-row highlight">
+          <span class="label">Monthly Profit to You <small>buyer's payment minus your mortgage</small></span>
+          <span class="value" id="sfMonthlyPmt">$—</span>
+        </div>
+        <div class="sf-row">
+          <span class="label">Total Collected Over 5 Years <small id="sfMonthsLbl">60 months of cash flow</small></span>
+          <span class="value" id="sfTotalMonthly">$—</span>
+        </div>
+
+        <!-- PHASE 3: BALLOON -->
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 3 · At Balloon (End of Year 5)</div>
+        <div class="sf-row highlight">
+          <span class="label">Final Payment to You <small id="sfBalloonLbl">buyer refinances or pays you off</small></span>
+          <span class="value" id="sfBalloonAmt">$—</span>
+        </div>
+
+        <div class="sf-row total">
+          <span class="label">Total Over the Full 5 Years</span>
+          <span class="value" id="sfLifetimeTotal">$—</span>
+        </div>
+
+        <!-- BALLOON EXPLAINER -->
+        <details style="margin-top:14px;padding:0;background:var(--accent-soft);border:1px solid var(--accent);border-radius:2px;overflow:hidden">
+          <summary style="cursor:pointer;padding:14px 16px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center">
+            <span>How the balloon payment works</span>
+            <span style="font-family:'Fraunces',serif;font-size:18px;font-style:italic;color:var(--gold)">+</span>
+          </summary>
+          <div style="padding:0 16px 16px;font-size:12px;line-height:1.7;color:var(--ink-soft)">
+            <p style="margin-bottom:10px">After 5 years of monthly payments, the buyer still owes you most of the financed amount because they've been paying mostly interest. They'll either refinance with a traditional lender or sell, and the proceeds go to you.</p>
+            <div style="background:var(--paper);padding:14px;border-left:2px solid var(--gold);font-family:'Fraunces',serif;font-style:italic">
+              <div style="display:flex;justify-content:space-between;padding:4px 0">
+                <span>Buyer pays off their loan to you</span>
+                <strong style="font-family:'Inter',sans-serif;font-style:normal;color:var(--ink)" id="sfBuyerOwes">$—</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--warn)">
+                <span>You pay off your remaining 3.5% mortgage</span>
+                <strong style="font-family:'Inter',sans-serif;font-style:normal" id="sfYourOwes">−$—</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0 4px;border-top:1px solid var(--line);color:var(--accent);font-weight:600">
+                <span>You keep the difference</span>
+                <strong style="font-family:'Inter',sans-serif;font-style:normal" id="sfBalloonKeeps">$—</strong>
+              </div>
+            </div>
+            <p style="margin-top:10px;font-style:italic">Why so much? Over 5 years, your $295K mortgage paid down to ~$256K (the bank gets less interest, more principal as time goes on). Meanwhile, the buyer's higher-rate loan still has most of the balance outstanding. <strong style="font-style:normal;color:var(--accent)">You walk away with the equity that built up during those 5 years.</strong></p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE BIG WIN -->
+  <div class="sf-summary">
+    <div class="sf-summary-label">The seller financing advantage</div>
+    <div class="sf-summary-num">+ <em id="sfAdvantage">$—</em> more</div>
+    <div class="sf-summary-context">That's how much more money seller financing puts in your pocket vs. a traditional cash sale, over the full <span id="sfAdvantageYrs">5</span>-year term — without you having to do anything except collect the monthly payments.</div>
+  </div>
+
+  <!-- PROS AND CONS -->
+  <div class="sf-pros-cons">
+    <div class="sf-pc-card pros">
+      <h4>Why this <em>works for you</em></h4>
+      <ul>
+        <li><strong>Higher total return</strong> — you collect interest on the financed portion, which adds tens of thousands over the term</li>
+        <li><strong>Steady monthly income</strong> — like owning a rental property without being a landlord</li>
+        <li><strong>Larger buyer pool</strong> — buyers who can't qualify for a traditional mortgage will pay a premium to work with you</li>
+        <li><strong>Faster sale, often above asking</strong> — owner-financed condos in Utah typically sell 20-30% faster</li>
+        <li><strong>Tax advantages</strong> — installment sale rules spread your capital gains over the life of the loan</li>
+        <li><strong>You hold the lien</strong> — if buyer defaults, you can foreclose and reclaim the property</li>
+      </ul>
+    </div>
+    <div class="sf-pc-card cons">
+      <h4>What to <em>consider</em></h4>
+      <ul>
+        <li><strong>No big lump sum on Day 1</strong> — if you need all the cash now to buy your next home, this isn't ideal</li>
+        <li><strong>Buyer default risk</strong> — though you hold the lien, foreclosure costs time and legal fees</li>
+        <li><strong>You're the bank</strong> — you'll need a servicing company to collect payments and send 1099s</li>
+        <li><strong>Balloon risk</strong> — if buyer can't refinance at balloon, you'll need to extend or foreclose</li>
+        <li><strong>Title and tax filing</strong> — slightly more complex closing process than a cash sale</li>
+        <li><strong>Inflation exposure</strong> — your interest rate is fixed; you don't benefit if rates rise</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sf-disclaimer">
+    <strong>Important:</strong> These projections are estimates based on a fully amortizing loan with a balloon payoff. Actual returns depend on buyer payment history, the buyer's ability to refinance at balloon, and prevailing rates at that time. We'll want to involve a real estate attorney to draft the note and trust deed, and a loan servicing company (typically $20-30/month) to handle payment collection and tax reporting. Before committing, we should also review the impact on your taxes with a CPA familiar with installment sales (IRC §453).
   </div>
 </section>
 
@@ -798,7 +1240,245 @@ function renderAll(){
   renderComps();
   renderTable();
   updateNet();
+  updateSF();
   if(map) updateMap();
+}
+
+/* =========== SELLER FINANCING CALCULATION =========== */
+let sfStrategy = 'wrap'; // 'clean' = pay off mortgage at closing; 'wrap' = keep mortgage and capture the spread
+
+function setSFStrategy(s){
+  sfStrategy = s;
+  document.getElementById('strategyClean').classList.toggle('active', s==='clean');
+  document.getElementById('strategyWrap').classList.toggle('active', s==='wrap');
+  const reinvestBtn = document.getElementById('strategyReinvest');
+  if(reinvestBtn) reinvestBtn.classList.toggle('active', s==='reinvest');
+
+  const explainer = document.getElementById('strategyExplainer');
+  if(s === 'clean'){
+    explainer.innerHTML = '<strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--accent);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Clean Payoff:</strong> You pay off your 3.5% mortgage at closing using the down payment and possibly bringing additional funds. You then carry a new note to the buyer at 7.5%. <strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--ink);font-weight:600">Safer, simpler, no due-on-sale risk.</strong>';
+  } else if(s === 'wrap'){
+    explainer.innerHTML = '<strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--warn);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Wrap-Around (Keep Cash Flow):</strong> Keep your 3.5% mortgage in place. Collect from buyer, pay your mortgage, <strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--ink);font-weight:600">pocket the $471/month difference for everyday expenses</strong>. Your balloon gain comes from the natural mortgage amortization spread.';
+  } else if(s === 'reinvest'){
+    explainer.innerHTML = '<strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--gold);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Wrap + Accelerate (Reinvest):</strong> Same as B, but instead of pocketing the $471/month, you apply it as <strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--ink);font-weight:600">extra principal payments on your 3.5% mortgage</strong> — paying it off faster so your balloon proceeds are larger. <em style="font-style:italic">Spoiler: only modestly better since your rate is so low.</em>';
+  }
+  updateSF();
+}
+
+function updateSF(){
+  const salePrice = parseFloat(document.getElementById('sfSalePrice').value) || 0;
+  const downAmount = parseFloat(document.getElementById('sfDownAmount').value) || 0;
+  const buyerRate = parseFloat(document.getElementById('sfRate').value) || 0;
+  const amortYears = parseFloat(document.getElementById('sfAmort').value) || 30;
+  const balloonYears = parseFloat(document.getElementById('sfBalloon').value) || 5;
+  const mortgagePayoff = parseFloat(document.getElementById('sfPayoff').value) || 0;
+  const mortgageRate = parseFloat(document.getElementById('sfMortgageRate').value) || 0;
+  const mortgagePI = parseFloat(document.getElementById('sfMortgagePI').value) || 0;
+  const closingCosts = parseFloat(document.getElementById('sfClosingCosts').value) || 0;
+  const commissionPct = parseFloat(document.getElementById('sfCommission').value) || 0;
+
+  if(!salePrice) return;
+
+  const commission = salePrice * (commissionPct/100);
+  const totalSellingCosts = commission + closingCosts;
+
+  // ===== OPTION A: Traditional sale =====
+  const tradNet = salePrice - totalSellingCosts - mortgagePayoff;
+
+  // ===== OPTION B: Seller financing =====
+  const downPct = (downAmount / salePrice) * 100;
+
+  let financedAmount;
+  let netCashAtClosing;
+  let monthlyToGarrett;
+
+  if(sfStrategy === 'clean'){
+    financedAmount = salePrice - downAmount;
+    netCashAtClosing = downAmount - totalSellingCosts - mortgagePayoff;
+  } else {
+    financedAmount = salePrice - downAmount;
+    netCashAtClosing = downAmount - totalSellingCosts;
+  }
+
+  // Buyer's monthly P&I to Garrett
+  const buyerMonthlyRate = (buyerRate/100) / 12;
+  const totalPayments = amortYears * 12;
+  const balloonMonths = balloonYears * 12;
+
+  let buyerMonthlyPmt = 0;
+  if(buyerMonthlyRate > 0){
+    buyerMonthlyPmt = financedAmount * (buyerMonthlyRate * Math.pow(1+buyerMonthlyRate, totalPayments)) /
+                      (Math.pow(1+buyerMonthlyRate, totalPayments) - 1);
+  } else {
+    buyerMonthlyPmt = financedAmount / totalPayments;
+  }
+
+  // Garrett's effective monthly cash flow
+  if(sfStrategy === 'clean'){
+    monthlyToGarrett = buyerMonthlyPmt;
+  } else if(sfStrategy === 'reinvest'){
+    // Option C: $0 in pocket monthly; the spread auto-applies to mortgage paydown
+    monthlyToGarrett = 0;
+  } else {
+    monthlyToGarrett = buyerMonthlyPmt - mortgagePI;
+  }
+
+  // Buyer's remaining balance at balloon
+  let buyerBalloonBalance = 0;
+  if(buyerMonthlyRate > 0){
+    buyerBalloonBalance = financedAmount * Math.pow(1+buyerMonthlyRate, balloonMonths) -
+                          buyerMonthlyPmt * (Math.pow(1+buyerMonthlyRate, balloonMonths) - 1) / buyerMonthlyRate;
+  } else {
+    buyerBalloonBalance = financedAmount - (buyerMonthlyPmt * balloonMonths);
+  }
+
+  // Garrett's underlying mortgage balance at balloon (if wrap or reinvest)
+  let garrettMortgageAtBalloon = 0;
+  if((sfStrategy === 'wrap' || sfStrategy === 'reinvest') && mortgagePayoff > 0){
+    const garrettMonthlyRate = (mortgageRate/100) / 12;
+    const truePI = (garrettMonthlyRate > 0)
+      ? mortgagePayoff * (garrettMonthlyRate * Math.pow(1+garrettMonthlyRate, 360)) /
+        (Math.pow(1+garrettMonthlyRate, 360) - 1)
+      : mortgagePayoff / 360;
+
+    if(sfStrategy === 'reinvest'){
+      // Month-by-month amortization with extra principal applied each month
+      const monthlyExtra = buyerMonthlyPmt - mortgagePI; // the spread becomes extra principal
+      let bal = mortgagePayoff;
+      for(let m = 0; m < balloonMonths; m++){
+        const interest = bal * garrettMonthlyRate;
+        const principal = truePI - interest;
+        bal -= principal;
+        bal -= monthlyExtra; // apply extra payment
+        if(bal < 0){ bal = 0; break; }
+      }
+      garrettMortgageAtBalloon = bal;
+    } else {
+      // Standard wrap: just normal amortization
+      if(garrettMonthlyRate > 0){
+        garrettMortgageAtBalloon = mortgagePayoff * Math.pow(1+garrettMonthlyRate, balloonMonths) -
+                                    truePI * (Math.pow(1+garrettMonthlyRate, balloonMonths) - 1) / garrettMonthlyRate;
+      } else {
+        garrettMortgageAtBalloon = mortgagePayoff - (truePI * balloonMonths);
+      }
+    }
+    if(garrettMortgageAtBalloon < 0) garrettMortgageAtBalloon = 0;
+  }
+
+  const totalMonthlyCollected = monthlyToGarrett * balloonMonths;
+  const netBalloonProceeds = buyerBalloonBalance - garrettMortgageAtBalloon;
+  const lifetimeTotal = netCashAtClosing + totalMonthlyCollected + netBalloonProceeds;
+  const advantage = lifetimeTotal - tradNet;
+  const annualCashFlow = monthlyToGarrett * 12;
+
+  // ===== UPDATE DOM =====
+  // Traditional column
+  document.getElementById('sfTradNet').textContent = fmt(tradNet);
+  document.getElementById('sfTradSale').textContent = fmt(salePrice);
+  document.getElementById('sfTradComm').textContent = '−' + fmt(commission);
+  document.getElementById('sfTradClosing').textContent = '−' + fmt(closingCosts);
+  document.getElementById('sfTradPayoff').textContent = '−' + fmt(mortgagePayoff);
+  document.getElementById('sfTradTotal').textContent = fmt(tradNet);
+
+  // Seller financed column
+  document.getElementById('sfSellerTotal').textContent = fmt(lifetimeTotal);
+  document.getElementById('sfSFSale').textContent = fmt(salePrice);
+  document.getElementById('sfDownAmt').textContent = fmt(downAmount);
+  document.getElementById('sfSFCosts').textContent = '−' + fmt(totalSellingCosts);
+  document.getElementById('sfSFPayoff').textContent = sfStrategy === 'clean'
+    ? '−' + fmt(mortgagePayoff)
+    : '$0 (stays in place)';
+  document.getElementById('sfNetClosing').textContent = fmt(netCashAtClosing);
+  document.getElementById('sfMonthlyPmt').textContent = fmt(monthlyToGarrett);
+  document.getElementById('sfTotalMonthly').textContent = fmt(totalMonthlyCollected);
+  document.getElementById('sfBalloonAmt').textContent = fmt(netBalloonProceeds);
+  document.getElementById('sfLifetimeTotal').textContent = fmt(lifetimeTotal);
+
+  // Balloon explainer breakdown
+  const sfBuyerOwes = document.getElementById('sfBuyerOwes');
+  const sfYourOwes = document.getElementById('sfYourOwes');
+  const sfBalloonKeeps = document.getElementById('sfBalloonKeeps');
+  if(sfBuyerOwes) sfBuyerOwes.textContent = fmt(buyerBalloonBalance);
+  if(sfYourOwes) sfYourOwes.textContent = '−' + fmt(garrettMortgageAtBalloon);
+  if(sfBalloonKeeps) sfBalloonKeeps.textContent = fmt(netBalloonProceeds);
+
+  // Context-sensitive "Your Cash at Closing" note
+  const sfClosingNote = document.getElementById('sfClosingNote');
+  if(sfClosingNote){
+    if(netCashAtClosing < 0){
+      sfClosingNote.textContent = 'you bring this to closing (the price of admission)';
+    } else if(sfStrategy === 'wrap'){
+      sfClosingNote.textContent = 'down payment minus selling costs';
+    } else {
+      sfClosingNote.textContent = 'down payment minus costs and mortgage payoff';
+    }
+  }
+
+  // Labels
+  document.getElementById('sfMonthsLbl').textContent = `over ${balloonMonths} months`;
+  document.getElementById('sfBalloonLbl').textContent = `end of year ${balloonYears}`;
+  document.getElementById('sfBalloonYrs').textContent = balloonYears;
+  const sfBalloonYrs2 = document.getElementById('sfBalloonYrs2');
+  if(sfBalloonYrs2) sfBalloonYrs2.textContent = balloonYears;
+  document.getElementById('sfTermSummary').textContent = balloonYears + (balloonYears === 1 ? ' year' : ' years');
+
+  document.getElementById('sfAdvantage').textContent = fmt(advantage);
+  document.getElementById('sfAdvantageYrs').textContent = balloonYears;
+
+  // ===== CASH FLOW WATERFALL =====
+  // Always visible whether clean or wrap, but shows different math
+  const cfBuyerPmt = document.getElementById('cfBuyerPmt');
+  const cfMortgagePmt = document.getElementById('cfMortgagePmt');
+  const cfNetMonthly = document.getElementById('cfNetMonthly');
+  const cfAnnual = document.getElementById('cfAnnual');
+  const cfMortgageRow = document.getElementById('cfMortgageRow');
+  const cfStrategyNote = document.getElementById('cfStrategyNote');
+
+  if(cfBuyerPmt) cfBuyerPmt.textContent = fmt(buyerMonthlyPmt);
+  if(cfMortgagePmt){
+    if(sfStrategy === 'reinvest'){
+      // Show: normal payment + extra principal
+      cfMortgagePmt.textContent = '−' + fmt(buyerMonthlyPmt);
+    } else {
+      cfMortgagePmt.textContent = '−' + fmt(mortgagePI);
+    }
+  }
+  if(cfNetMonthly) cfNetMonthly.textContent = fmt(monthlyToGarrett);
+  if(cfAnnual) cfAnnual.textContent = fmt(annualCashFlow);
+  const cfTotalMonthsLbl = document.getElementById('cfTotalMonthsLbl');
+  if(cfTotalMonthsLbl) cfTotalMonthsLbl.textContent = balloonMonths;
+
+  // Update labels for reinvest scenario
+  const cfMortgageRowLbl = document.querySelector('#cfMortgageRow .cf-lbl-main');
+  const cfMortgageRowSub = document.querySelector('#cfMortgageRow .cf-lbl-sub');
+  if(cfMortgageRowLbl && cfMortgageRowSub){
+    if(sfStrategy === 'reinvest'){
+      cfMortgageRowLbl.textContent = 'You pay your bank (extra principal)';
+      cfMortgageRowSub.textContent = `Your normal $${Math.round(mortgagePI).toLocaleString()} + extra $${Math.round(buyerMonthlyPmt - mortgagePI).toLocaleString()} = paid off faster`;
+    } else {
+      cfMortgageRowLbl.textContent = 'You pay your bank';
+      cfMortgageRowSub.textContent = 'Your locked 3.5% mortgage continues';
+    }
+  }
+
+  if(cfMortgageRow){
+    cfMortgageRow.style.display = (sfStrategy === 'wrap' || sfStrategy === 'reinvest') ? 'grid' : 'none';
+  }
+  if(cfStrategyNote){
+    if(sfStrategy === 'wrap'){
+      cfStrategyNote.textContent = `You collect $${Math.round(buyerMonthlyPmt).toLocaleString()} from the buyer each month, continue paying $${Math.round(mortgagePI).toLocaleString()} to your bank, and pocket the $${Math.round(buyerMonthlyPmt - mortgagePI).toLocaleString()} difference. That's the spread you can spend, save, or invest.`;
+    } else if(sfStrategy === 'reinvest'){
+      cfStrategyNote.textContent = `You collect $${Math.round(buyerMonthlyPmt).toLocaleString()} from the buyer each month and apply the entire amount toward your mortgage — your normal $${Math.round(mortgagePI).toLocaleString()} payment plus an extra $${Math.round(buyerMonthlyPmt - mortgagePI).toLocaleString()} as extra principal. Your bigger payday comes at balloon.`;
+    } else {
+      cfStrategyNote.textContent = `Your 3.5% mortgage is paid off at closing, so the entire $${Math.round(buyerMonthlyPmt).toLocaleString()} monthly payment from the buyer goes directly to you.`;
+    }
+  }
+
+  // Down payment helper text - shows the percentage equivalent
+  const downHelper = document.getElementById('sfDownHelper');
+  if(downHelper){
+    downHelper.textContent = `${downPct.toFixed(1)}% of sale price`;
+  }
 }
 
 /* =========== NET SHEET CALCULATION =========== */
@@ -812,11 +1492,11 @@ function updateNet(){
   const salePrice = (!isNaN(override) && override > 0) ? override : r.suggested;
 
   // Fixed-rate inputs (Utah condo defaults)
-  const listCommPct = 3.0;
-  const buyCommPct = 2.5;
-  const titleEscrow = 1800;
-  const recordingMisc = 350;
-  const homeWarranty = 600;
+  const listCommPct = 2.0;
+  const buyCommPct = 2.0;
+  const titleEscrow = 3500;
+  const recordingMisc = 1200;
+  const homeWarranty = 800;
 
   // Payoff (optional input from Garrett)
   const payoffEl = document.getElementById('payoffInput');
@@ -1056,7 +1736,7 @@ const revealObserver = new IntersectionObserver((entries)=>{
 
 // Tag sections and key elements for reveal
 function attachReveals(){
-  document.querySelectorAll('.section-eyebrow,.section-title,.section-lead,.price-band,.price-explainer,.market-stats,.net-sheet,.timeline,.comp-grid,#map,.summary-table,.lifestyle-grid,.honest-take').forEach(el=>{
+  document.querySelectorAll('.section-eyebrow,.section-title,.section-lead,.price-band,.price-explainer,.market-stats,.net-sheet,.timeline,.comp-grid,#map,.summary-table,.lifestyle-grid,.honest-take,.sf-intro,.sf-inputs,.sf-comparison,.sf-summary,.sf-pros-cons').forEach(el=>{
     el.classList.add('reveal');
     revealObserver.observe(el);
   });
@@ -1071,6 +1751,9 @@ function attachReveals(){
   if(timeline) revealObserver.observe(timeline);
 }
 attachReveals();
+setSFStrategy('wrap'); // initialize as wrap-around (Garrett's most powerful play)
+// Defensive: ensure all SF numbers populate even if there's a timing issue
+setTimeout(()=>{ updateSF(); }, 100);
 
 /* =========== FLASH NUMBER ON CHANGE =========== */
 function flashElement(id){
@@ -1088,6 +1771,21 @@ function flashElement(id){
     el.addEventListener('input',()=>{
       clearTimeout(window._netFlashTimer);
       window._netFlashTimer = setTimeout(()=>flashElement('netAmount'),200);
+    });
+  }
+});
+
+// Flash SF numbers when user types in seller financing inputs
+['sfSalePrice','sfDownAmount','sfRate','sfAmort','sfBalloon','sfPayoff','sfCommission','sfClosingCosts','sfMortgageRate','sfMortgagePI'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el){
+    el.addEventListener('input',()=>{
+      clearTimeout(window._sfFlashTimer);
+      window._sfFlashTimer = setTimeout(()=>{
+        flashElement('sfSellerTotal');
+        flashElement('sfAdvantage');
+        flashElement('sfTradNet');
+      },200);
     });
   }
 });
