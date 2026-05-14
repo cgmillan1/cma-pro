@@ -766,7 +766,7 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
 
   <!-- Hidden inputs for advanced fields -->
   <input type="hidden" id="sfClosingCosts" value="5500">
-  <input type="hidden" id="sfCommission" value="4">
+  <input type="hidden" id="sfCommission" value="2">
 
   <!-- STRATEGY SELECTOR -->
   <div style="margin-top:24px;padding:18px 24px;background:var(--bg);border:1px solid var(--line);border-radius:2px">
@@ -878,13 +878,21 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
           <span class="label">Sale Price <small>negotiated price</small></span>
           <span class="value" id="sfSFSale">$—</span>
         </div>
-        <div class="sf-row deduction">
-          <span class="label">Down Payment From Buyer <small>buyer covers this — cash to you</small></span>
-          <span class="value" id="sfDownAmt">−$—</span>
+        <div class="sf-row highlight">
+          <span class="label">Down Payment From Buyer <small>buyer brings this at closing</small></span>
+          <span class="value" id="sfDownAmt">$—</span>
         </div>
-        <div class="sf-row deduction" style="border-bottom:1px dashed var(--line)">
-          <span class="label">Commissions &amp; Closing Costs <small>4% commission + $5,500 fees</small></span>
+        <div class="sf-row deduction">
+          <span class="label">Seller's Agent Commission <small id="sfCommLbl">2% of sale price</small></span>
+          <span class="value" id="sfCommAmt">−$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Closing Costs <small>title, escrow, recording, warranty</small></span>
           <span class="value" id="sfSFCosts">−$—</span>
+        </div>
+        <div class="sf-row" style="background:var(--accent-soft);padding:14px 16px;margin:6px -16px 0;border-radius:2px;border-left:3px solid var(--accent)">
+          <span class="label" style="font-weight:600">Cash to You at Closing <small>what's left from the down payment</small></span>
+          <span class="value" id="sfCashAtClosing" style="font-size:18px;color:var(--accent)">$—</span>
         </div>
         <div class="sf-row" style="background:var(--bg);padding:14px 16px;margin:6px -16px 0;border-radius:2px">
           <span class="label" style="font-weight:600">Loan Amount Carried by You <small>this is the note the buyer signs</small></span>
@@ -1281,10 +1289,17 @@ function updateSF(){
   const totalSellingCosts = commission + closingCosts;
 
   // ===== OPTION A: Traditional sale =====
-  const tradNet = salePrice - totalSellingCosts - mortgagePayoff;
+  // Traditional: commission + closing costs come out of sale proceeds
+  // Note: traditional uses 4% (2% listing + 2% buyer side) since buyer agent commission applies
+  const tradCommission = salePrice * 0.04;
+  const tradNet = salePrice - tradCommission - closingCosts - mortgagePayoff;
 
   // ===== OPTION B: Seller financing =====
+  // For SF: down payment covers seller agent commission + closing costs first
+  // Whatever remains of the down payment goes to Garrett at closing
+  // The financed amount the buyer signs a note for = full sale price minus the down payment
   const downPct = (downAmount / salePrice) * 100;
+  const cashFromDown = downAmount - commission - closingCosts; // what Garrett actually pockets at closing
 
   let financedAmount;
   let netCashAtClosing;
@@ -1292,10 +1307,10 @@ function updateSF(){
 
   if(sfStrategy === 'clean'){
     financedAmount = salePrice - downAmount;
-    netCashAtClosing = downAmount - totalSellingCosts - mortgagePayoff;
+    netCashAtClosing = cashFromDown - mortgagePayoff;
   } else {
     financedAmount = salePrice - downAmount;
-    netCashAtClosing = downAmount - totalSellingCosts;
+    netCashAtClosing = cashFromDown;
   }
 
   // Buyer's monthly P&I to Garrett
@@ -1383,8 +1398,11 @@ function updateSF(){
 
   // PHASE 1: At Closing
   safeSetText('sfSFSale', fmt(salePrice));
-  safeSetText('sfDownAmt', '−' + fmt(downAmount));
-  safeSetText('sfSFCosts', '−' + fmt(totalSellingCosts));
+  safeSetText('sfDownAmt', fmt(downAmount));
+  safeSetText('sfCommAmt', '−' + fmt(commission));
+  safeSetText('sfCommLbl', `${commissionPct}% of sale price`);
+  safeSetText('sfSFCosts', '−' + fmt(closingCosts));
+  safeSetText('sfCashAtClosing', fmt(cashFromDown));
   // Loan carried by Garrett = what he finances to the buyer (sale price - down payment)
   safeSetText('sfLoanCarried', fmt(financedAmount));
 
