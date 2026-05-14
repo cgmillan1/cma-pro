@@ -867,7 +867,7 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
         <h3>Seller <em>Financed</em></h3>
       </div>
       <div class="sf-headline">
-        <div class="label">Day 1 Cash + Total Return</div>
+        <div class="label">Total You Walk Away With</div>
         <div class="num" id="sfSellerTotal">$—</div>
         <div class="sub">Over the full <span id="sfBalloonYrs">5</span>-year term</div>
       </div>
@@ -878,27 +878,31 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
           <span class="label">Sale Price <small>negotiated price</small></span>
           <span class="value" id="sfSFSale">$—</span>
         </div>
-        <div class="sf-row highlight">
-          <span class="label">Down Payment You Receive <small>cash in your hand at closing</small></span>
-          <span class="value" id="sfDownAmt">$—</span>
-        </div>
         <div class="sf-row deduction">
-          <span class="label">Commission &amp; Closing Costs <small>4% commission + $2,750 fees</small></span>
+          <span class="label">Down Payment From Buyer <small>buyer covers this — cash to you</small></span>
+          <span class="value" id="sfDownAmt">−$—</span>
+        </div>
+        <div class="sf-row deduction" style="border-bottom:1px dashed var(--line)">
+          <span class="label">Commissions &amp; Closing Costs <small>4% commission + $5,500 fees</small></span>
           <span class="value" id="sfSFCosts">−$—</span>
         </div>
-        <div class="sf-row deduction">
-          <span class="label">Mortgage Payoff <small>only applies if you pay it off at closing</small></span>
-          <span class="value" id="sfSFPayoff">−$—</span>
-        </div>
-        <div class="sf-row" style="border-bottom:1px dashed var(--line)">
-          <span class="label">Your Cash at Closing <small id="sfClosingNote">down payment minus costs</small></span>
-          <span class="value" id="sfNetClosing">$—</span>
+        <div class="sf-row" style="background:var(--bg);padding:14px 16px;margin:6px -16px 0;border-radius:2px">
+          <span class="label" style="font-weight:600">Loan Amount Carried by You <small>this is the note the buyer signs</small></span>
+          <span class="value" id="sfLoanCarried" style="font-size:18px;color:var(--accent)">$—</span>
         </div>
 
         <!-- PHASE 2: MONTHLY INCOME -->
         <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 2 · For 5 Years (Months 1–60)</div>
+        <div class="sf-row">
+          <span class="label">Buyer Pays You Monthly <small id="sfBuyerRateLbl">P&amp;I at 6.8% on the financed amount</small></span>
+          <span class="value" id="sfBuyerMonthly">$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">You Pay Your 3.5% Mortgage <small>your PITI continues monthly</small></span>
+          <span class="value" id="sfYourMonthly">−$—</span>
+        </div>
         <div class="sf-row highlight">
-          <span class="label">Monthly Profit to You <small>buyer's payment minus your mortgage</small></span>
+          <span class="label">Monthly Profit to You <small>the spread you keep</small></span>
           <span class="value" id="sfMonthlyPmt">$—</span>
         </div>
         <div class="sf-row">
@@ -908,8 +912,16 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
 
         <!-- PHASE 3: BALLOON -->
         <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 3 · At Balloon (End of Year 5)</div>
+        <div class="sf-row">
+          <span class="label">Buyer's Loan Balance to You <small>what the buyer still owes after 5 years</small></span>
+          <span class="value" id="sfBuyerOwes">$—</span>
+        </div>
+        <div class="sf-row deduction">
+          <span class="label">Your Mortgage Balance to Bank <small>your 3.5% loan after 5 years of payments</small></span>
+          <span class="value" id="sfYourOwes">−$—</span>
+        </div>
         <div class="sf-row highlight">
-          <span class="label">Final Payment to You <small id="sfBalloonLbl">buyer refinances or pays you off</small></span>
+          <span class="label">You Receive at Balloon <small id="sfBalloonLbl">cash to you when buyer refinances</small></span>
           <span class="value" id="sfBalloonAmt">$—</span>
         </div>
 
@@ -918,31 +930,11 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
           <span class="value" id="sfLifetimeTotal">$—</span>
         </div>
 
-        <!-- BALLOON EXPLAINER -->
-        <details style="margin-top:14px;padding:0;background:var(--accent-soft);border:1px solid var(--accent);border-radius:2px;overflow:hidden">
-          <summary style="cursor:pointer;padding:14px 16px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center">
-            <span>How the balloon payment works</span>
-            <span style="font-family:'Fraunces',serif;font-size:18px;font-style:italic;color:var(--gold)">+</span>
-          </summary>
-          <div style="padding:0 16px 16px;font-size:12px;line-height:1.7;color:var(--ink-soft)">
-            <p style="margin-bottom:10px">After 5 years of monthly payments, the buyer still owes you most of the financed amount because they've been paying mostly interest. They'll either refinance with a traditional lender or sell, and the proceeds go to you.</p>
-            <div style="background:var(--paper);padding:14px;border-left:2px solid var(--gold);font-family:'Fraunces',serif;font-style:italic">
-              <div style="display:flex;justify-content:space-between;padding:4px 0">
-                <span>Buyer pays off their loan to you</span>
-                <strong style="font-family:'Inter',sans-serif;font-style:normal;color:var(--ink)" id="sfBuyerOwes">$—</strong>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--warn)">
-                <span>You pay off your remaining 3.5% mortgage</span>
-                <strong style="font-family:'Inter',sans-serif;font-style:normal" id="sfYourOwes">−$—</strong>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:8px 0 4px;border-top:1px solid var(--line);color:var(--accent);font-weight:600">
-                <span>You keep the difference</span>
-                <strong style="font-family:'Inter',sans-serif;font-style:normal" id="sfBalloonKeeps">$—</strong>
-              </div>
-            </div>
-            <p style="margin-top:10px;font-style:italic">Why so much? Over 5 years, your $295K mortgage paid down to ~$256K (the bank gets less interest, more principal as time goes on). Meanwhile, the buyer's higher-rate loan still has most of the balance outstanding. <strong style="font-style:normal;color:var(--accent)">You walk away with the equity that built up during those 5 years.</strong></p>
-          </div>
-        </details>
+        <!-- WHY IT WORKS EXPLAINER -->
+        <div style="margin-top:14px;padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:12px;line-height:1.6;color:var(--ink-soft)">
+          <strong style="font-style:normal;color:var(--accent);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:6px">Why the balloon is so big</strong>
+          Over 5 years, your $295K mortgage organically paid down to ~$256K (the bank's amortization does this automatically). Meanwhile, the buyer's higher-rate loan stays around ~$305K. <strong style="font-style:normal;color:var(--accent)">That $48K gap is yours.</strong>
+        </div>
       </div>
     </div>
   </div>
@@ -1266,6 +1258,12 @@ function setSFStrategy(s){
 }
 
 function updateSF(){
+  // Null-safe DOM text setter
+  const safeSetText = (id, text) => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+  };
+
   const salePrice = parseFloat(document.getElementById('sfSalePrice').value) || 0;
   const downAmount = parseFloat(document.getElementById('sfDownAmount').value) || 0;
   const buyerRate = parseFloat(document.getElementById('sfRate').value) || 0;
@@ -1373,57 +1371,52 @@ function updateSF(){
 
   // ===== UPDATE DOM =====
   // Traditional column
-  document.getElementById('sfTradNet').textContent = fmt(tradNet);
-  document.getElementById('sfTradSale').textContent = fmt(salePrice);
-  document.getElementById('sfTradComm').textContent = '−' + fmt(commission);
-  document.getElementById('sfTradClosing').textContent = '−' + fmt(closingCosts);
-  document.getElementById('sfTradPayoff').textContent = '−' + fmt(mortgagePayoff);
-  document.getElementById('sfTradTotal').textContent = fmt(tradNet);
+  safeSetText('sfTradNet', fmt(tradNet));
+  safeSetText('sfTradSale', fmt(salePrice));
+  safeSetText('sfTradComm', '−' + fmt(commission));
+  safeSetText('sfTradClosing', '−' + fmt(closingCosts));
+  safeSetText('sfTradPayoff', '−' + fmt(mortgagePayoff));
+  safeSetText('sfTradTotal', fmt(tradNet));
 
   // Seller financed column
-  document.getElementById('sfSellerTotal').textContent = fmt(lifetimeTotal);
-  document.getElementById('sfSFSale').textContent = fmt(salePrice);
-  document.getElementById('sfDownAmt').textContent = fmt(downAmount);
-  document.getElementById('sfSFCosts').textContent = '−' + fmt(totalSellingCosts);
-  document.getElementById('sfSFPayoff').textContent = sfStrategy === 'clean'
-    ? '−' + fmt(mortgagePayoff)
-    : '$0 (stays in place)';
-  document.getElementById('sfNetClosing').textContent = fmt(netCashAtClosing);
-  document.getElementById('sfMonthlyPmt').textContent = fmt(monthlyToGarrett);
-  document.getElementById('sfTotalMonthly').textContent = fmt(totalMonthlyCollected);
-  document.getElementById('sfBalloonAmt').textContent = fmt(netBalloonProceeds);
-  document.getElementById('sfLifetimeTotal').textContent = fmt(lifetimeTotal);
+  safeSetText('sfSellerTotal', fmt(lifetimeTotal));
 
-  // Balloon explainer breakdown
-  const sfBuyerOwes = document.getElementById('sfBuyerOwes');
-  const sfYourOwes = document.getElementById('sfYourOwes');
-  const sfBalloonKeeps = document.getElementById('sfBalloonKeeps');
-  if(sfBuyerOwes) sfBuyerOwes.textContent = fmt(buyerBalloonBalance);
-  if(sfYourOwes) sfYourOwes.textContent = '−' + fmt(garrettMortgageAtBalloon);
-  if(sfBalloonKeeps) sfBalloonKeeps.textContent = fmt(netBalloonProceeds);
+  // PHASE 1: At Closing
+  safeSetText('sfSFSale', fmt(salePrice));
+  safeSetText('sfDownAmt', '−' + fmt(downAmount));
+  safeSetText('sfSFCosts', '−' + fmt(totalSellingCosts));
+  // Loan carried by Garrett = what he finances to the buyer (sale price - down payment)
+  safeSetText('sfLoanCarried', fmt(financedAmount));
 
-  // Context-sensitive "Your Cash at Closing" note
-  const sfClosingNote = document.getElementById('sfClosingNote');
-  if(sfClosingNote){
-    if(netCashAtClosing < 0){
-      sfClosingNote.textContent = 'you bring this to closing (the price of admission)';
-    } else if(sfStrategy === 'wrap'){
-      sfClosingNote.textContent = 'down payment minus selling costs';
-    } else {
-      sfClosingNote.textContent = 'down payment minus costs and mortgage payoff';
-    }
-  }
+  // PHASE 2: Monthly cash flow during the 5 years
+  safeSetText('sfBuyerMonthly', fmt(buyerMonthlyPmt));
+  safeSetText('sfYourMonthly', '−' + fmt(mortgagePI));
+  safeSetText('sfMonthlyPmt', fmt(monthlyToGarrett));
+  safeSetText('sfTotalMonthly', fmt(totalMonthlyCollected));
 
-  // Labels
-  document.getElementById('sfMonthsLbl').textContent = `over ${balloonMonths} months`;
-  document.getElementById('sfBalloonLbl').textContent = `end of year ${balloonYears}`;
-  document.getElementById('sfBalloonYrs').textContent = balloonYears;
-  const sfBalloonYrs2 = document.getElementById('sfBalloonYrs2');
-  if(sfBalloonYrs2) sfBalloonYrs2.textContent = balloonYears;
-  document.getElementById('sfTermSummary').textContent = balloonYears + (balloonYears === 1 ? ' year' : ' years');
+  // PHASE 3: At Balloon
+  safeSetText('sfBuyerOwes', fmt(buyerBalloonBalance));
+  safeSetText('sfYourOwes', '−' + fmt(garrettMortgageAtBalloon));
+  safeSetText('sfBalloonAmt', fmt(netBalloonProceeds));
 
-  document.getElementById('sfAdvantage').textContent = fmt(advantage);
-  document.getElementById('sfAdvantageYrs').textContent = balloonYears;
+  // Total
+  safeSetText('sfLifetimeTotal', fmt(lifetimeTotal));
+
+  // Dynamic interest rate label in Phase 2
+  safeSetText('sfBuyerRateLbl', `P&I at ${buyerRate}% on the financed amount`);
+
+  // Legacy/unused but kept for safety (in case any old code refs them)
+  safeSetText('sfBalloonKeeps', fmt(netBalloonProceeds));
+  safeSetText('sfSFPayoff', sfStrategy === 'clean' ? '−' + fmt(mortgagePayoff) : '$0 (stays in place)');
+
+  // Labels (with null safety)
+  safeSetText('sfMonthsLbl', `over ${balloonMonths} months`);
+  safeSetText('sfBalloonLbl', `end of year ${balloonYears}`);
+  safeSetText('sfBalloonYrs', balloonYears);
+  safeSetText('sfBalloonYrs2', balloonYears);
+  safeSetText('sfTermSummary', balloonYears + (balloonYears === 1 ? ' year' : ' years'));
+  safeSetText('sfAdvantage', fmt(advantage));
+  safeSetText('sfAdvantageYrs', balloonYears);
 
   // ===== CASH FLOW WATERFALL =====
   // Always visible whether clean or wrap, but shows different math
