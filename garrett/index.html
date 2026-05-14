@@ -484,42 +484,6 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
   </div>
 </section>
 
-<!-- ROI CALCULATOR (slim) -->
-<section id="roi" class="narrow reveal">
-  <div class="section-eyebrow">Optional</div>
-  <h2 class="section-title">Thinking about <em>small fixes</em>?</h2>
-  <p class="section-lead">A little paint or staging often returns more than it costs. Plug in what you'd spend and see the estimated return.</p>
-
-  <div class="roi-slim">
-    <div class="roi-intro">These are typical Utah County returns. Conservative multipliers based on what actually moves the needle for condos in your price range.</div>
-    <div class="roi-grid">
-      <div class="roi-input">
-        <label>Paint ($)</label>
-        <input type="number" id="roiPaint" value="0" oninput="updateROI()">
-      </div>
-      <div class="roi-input">
-        <label>Carpet / Floors ($)</label>
-        <input type="number" id="roiFloor" value="0" oninput="updateROI()">
-      </div>
-      <div class="roi-input">
-        <label>Staging ($)</label>
-        <input type="number" id="roiStage" value="0" oninput="updateROI()">
-      </div>
-      <div class="roi-input">
-        <label>Curb / Touch-ups ($)</label>
-        <input type="number" id="roiCurb" value="0" oninput="updateROI()">
-      </div>
-    </div>
-    <div class="roi-result" id="roiResult">
-      <div class="roi-result-label">
-        Estimated bump in sale price
-        <small id="roiBreakdown">Spend $0, see what comes back</small>
-      </div>
-      <div class="roi-result-num">+ <em id="roiAmount">$0</em></div>
-    </div>
-  </div>
-</section>
-
 <!-- CTA -->
 <div class="cta-block">
   <div class="cta-eyebrow">What happens next</div>
@@ -652,33 +616,6 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, {threshold: 0.12, rootMargin: '0px 0px -60px 0px'});
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-/* ROI CALCULATOR */
-const roiMultipliers = {paint:1.6, floor:1.4, stage:3.0, curb:2.2};
-function updateROI(){
-  const paint = parseFloat(document.getElementById('roiPaint').value) || 0;
-  const floor = parseFloat(document.getElementById('roiFloor').value) || 0;
-  const stage = parseFloat(document.getElementById('roiStage').value) || 0;
-  const curb = parseFloat(document.getElementById('roiCurb').value) || 0;
-
-  const totalSpend = paint + floor + stage + curb;
-  const totalReturn = paint*roiMultipliers.paint + floor*roiMultipliers.floor + stage*roiMultipliers.stage + curb*roiMultipliers.curb;
-  const netGain = totalReturn - totalSpend;
-
-  const result = document.getElementById('roiResult');
-  const amount = document.getElementById('roiAmount');
-  const breakdown = document.getElementById('roiBreakdown');
-
-  if(totalSpend > 0){
-    result.classList.add('active');
-    amount.textContent = fmt(netGain);
-    breakdown.textContent = `Spend ${fmt(totalSpend)} → estimated ${fmt(totalReturn)} added to sale price · ${Math.round((netGain/totalSpend)*100)}% return`;
-  } else {
-    result.classList.remove('active');
-    amount.textContent = '$0';
-    breakdown.textContent = 'Spend $0, see what comes back';
-  }
-}
 
 /* ACTIONS */
 function scheduleCall(){
