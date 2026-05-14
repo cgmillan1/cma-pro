@@ -3,482 +3,219 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prepared for Garrett · Newport Village Market Analysis</title>
-<meta name="description" content="A personalized comparative market analysis for 203 N 1200 W #203, Orem UT, prepared by Cristian Millan, Real Brokerage Utah.">
+<title>Prepared for Garrett · Your Home Sale Options</title>
+<meta name="description" content="A simple, clear analysis of your home's value and your two best paths to sell — prepared by Cristian Millan, Real Brokerage Utah.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{
   --bg:#faf8f4; --ink:#0e0e0e; --ink-soft:#3a3a3a; --muted:#8a8680;
   --line:#e6e1d8; --paper:#ffffff; --accent:#1a3a2e; --accent-soft:#e8efea;
   --warn:#a3502a; --gold:#a88b56;
-  --sold:#1a3a2e; --pending:#a88b56; --active:#a3502a;
+  --sold:#1a3a2e;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-
-/* ANIMATIONS */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(24px)}
-  to{opacity:1;transform:translateY(0)}
-}
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-@keyframes shimmerIn{
-  0%{opacity:0;transform:translateY(8px) scale(0.98)}
-  100%{opacity:1;transform:translateY(0) scale(1)}
-}
-@keyframes pulse{
-  0%,100%{box-shadow:0 0 0 0 rgba(168,139,86,0.4)}
-  50%{box-shadow:0 0 0 12px rgba(168,139,86,0)}
-}
-@keyframes drawLine{
-  from{transform:scaleY(0);transform-origin:top}
-  to{transform:scaleY(1);transform-origin:top}
-}
-
-/* Hero entrance staggered */
-.hero-eyebrow{animation:fadeUp 0.7s ease-out 0.1s both}
-.hero-title{animation:fadeUp 0.9s ease-out 0.2s both}
-.hero-sub{animation:fadeUp 0.9s ease-out 0.4s both}
-.hero-cta{animation:fadeUp 0.9s ease-out 0.6s both}
-.hero-bottom .hero-stat-row{animation:fadeUp 1s ease-out 0.8s both}
-.brand-block{animation:fadeIn 1s ease-out 0.3s both}
-.hero-date{animation:fadeIn 1s ease-out 0.5s both}
-
-/* Reveal-on-scroll base state */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease-out,transform 0.7s ease-out}
-.reveal.visible{opacity:1;transform:translateY(0)}
-
-/* Reveal stagger for grids */
-.reveal-stagger > *{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease-out,transform 0.6s ease-out}
-.reveal-stagger.visible > *{opacity:1;transform:translateY(0)}
-.reveal-stagger.visible > *:nth-child(1){transition-delay:0.05s}
-.reveal-stagger.visible > *:nth-child(2){transition-delay:0.15s}
-.reveal-stagger.visible > *:nth-child(3){transition-delay:0.25s}
-.reveal-stagger.visible > *:nth-child(4){transition-delay:0.35s}
-.reveal-stagger.visible > *:nth-child(5){transition-delay:0.45s}
-.reveal-stagger.visible > *:nth-child(6){transition-delay:0.55s}
-.reveal-stagger.visible > *:nth-child(7){transition-delay:0.65s}
-.reveal-stagger.visible > *:nth-child(8){transition-delay:0.75s}
-
-/* Price band number pulse on strategy change */
-.price-range.flash{animation:shimmerIn 0.5s ease-out}
-.net-amount.flash{animation:shimmerIn 0.5s ease-out}
-
-/* Subject property "honest take" callout subtle glow */
-.honest-take{position:relative;overflow:hidden}
-.honest-take::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(168,139,86,0.08),transparent);animation:none}
-.honest-take.visible::before{animation:slideShine 2s ease-out 0.6s}
-@keyframes slideShine{
-  to{left:100%}
-}
-
-/* Anchor badge gentle pulse */
-.comp-card:not(.excluded) [data-anchor="true"]{animation:pulse 2.5s ease-in-out infinite}
-
-/* Timeline line draw-in */
-.timeline-line{transform-origin:top;transform:scaleY(0);transition:transform 1.4s cubic-bezier(0.25,0.46,0.45,0.94)}
-.timeline.visible .timeline-line{transform:scaleY(1)}
-
-/* Respect user preference */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important}
-  .reveal,.reveal-stagger > *{opacity:1;transform:none}
-  .timeline-line{transform:scaleY(1)}
-}
 h1,h2,h3,h4,.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
 em{font-style:italic;color:var(--gold);font-weight:300}
 .eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);font-weight:500}
 
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease-out,transform 0.7s ease-out}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+  .reveal{opacity:1;transform:none}
+}
+
 /* HERO */
-.hero{background:var(--ink);color:var(--bg);min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;overflow:hidden}
+.hero{background:var(--ink);color:var(--bg);min-height:80vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.15;pointer-events:none}
 .hero-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
-.brand-block{display:flex;align-items:center;gap:14px}
+.brand-block{display:flex;align-items:center;gap:14px;animation:fadeUp 0.9s ease-out 0.2s both}
 .brand-mark{width:48px;height:48px;border-radius:50%;background:rgba(168,139,86,0.15);border:1px solid rgba(168,139,86,0.3);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--gold)}
 .brand-name{font-family:'Fraunces',serif;font-size:17px;letter-spacing:-0.01em}
 .brand-name span{font-style:italic;color:var(--gold)}
 .brand-meta{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(250,248,244,0.5);margin-top:2px}
-.hero-date{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(250,248,244,0.5);text-align:right}
-.hero-center{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:900px;margin:80px 0;position:relative;z-index:2}
-.hero-eyebrow{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:24px}
-.hero-title{font-family:'Fraunces',serif;font-size:clamp(48px,9vw,108px);line-height:0.95;letter-spacing:-0.04em;font-weight:300;margin-bottom:24px}
+.hero-date{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(250,248,244,0.5);text-align:right;animation:fadeUp 0.9s ease-out 0.4s both}
+.hero-center{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:900px;margin:60px 0;position:relative;z-index:2}
+.hero-eyebrow{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;animation:fadeUp 0.9s ease-out 0.3s both}
+.hero-title{font-family:'Fraunces',serif;font-size:clamp(48px,9vw,100px);line-height:0.95;letter-spacing:-0.04em;font-weight:300;margin-bottom:24px;animation:fadeUp 1s ease-out 0.4s both}
 .hero-title em{color:var(--gold)}
-.hero-sub{font-family:'Fraunces',serif;font-size:clamp(20px,3vw,28px);font-weight:300;line-height:1.4;color:rgba(250,248,244,0.75);max-width:700px;letter-spacing:-0.01em}
-.hero-cta{display:flex;gap:14px;margin-top:48px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;border-radius:2px;cursor:pointer;font-family:inherit;border:1px solid;transition:all .2s;background:transparent}
+.hero-sub{font-family:'Fraunces',serif;font-size:clamp(18px,2.5vw,24px);font-weight:300;line-height:1.5;color:rgba(250,248,244,0.75);max-width:660px;letter-spacing:-0.01em;animation:fadeUp 1s ease-out 0.6s both}
+.hero-cta{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;animation:fadeUp 1s ease-out 0.8s both}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;border-radius:2px;cursor:pointer;font-family:inherit;border:1px solid;transition:all .2s;background:transparent;text-decoration:none}
 .btn-primary{background:var(--gold);border-color:var(--gold);color:var(--ink)}
 .btn-primary:hover{background:transparent;color:var(--gold)}
 .btn-ghost{border-color:rgba(250,248,244,0.3);color:var(--bg)}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
 .btn-dark{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .btn-dark:hover{opacity:0.85}
-.btn-light{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-.btn-light:hover{opacity:0.85}
-.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:2;flex-wrap:wrap;gap:24px}
+.hero-bottom{position:relative;z-index:2;animation:fadeUp 1s ease-out 1s both}
 .scroll-cue{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(250,248,244,0.5);display:flex;align-items:center;gap:10px}
 .scroll-cue::before{content:'';width:40px;height:1px;background:rgba(250,248,244,0.3)}
-.hero-stat-row{display:flex;gap:48px;flex-wrap:wrap}
-.hero-stat{display:block}
-.hero-stat .v{font-family:'Fraunces',serif;font-size:24px;letter-spacing:-0.01em;display:block}
-.hero-stat .l{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(250,248,244,0.5);margin-top:4px}
-@media(max-width:640px){.hero{padding:28px 20px}.hero-stat-row{gap:24px}}
+@media(max-width:640px){.hero{padding:28px 20px;min-height:auto}}
 
-/* SECTIONS */
-section{padding:96px 48px;max-width:1200px;margin:0 auto}
-section.narrow{max-width:920px}
-@media(max-width:640px){section{padding:64px 20px}}
-.section-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:500}
-.section-title{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-0.02em;font-weight:300;margin-bottom:24px}
-.section-lead{font-family:'Fraunces',serif;font-size:clamp(18px,2.2vw,22px);font-weight:300;line-height:1.6;color:var(--ink-soft);max-width:720px;font-style:italic}
-
-/* PRICE BAND */
-.price-band{background:var(--accent);color:var(--bg);padding:80px 48px;text-align:center;border-radius:2px;margin:48px 0;position:relative;overflow:hidden}
-.price-band::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.1;pointer-events:none}
-.price-band-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:20px;position:relative;z-index:1}
-.price-range{font-family:'Fraunces',serif;font-size:clamp(40px,7vw,76px);letter-spacing:-0.03em;font-weight:300;line-height:1.1;position:relative;z-index:1}
-.price-range em{color:var(--gold)}
-.price-suggested{font-size:13px;letter-spacing:0.2em;text-transform:uppercase;margin-top:24px;color:rgba(255,255,255,0.85);position:relative;z-index:1}
-.price-suggested strong{font-family:'Fraunces',serif;font-size:26px;font-weight:400;color:var(--gold);text-transform:none;letter-spacing:-0.01em;margin-left:8px}
-.strategy-toggle{display:inline-flex;border:1px solid rgba(255,255,255,0.2);border-radius:2px;margin-top:32px;background:rgba(0,0,0,0.2);position:relative;z-index:1}
-.strategy-toggle button{padding:10px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.6);background:transparent;border:none;cursor:pointer;font-family:inherit;font-weight:500;border-right:1px solid rgba(255,255,255,0.1)}
-.strategy-toggle button:last-child{border-right:none}
-.strategy-toggle button.active{background:var(--gold);color:var(--ink)}
-
-/* PRICE EXPLAINER */
-.price-explainer{margin-top:32px;border:1px solid var(--line);background:var(--paper);border-radius:2px;overflow:hidden}
-.price-explainer summary{padding:18px 24px;cursor:pointer;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink-soft);list-style:none;display:flex;align-items:center;justify-content:space-between;transition:background .15s}
-.price-explainer summary::-webkit-details-marker{display:none}
-.price-explainer summary:hover{background:var(--accent-soft)}
-.price-explainer summary::after{content:'+';font-family:'Fraunces',serif;font-size:24px;color:var(--gold);font-weight:300;line-height:1;transition:transform .2s}
-.price-explainer[open] summary::after{content:'−'}
-.price-explainer .explainer-body{padding:0 24px 24px;font-size:14px;line-height:1.7;color:var(--ink-soft);font-family:'Fraunces',serif;font-style:italic}
-.price-explainer .explainer-body strong{font-family:'Inter',sans-serif;font-style:normal;color:var(--ink);font-weight:600}
-.price-explainer .explainer-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;font-style:normal;font-family:'Inter',sans-serif}
-.explainer-step{background:var(--bg);padding:14px;border-left:2px solid var(--gold)}
-.explainer-step .num{font-family:'Fraunces',serif;font-size:11px;font-style:italic;color:var(--gold);letter-spacing:0.08em;margin-bottom:4px}
-.explainer-step .lbl{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink);font-weight:600;margin-bottom:4px}
-.explainer-step .desc{font-size:12px;color:var(--ink-soft);line-height:1.5}
-@media(max-width:640px){.price-explainer .explainer-steps{grid-template-columns:1fr}.price-explainer summary{padding:14px 18px;font-size:10px}}
-
-/* NET SHEET */
-.net-sheet{background:var(--paper);border:1px solid var(--line);padding:0;margin-top:32px;overflow:hidden}
-.net-summary{background:var(--accent);color:var(--bg);padding:36px 32px;text-align:center;position:relative;overflow:hidden}
-.net-summary::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.12;pointer-events:none}
-.net-summary .net-lbl{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:12px;position:relative;z-index:1}
-.net-summary .net-amount{font-family:'Fraunces',serif;font-size:clamp(36px,7vw,56px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
-.net-summary .net-amount em{color:var(--gold);font-style:italic}
-.net-summary .net-context{font-size:13px;color:rgba(255,255,255,0.7);margin-top:14px;letter-spacing:0.05em;position:relative;z-index:1}
-.net-summary .net-context strong{font-family:'Fraunces',serif;color:var(--gold);font-weight:400;font-style:italic;letter-spacing:-0.01em}
-
-.net-breakdown{padding:24px 32px}
-.net-breakdown summary{cursor:pointer;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:6px 0}
-.net-breakdown summary::-webkit-details-marker{display:none}
-.net-breakdown summary::after{content:'+';font-family:'Fraunces',serif;font-size:22px;color:var(--gold);font-weight:300}
-.net-breakdown[open] summary::after{content:'−'}
-.net-breakdown-body{margin-top:20px}
-.net-line{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;font-feature-settings:"tnum"}
-.net-line:last-child{border-bottom:none}
-.net-line .label{color:var(--ink-soft);display:flex;flex-direction:column;gap:2px}
-.net-line .label small{font-size:10px;color:var(--muted);letter-spacing:0.05em;font-weight:400}
-.net-line .value{font-family:'Fraunces',serif;font-size:16px;letter-spacing:-0.005em}
-.net-line.deduction .value{color:var(--warn)}
-.net-line.subtotal{border-top:2px solid var(--ink);border-bottom:none;margin-top:8px;padding-top:14px;font-weight:600}
-.net-line.subtotal .value{font-size:18px;color:var(--ink)}
-.net-disclaimer{font-size:11px;color:var(--muted);font-style:italic;margin-top:18px;line-height:1.6;padding:12px;background:var(--bg);border-left:2px solid var(--line)}
-
-/* NET SHEET INTERACTIVE INPUTS */
-.net-inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;padding:18px;background:var(--bg);border-radius:2px}
-.net-input{display:flex;flex-direction:column;gap:6px}
-.net-input label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.net-input input{padding:10px 12px;border:1px solid var(--line);background:var(--paper);font-family:inherit;font-size:14px;font-feature-settings:"tnum";border-radius:2px;width:100%}
-.net-input input:focus{outline:none;border-color:var(--ink)}
-@media(max-width:640px){.net-summary{padding:28px 20px}.net-breakdown{padding:20px}.net-inputs{grid-template-columns:1fr;padding:14px}.net-line{font-size:13px}.net-line .value{font-size:15px}}
-
-/* TIMELINE */
-.timeline{margin-top:48px;position:relative}
-.timeline-line{position:absolute;left:24px;top:30px;bottom:30px;width:2px;background:linear-gradient(to bottom,var(--gold) 0%,var(--accent) 50%,var(--line) 100%)}
-.timeline-step{display:grid;grid-template-columns:48px 1fr;gap:24px;padding:16px 0;align-items:start;position:relative;z-index:1}
-.timeline-dot{width:48px;height:48px;border-radius:50%;background:var(--paper);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:18px;font-style:italic;color:var(--gold);font-weight:300;flex-shrink:0;box-shadow:0 2px 8px rgba(168,139,86,0.15)}
-.timeline-step:nth-child(3) .timeline-dot,.timeline-step:nth-child(4) .timeline-dot{border-color:var(--accent);color:var(--accent)}
-.timeline-step:nth-child(5) .timeline-dot,.timeline-step:nth-child(6) .timeline-dot{border-color:var(--ink);color:var(--ink);background:var(--ink);color:var(--gold)}
-.timeline-content{background:var(--paper);border:1px solid var(--line);padding:20px 24px;border-radius:2px;transition:border-color .15s}
-.timeline-step:hover .timeline-content{border-color:var(--ink-soft)}
-.timeline-week{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:4px;display:block}
-.timeline-title{font-family:'Fraunces',serif;font-size:20px;letter-spacing:-0.01em;margin-bottom:6px;line-height:1.2}
-.timeline-title em{color:var(--gold)}
-.timeline-desc{font-size:13px;color:var(--ink-soft);line-height:1.6}
-.timeline-desc strong{color:var(--ink);font-weight:600}
-@media(max-width:640px){
-  .timeline-line{left:18px;top:24px;bottom:24px}
-  .timeline-step{grid-template-columns:36px 1fr;gap:16px}
-  .timeline-dot{width:36px;height:36px;font-size:14px}
-  .timeline-content{padding:16px 18px}
-  .timeline-title{font-size:17px}
-  .timeline-desc{font-size:12px}
-}
-
-/* SELLER FINANCING SECTION */
-.sf-intro{background:var(--ink);color:var(--bg);padding:48px;border-radius:2px;margin-top:48px;position:relative;overflow:hidden}
-.sf-intro::after{content:'';position:absolute;top:-150px;right:-150px;width:400px;height:400px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.1;pointer-events:none}
-.sf-intro-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;position:relative;z-index:1}
-.sf-intro-title{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:-0.02em;line-height:1.15;margin-bottom:16px;position:relative;z-index:1}
-.sf-intro-title em{color:var(--gold);font-style:italic}
-.sf-intro p{font-family:'Fraunces',serif;font-size:16px;line-height:1.6;color:rgba(250,248,244,0.75);font-style:italic;max-width:640px;position:relative;z-index:1}
-
-.sf-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px;padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:2px}
-.sf-input{display:flex;flex-direction:column;gap:6px}
-.sf-input label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.sf-input input{padding:10px 12px;border:1px solid var(--line);background:var(--bg);font-family:inherit;font-size:14px;font-feature-settings:"tnum";border-radius:2px;width:100%;transition:border-color .15s}
-.sf-input input:focus{outline:none;border-color:var(--ink);background:var(--paper)}
-.sf-input .suffix{position:relative}
-.sf-input .suffix::after{content:attr(data-suffix);position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
-.sf-input .suffix input{padding-right:32px}
-@media(max-width:768px){.sf-inputs{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.sf-inputs{grid-template-columns:1fr}}
-
-.sf-comparison{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
-@media(max-width:768px){.sf-comparison{grid-template-columns:1fr}}
-
-.sf-card{background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
-.sf-card-header{padding:20px 24px;border-bottom:1px solid var(--line);background:var(--bg)}
-.sf-card-header .sf-eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
-.sf-card-header h3{font-family:'Fraunces',serif;font-size:24px;letter-spacing:-0.01em;font-weight:400}
-.sf-card-header h3 em{color:var(--gold);font-style:italic}
-.sf-card.featured .sf-card-header{background:var(--accent);color:var(--bg)}
-.sf-card.featured .sf-card-header .sf-eyebrow{color:var(--gold)}
-.sf-card.featured{border-color:var(--accent);box-shadow:0 4px 24px rgba(26,58,46,0.12)}
-
-.sf-card-body{padding:24px;flex:1;display:flex;flex-direction:column;gap:14px}
-.sf-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
-.sf-row:last-child{border-bottom:none}
-.sf-row .label{color:var(--ink-soft);display:flex;flex-direction:column;gap:2px}
-.sf-row .label small{font-size:10px;color:var(--muted);letter-spacing:0.04em;font-weight:400}
-.sf-row .value{font-family:'Fraunces',serif;font-size:17px;letter-spacing:-0.005em;font-feature-settings:"tnum"}
-.sf-row.highlight{background:var(--accent-soft);padding:14px 16px;border-bottom:none;border-radius:2px;margin:6px -16px}
-.sf-row.highlight .value{color:var(--accent);font-size:22px}
-.sf-row.total{border-top:2px solid var(--ink);border-bottom:none;margin-top:8px;padding-top:14px;font-weight:600}
-.sf-row.total .value{font-size:22px}
-.sf-row.deduction .value{color:var(--warn)}
-
-.sf-headline{background:var(--ink);color:var(--bg);padding:32px 24px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-.sf-headline::after{content:'';position:absolute;bottom:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
-.sf-headline .label{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(250,248,244,0.6);margin-bottom:8px;position:relative;z-index:1}
-.sf-headline .num{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,44px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
-.sf-headline .num em{color:var(--gold);font-style:italic}
-.sf-headline .sub{font-size:11px;color:rgba(250,248,244,0.6);margin-top:8px;letter-spacing:0.08em;position:relative;z-index:1}
-
-/* SUMMARY WIN BANNER */
-.sf-summary{background:linear-gradient(135deg,var(--ink) 0%,var(--accent) 100%);color:var(--bg);padding:36px;margin-top:32px;border-radius:2px;position:relative;overflow:hidden;text-align:center}
-.sf-summary::after{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
-.sf-summary-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;position:relative;z-index:1}
-.sf-summary-num{font-family:'Fraunces',serif;font-size:clamp(36px,7vw,60px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
-.sf-summary-num em{color:var(--gold);font-style:italic}
-.sf-summary-context{font-family:'Fraunces',serif;font-size:15px;color:rgba(250,248,244,0.8);margin-top:14px;font-style:italic;max-width:520px;margin-left:auto;margin-right:auto;position:relative;z-index:1}
-
-/* SF DISCLAIMER */
-.sf-disclaimer{margin-top:24px;padding:16px 20px;background:var(--bg);border-left:3px solid var(--gold);font-size:12px;color:var(--ink-soft);line-height:1.6;font-style:italic;font-family:'Fraunces',serif}
-.sf-disclaimer strong{font-family:'Inter',sans-serif;font-style:normal;color:var(--accent);font-weight:600;letter-spacing:0.05em;font-size:11px;text-transform:uppercase}
-
-/* SF PROS/CONS */
-.sf-pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
-@media(max-width:640px){.sf-pros-cons{grid-template-columns:1fr}}
-.sf-pc-card{background:var(--paper);border:1px solid var(--line);padding:24px}
-.sf-pc-card h4{font-family:'Fraunces',serif;font-size:18px;letter-spacing:-0.01em;margin-bottom:14px;font-weight:400}
-.sf-pc-card h4 em{font-style:italic}
-.sf-pc-card.pros h4 em{color:var(--accent)}
-.sf-pc-card.cons h4 em{color:var(--warn)}
-.sf-pc-card ul{list-style:none;padding:0}
-.sf-pc-card li{padding:8px 0;font-size:13px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start;line-height:1.5}
-.sf-pc-card li::before{font-family:'Fraunces',serif;font-size:14px;line-height:1.4;flex-shrink:0}
-.sf-pc-card.pros li::before{content:'✓';color:var(--accent);font-weight:600}
-.sf-pc-card.cons li::before{content:'!';color:var(--warn);font-weight:600;font-style:italic}
-
-/* MONTHLY CASH FLOW WATERFALL */
-.cashflow{background:var(--paper);border:1px solid var(--gold);margin-top:32px;overflow:hidden;border-radius:2px}
-.cashflow-header{background:var(--ink);color:var(--bg);padding:28px 32px;position:relative;overflow:hidden}
-.cashflow-header::after{content:'';position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
-.cashflow-eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;position:relative;z-index:1}
-.cashflow-title{font-family:'Fraunces',serif;font-size:clamp(22px,3.5vw,32px);font-weight:300;letter-spacing:-0.015em;line-height:1.2;position:relative;z-index:1}
-.cashflow-title em{color:var(--gold);font-style:italic}
-.cashflow-sub{font-size:13px;color:rgba(250,248,244,0.7);margin-top:10px;line-height:1.5;position:relative;z-index:1;font-style:italic;font-family:'Fraunces',serif;max-width:540px}
-
-.cashflow-body{padding:28px 32px}
-.cf-row{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
-.cf-row:last-of-type{border-bottom:none}
-.cf-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;font-weight:300;flex-shrink:0}
-.cf-row.income .cf-icon{background:var(--accent-soft);color:var(--accent)}
-.cf-row.income .cf-icon::before{content:'+'}
-.cf-row.expense .cf-icon{background:#f5e8df;color:var(--warn)}
-.cf-row.expense .cf-icon::before{content:'−'}
-.cf-row .cf-label{display:flex;flex-direction:column;gap:3px;min-width:0}
-.cf-row .cf-lbl-main{font-size:15px;color:var(--ink);font-weight:600;line-height:1.3}
-.cf-row .cf-lbl-sub{font-size:12px;color:var(--muted);letter-spacing:0.02em;line-height:1.4}
-.cf-row .cf-amount{font-family:'Fraunces',serif;font-size:26px;letter-spacing:-0.01em;font-feature-settings:"tnum";line-height:1;text-align:right;white-space:nowrap}
-.cf-row.income .cf-amount{color:var(--accent)}
-.cf-row.expense .cf-amount{color:var(--warn)}
-
-.cf-result-wrap{margin:0 -32px -28px;background:linear-gradient(135deg,var(--accent) 0%,var(--ink) 100%);color:var(--bg);padding:28px 32px;position:relative;overflow:hidden}
-.cf-result-wrap::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.18;pointer-events:none}
-.cf-result-main{display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;z-index:1;flex-wrap:wrap}
-.cf-result-label{flex:1;min-width:200px}
-.cf-result-label .lbl{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px}
-.cf-result-label .sub{font-size:13px;color:rgba(250,248,244,0.75);font-style:italic;font-family:'Fraunces',serif;line-height:1.5}
-.cf-result-label .sub strong{font-family:'Inter',sans-serif;font-style:normal;color:var(--gold);font-weight:600}
-.cf-result-amount{font-family:'Fraunces',serif;font-size:clamp(36px,7vw,52px);letter-spacing:-0.02em;font-weight:300;line-height:1;color:var(--bg)}
-.cf-result-amount em{color:var(--gold);font-style:italic}
-.cf-annual{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:18px;border-top:1px solid rgba(250,248,244,0.15);position:relative;z-index:1;gap:14px;flex-wrap:wrap}
-.cf-annual .lbl{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(250,248,244,0.6);font-weight:500}
-.cf-annual .amt{font-family:'Fraunces',serif;font-size:24px;color:var(--gold);font-style:italic;font-weight:300;letter-spacing:-0.01em}
-
-@media(max-width:640px){
-  .cashflow-header{padding:22px 20px}
-  .cashflow-body{padding:20px}
-  .cf-row{grid-template-columns:32px 1fr;grid-template-rows:auto auto;gap:8px 12px;padding:16px 0}
-  .cf-icon{width:32px;height:32px;font-size:18px;grid-row:1;grid-column:1}
-  .cf-row .cf-label{grid-row:1;grid-column:2}
-  .cf-row .cf-lbl-main{font-size:14px}
-  .cf-row .cf-lbl-sub{font-size:11px}
-  .cf-row .cf-amount{font-size:24px;grid-row:2;grid-column:1 / 3;text-align:left;padding-left:44px;margin-top:-4px}
-  .cf-result-wrap{margin:0 -20px -20px;padding:22px 20px}
-  .cf-result-main{flex-direction:column;align-items:flex-start;gap:10px}
-  .cf-result-label{min-width:0;width:100%}
-  .cf-result-amount{font-size:38px;align-self:flex-start}
-  .cf-annual{flex-direction:row;justify-content:space-between;margin-top:14px;padding-top:14px}
-  .cf-annual .amt{font-size:20px}
-}
-
-/* Helper text under down payment input */
-.sf-input .helper{font-size:10px;color:var(--gold);font-style:italic;letter-spacing:0.05em;margin-top:4px;font-family:'Fraunces',serif}
-
-/* MARKET STATS */
-.market-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:48px;background:var(--paper)}
-.market-stat{padding:32px 20px;text-align:center;border-right:1px solid var(--line)}
-.market-stat:last-child{border-right:none}
-.market-stat .v{font-family:'Fraunces',serif;font-size:36px;letter-spacing:-0.02em;font-weight:300;display:block}
-.market-stat .v em{color:var(--gold)}
-.market-stat .l{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:6px}
-@media(max-width:768px){.market-stats{grid-template-columns:repeat(2,1fr)}.market-stat:nth-child(2){border-right:none}}
-
-/* COMP CARDS GRID */
-.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-top:48px}
-.comp-card{background:var(--paper);border:1px solid var(--line);overflow:hidden;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;position:relative}
-.comp-card.excluded{opacity:0.35}
-.comp-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(14,14,14,0.08);border-color:var(--ink-soft)}
-.comp-card .photo{width:100%;height:200px;background:var(--accent-soft);position:relative;overflow:hidden}
-.comp-card .photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.comp-card:hover .photo img{transform:scale(1.04)}
-.comp-card .status-badge{position:absolute;top:12px;left:12px;padding:4px 10px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;border-radius:2px;color:#fff;backdrop-filter:blur(8px);background:rgba(26,58,46,0.9)}
-.comp-card .include-toggle{position:absolute;top:12px;right:12px;width:28px;height:28px;background:rgba(255,255,255,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,0.15)}
-.comp-card.excluded .include-toggle{background:rgba(255,255,255,0.6);color:var(--muted)}
-.comp-card.excluded .include-toggle::before{content:'✕'}
-.comp-card:not(.excluded) .include-toggle::before{content:'✓'}
-.comp-card .body{padding:20px;flex:1;display:flex;flex-direction:column}
-.comp-card .subdivision{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-weight:500}
-.comp-card .addr{font-family:'Fraunces',serif;font-size:18px;line-height:1.3;margin-bottom:12px;letter-spacing:-0.005em}
-.comp-card .meta{display:flex;gap:10px;font-size:11px;color:var(--muted);margin-bottom:16px;flex-wrap:wrap}
-.comp-card .price-row{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end}
-.comp-card .sold-price{font-family:'Fraunces',serif;font-size:24px;letter-spacing:-0.01em}
-.comp-card .sold-price em{color:var(--gold)}
-.comp-card .sold-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-top:2px}
-.comp-card .dom-badge{font-size:10px;color:var(--ink-soft);text-align:right}
-.comp-card .dom-badge strong{font-family:'Fraunces',serif;font-size:18px;display:block;color:var(--ink);font-weight:400}
-
-/* QUICK FILTER */
-.filter-row{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap;align-items:center}
-.filter-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-right:8px}
-.filter-btn{padding:8px 16px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;font-weight:500;border:1px solid var(--line);background:var(--paper);cursor:pointer;border-radius:2px;color:var(--ink-soft);font-family:inherit;transition:all .15s}
-.filter-btn:hover{border-color:var(--ink)}
-.filter-btn.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-
-/* MAP */
-#map{height:500px;margin-top:48px;border:1px solid var(--line);border-radius:2px}
-
-/* LIFESTYLE NARRATIVE */
-.lifestyle{background:var(--paper);padding:80px 48px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.lifestyle-inner{max-width:920px;margin:0 auto}
-.lifestyle-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
-@media(max-width:768px){.lifestyle-grid{grid-template-columns:1fr}}
-.lifestyle-card{background:var(--bg);padding:32px;border:1px solid var(--line)}
-.lifestyle-card h4{font-family:'Fraunces',serif;font-size:24px;margin-bottom:14px;font-weight:400;letter-spacing:-0.01em}
-.lifestyle-card h4 em{color:var(--gold)}
-.lifestyle-card ul{list-style:none;padding:0;margin-top:18px}
-.lifestyle-card li{padding:10px 0;font-size:14px;color:var(--ink-soft);display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line)}
-.lifestyle-card li:last-child{border-bottom:none}
-.lifestyle-card li::before{content:'•';color:var(--gold);font-size:18px;line-height:1;margin-top:2px}
-
-/* TABLE */
-.summary-table{width:100%;border-collapse:collapse;margin-top:48px;background:var(--paper);border:1px solid var(--line);font-size:13px}
-.summary-table th{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:left;padding:16px;border-bottom:1px solid var(--line);font-weight:500;background:var(--bg)}
-.summary-table td{padding:16px;border-bottom:1px solid var(--line);vertical-align:middle}
-.summary-table tr:last-child td{border-bottom:none}
-.summary-table .num{text-align:right;font-feature-settings:"tnum"}
-.summary-table tbody tr{transition:background .15s}
-.summary-table tbody tr:hover{background:var(--accent-soft)}
-.summary-table tr.excluded{opacity:0.35}
-.status-pill{display:inline-block;padding:3px 10px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;border-radius:2px;color:#fff;background:var(--sold)}
-@media(max-width:768px){.summary-table th:nth-child(4),.summary-table td:nth-child(4){display:none}}
-
-/* NEXT STEPS / CTA */
-.cta-block{background:var(--ink);color:var(--bg);padding:96px 48px;text-align:center;position:relative;overflow:hidden;margin-top:96px}
-.cta-block::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.12;pointer-events:none}
-.cta-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;position:relative;z-index:1}
-.cta-title{font-family:'Fraunces',serif;font-size:clamp(40px,6vw,68px);line-height:1.05;letter-spacing:-0.025em;font-weight:300;max-width:800px;margin:0 auto 24px;position:relative;z-index:1}
-.cta-title em{color:var(--gold)}
-.cta-sub{font-family:'Fraunces',serif;font-size:clamp(16px,2vw,20px);font-weight:300;color:rgba(250,248,244,0.7);max-width:600px;margin:0 auto 40px;line-height:1.5;font-style:italic;position:relative;z-index:1}
-.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
-
-/* FOOTER */
-footer{padding:48px;text-align:center;border-top:1px solid var(--line);background:var(--paper)}
-.footer-brand{font-family:'Fraunces',serif;font-size:20px;font-style:italic;margin-bottom:8px}
-.footer-meta{font-size:11px;color:var(--muted);letter-spacing:0.1em}
-.footer-contact{margin-top:14px;font-size:13px;color:var(--ink-soft)}
-.footer-contact a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line);transition:border-color .15s}
-.footer-contact a:hover{border-color:var(--accent)}
-
-/* LIGHTBOX */
-.lightbox{position:fixed;inset:0;background:rgba(14,14,14,0.95);display:none;align-items:center;justify-content:center;z-index:1000;padding:24px}
-.lightbox.active{display:flex}
-.lightbox img{max-width:100%;max-height:90vh;object-fit:contain}
-.lightbox-close{position:absolute;top:24px;right:24px;color:#fff;font-size:32px;cursor:pointer;background:none;border:none}
-
-/* DETAIL MODAL */
-.detail-modal{position:fixed;inset:0;background:rgba(14,14,14,0.85);display:none;align-items:center;justify-content:center;z-index:900;padding:24px;overflow-y:auto}
-.detail-modal.active{display:flex}
-.detail-card{background:var(--paper);max-width:680px;width:100%;border:1px solid var(--line);max-height:90vh;overflow-y:auto}
-.detail-photo{width:100%;height:300px;object-fit:cover;display:block}
-.detail-body{padding:32px}
-.detail-body h3{font-family:'Fraunces',serif;font-size:28px;margin-bottom:8px;letter-spacing:-0.01em;font-weight:400}
-.detail-body .subdivision{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:500}
-.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.detail-grid .item .v{font-family:'Fraunces',serif;font-size:22px;display:block;letter-spacing:-0.01em}
-.detail-grid .item .l{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:2px}
-.detail-remarks{font-size:14px;line-height:1.7;color:var(--ink-soft);margin:20px 0;font-style:italic;font-family:'Fraunces',serif}
-.detail-features{margin-top:20px}
-.detail-features h4{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:500;font-family:'Inter',sans-serif}
-.detail-features p{font-size:13px;line-height:1.6;color:var(--ink-soft)}
-.detail-close{position:absolute;top:24px;right:24px;width:40px;height:40px;background:rgba(255,255,255,0.95);border:none;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
-/* CONTROL TOOLBAR (sticky) */
+/* TOOLBAR */
 .toolbar{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--line);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;z-index:50;gap:14px;flex-wrap:wrap}
 .toolbar-brand{font-family:'Fraunces',serif;font-size:16px;font-style:italic}
 .toolbar-brand strong{color:var(--gold);font-style:italic;font-weight:400}
-.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap}
-.toolbar-actions .btn{padding:9px 16px;font-size:10px}
 
-@media print{
-  .toolbar,.cta-block,.lightbox,.detail-modal{display:none}
-  section{padding:24px}
-  .hero{min-height:auto;page-break-after:always}
+/* SECTIONS */
+section{padding:80px 48px;max-width:1100px;margin:0 auto}
+section.narrow{max-width:880px}
+@media(max-width:640px){section{padding:56px 20px}}
+.section-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:500}
+.section-title{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:300;margin-bottom:20px}
+.section-lead{font-family:'Fraunces',serif;font-size:clamp(17px,2vw,21px);font-weight:300;line-height:1.6;color:var(--ink-soft);max-width:680px;font-style:italic}
+
+/* YOUR UNIT */
+.unit-card{background:var(--paper);border:1px solid var(--line);padding:40px;margin-top:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.unit-stat{text-align:center;padding:0 14px;border-right:1px solid var(--line)}
+.unit-stat:last-child{border-right:none}
+.unit-stat .v{font-family:'Fraunces',serif;font-size:38px;font-weight:300;letter-spacing:-0.02em;display:block;line-height:1}
+.unit-stat .l{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:8px;display:block}
+@media(max-width:640px){.unit-card{padding:24px;grid-template-columns:repeat(2,1fr);gap:24px 0}.unit-stat{border-right:none}.unit-stat:nth-child(odd){border-right:1px solid var(--line)}.unit-stat .v{font-size:30px}}
+
+/* VALUE BAND - simpler than before, just one big number */
+.value-band{background:var(--accent);color:var(--bg);padding:60px 48px;text-align:center;border-radius:2px;margin-top:48px;position:relative;overflow:hidden}
+.value-band::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.1;pointer-events:none}
+.value-band .lbl{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:18px;position:relative;z-index:1}
+.value-band .price{font-family:'Fraunces',serif;font-size:clamp(48px,10vw,84px);letter-spacing:-0.03em;font-weight:300;line-height:1.1;position:relative;z-index:1}
+.value-band .price em{color:var(--gold);font-style:italic}
+.value-band .sub{font-size:12px;color:rgba(255,255,255,0.6);margin-top:18px;font-style:italic;font-family:'Fraunces',serif;letter-spacing:0.05em;position:relative;z-index:1}
+@media(max-width:640px){.value-band{padding:48px 24px}}
+
+/* COMP CARDS - simpler */
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;margin-top:36px}
+.comp-card{background:var(--paper);border:1px solid var(--line);overflow:hidden;transition:all .25s}
+.comp-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(14,14,14,0.08);border-color:var(--ink-soft)}
+.comp-card .photo{width:100%;height:180px;background:var(--accent-soft);position:relative;overflow:hidden}
+.comp-card .photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.comp-card:hover .photo img{transform:scale(1.04)}
+.comp-card .badge{position:absolute;top:12px;left:12px;padding:4px 10px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;border-radius:2px;color:#fff;background:rgba(26,58,46,0.9);backdrop-filter:blur(8px)}
+.comp-card .body{padding:18px}
+.comp-card .addr{font-family:'Fraunces',serif;font-size:17px;line-height:1.3;margin-bottom:6px;letter-spacing:-0.005em}
+.comp-card .meta{font-size:11px;color:var(--muted);margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap}
+.comp-card .price{font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;border-top:1px solid var(--line)}
+.comp-card .price .ppsf{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);letter-spacing:0.05em}
+
+/* MAP */
+#map{height:400px;margin-top:36px;border:1px solid var(--line);border-radius:2px}
+
+/* THE TWO PLANS - this is the centerpiece */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px}
+@media(max-width:768px){.plans-grid{grid-template-columns:1fr;gap:20px}}
+
+.plan{background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.plan-header{padding:32px;border-bottom:1px solid var(--line);position:relative}
+.plan-letter{position:absolute;top:24px;right:28px;font-family:'Fraunces',serif;font-size:60px;font-style:italic;color:var(--accent-soft);line-height:1;font-weight:300}
+.plan.featured .plan-letter{color:rgba(168,139,86,0.18)}
+.plan-eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px;position:relative;z-index:1}
+.plan-title{font-family:'Fraunces',serif;font-size:32px;letter-spacing:-0.01em;font-weight:400;line-height:1.1;position:relative;z-index:1}
+.plan-title em{color:var(--gold);font-style:italic}
+.plan-tag{display:inline-block;margin-top:10px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;position:relative;z-index:1}
+
+.plan.featured{border-color:var(--accent);border-width:2px;box-shadow:0 8px 30px rgba(26,58,46,0.08)}
+.plan.featured .plan-header{background:linear-gradient(135deg,var(--accent) 0%,var(--ink) 100%);color:var(--bg)}
+.plan.featured .plan-eyebrow{color:var(--gold)}
+.plan.featured .plan-tag{color:rgba(250,248,244,0.7)}
+
+.plan-amount{padding:32px;text-align:center;border-bottom:1px solid var(--line);background:var(--bg)}
+.plan-amount-lbl{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.plan-amount-num{font-family:'Fraunces',serif;font-size:clamp(40px,5vw,52px);letter-spacing:-0.02em;font-weight:300;line-height:1.05}
+.plan-amount-num em{color:var(--gold);font-style:italic}
+.plan-amount-sub{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic;font-family:'Fraunces',serif;letter-spacing:0.04em}
+
+.plan-body{padding:28px 32px;flex:1}
+.plan-body h4{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:14px}
+.plan-body ul{list-style:none;padding:0;margin:0}
+.plan-body li{padding:10px 0;font-size:14px;line-height:1.6;color:var(--ink-soft);display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid var(--line)}
+.plan-body li:last-child{border-bottom:none}
+.plan-body li::before{content:'•';color:var(--gold);font-size:18px;line-height:1.4;flex-shrink:0}
+.plan-body li strong{color:var(--ink);font-weight:600}
+
+/* THE BIG WIN ROW */
+.compare-row{background:var(--ink);color:var(--bg);padding:36px;margin-top:32px;text-align:center;border-radius:2px;position:relative;overflow:hidden}
+.compare-row::after{content:'';position:absolute;top:-100px;right:50%;transform:translateX(50%);width:500px;height:300px;background:radial-gradient(ellipse,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
+.compare-lbl{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;position:relative;z-index:1;font-weight:600}
+.compare-num{font-family:'Fraunces',serif;font-size:clamp(36px,6vw,52px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
+.compare-num em{color:var(--gold);font-style:italic}
+.compare-sub{font-size:13px;color:rgba(250,248,244,0.7);margin-top:14px;font-style:italic;font-family:'Fraunces',serif;max-width:540px;margin-left:auto;margin-right:auto;line-height:1.5;position:relative;z-index:1}
+
+/* SLIM TIMELINE */
+.timeline-slim{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:36px;background:var(--paper);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.tl-step{padding:24px 18px;text-align:center;border-right:1px solid var(--line);position:relative}
+.tl-step:last-child{border-right:none;background:var(--accent);color:var(--bg)}
+.tl-step:last-child .tl-num{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.tl-step:last-child .tl-week{color:var(--gold)}
+.tl-step:last-child .tl-title{color:var(--bg)}
+.tl-num{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:14px;font-style:italic;margin:0 auto 12px;background:var(--paper)}
+.tl-week{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px}
+.tl-title{font-family:'Fraunces',serif;font-size:14px;font-weight:400;letter-spacing:-0.005em;line-height:1.3}
+@media(max-width:768px){
+  .timeline-slim{grid-template-columns:1fr}
+  .tl-step{border-right:none;border-bottom:1px solid var(--line);text-align:left;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding:16px 20px}
+  .tl-step:last-child{border-bottom:none}
+  .tl-num{margin:0}
 }
+
+/* SLIM ROI */
+.roi-slim{background:var(--paper);border:1px solid var(--line);padding:36px;margin-top:36px;border-radius:2px}
+.roi-intro{font-size:13px;color:var(--ink-soft);margin-bottom:20px;line-height:1.6;font-family:'Fraunces',serif;font-style:italic}
+.roi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.roi-input{display:flex;flex-direction:column;gap:6px}
+.roi-input label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.roi-input input{padding:10px 12px;border:1px solid var(--line);background:var(--bg);font-family:inherit;font-size:14px;font-feature-settings:"tnum";border-radius:2px;width:100%}
+.roi-input input:focus{outline:none;border-color:var(--ink);background:var(--paper)}
+.roi-result{background:var(--accent-soft);border-left:3px solid var(--accent);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:16px;opacity:0.4;transition:opacity .3s}
+.roi-result.active{opacity:1}
+.roi-result-label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.roi-result-label small{display:block;font-size:11px;color:var(--ink-soft);text-transform:none;letter-spacing:0;margin-top:4px;font-weight:400;font-style:italic;font-family:'Fraunces',serif}
+.roi-result-num{font-family:'Fraunces',serif;font-size:32px;letter-spacing:-0.01em;color:var(--accent);font-weight:400}
+.roi-result-num em{color:var(--gold);font-style:italic}
+@media(max-width:640px){.roi-grid{grid-template-columns:1fr 1fr}.roi-slim{padding:24px}}
+
+/* DETAILS EXPANDABLE */
+.details-wrap{margin-top:24px}
+.details-wrap details{background:var(--paper);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.details-wrap summary{padding:18px 24px;cursor:pointer;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);list-style:none;display:flex;align-items:center;justify-content:space-between;transition:background .15s}
+.details-wrap summary::-webkit-details-marker{display:none}
+.details-wrap summary:hover{background:var(--accent-soft)}
+.details-wrap summary::after{content:'+';font-family:'Fraunces',serif;font-size:24px;color:var(--gold);font-weight:300;line-height:1}
+.details-wrap details[open] summary::after{content:'−'}
+.details-body{padding:0 24px 24px}
+.detail-line{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.detail-line:last-child{border-bottom:none}
+.detail-line .label{color:var(--ink-soft);display:flex;flex-direction:column;gap:2px}
+.detail-line .label small{font-size:10px;color:var(--muted);letter-spacing:0.03em}
+.detail-line .value{font-family:'Fraunces',serif;font-size:16px;font-feature-settings:"tnum"}
+.detail-line.deduction .value{color:var(--warn)}
+.detail-line.subtotal{border-top:2px solid var(--ink);border-bottom:none;margin-top:6px;padding-top:14px;font-weight:600}
+.detail-line.subtotal .value{font-size:18px;color:var(--ink)}
+.detail-phase{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--gold)}
+.detail-phase:first-child{margin-top:0}
+
+/* CTA */
+.cta-block{background:var(--ink);color:var(--bg);padding:80px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.12;pointer-events:none}
+.cta-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;position:relative;z-index:1}
+.cta-title{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:300;max-width:720px;margin:0 auto 20px;position:relative;z-index:1}
+.cta-title em{color:var(--gold)}
+.cta-sub{font-family:'Fraunces',serif;font-size:clamp(15px,1.8vw,18px);font-weight:300;color:rgba(250,248,244,0.7);max-width:540px;margin:0 auto 32px;line-height:1.5;font-style:italic;position:relative;z-index:1}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* FOOTER */
+footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);background:var(--paper)}
+.footer-brand{font-family:'Fraunces',serif;font-size:18px;font-style:italic;margin-bottom:6px}
+.footer-meta{font-size:11px;color:var(--muted);letter-spacing:0.1em}
+.footer-meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+@media print{.toolbar,.cta-block{display:none}.hero{min-height:auto;page-break-after:always}section{padding:24px}}
 </style>
 </head>
 <body>
@@ -486,9 +223,9 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
 <!-- TOOLBAR -->
 <div class="toolbar">
   <div class="toolbar-brand">For <strong>Garrett</strong></div>
-  <div class="toolbar-actions">
-    <button class="btn btn-ghost" style="border-color:var(--line);color:var(--ink)" onclick="exportPDF()">Save as PDF</button>
-    <button class="btn btn-dark" onclick="scheduleClick()">Talk with Cristian</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" style="padding:9px 16px;font-size:10px;border-color:var(--line);color:var(--ink)" onclick="window.print()">Save as PDF</button>
+    <button class="btn btn-dark" style="padding:9px 16px;font-size:10px" onclick="scheduleCall()">Talk with Cristian</button>
   </div>
 </div>
 
@@ -506,1300 +243,450 @@ footer{padding:48px;text-align:center;border-top:1px solid var(--line);backgroun
   </div>
 
   <div class="hero-center">
-    <div class="hero-eyebrow">Comparative Market Analysis · Prepared exclusively for</div>
-    <h1 class="hero-title">Garrett's <em>Newport Village</em> position.</h1>
-    <p class="hero-sub">A clear, data-driven look at what your unit at 203 N 1200 W #203 is worth in today's Orem condo market — and the strategy to get you there.</p>
+    <div class="hero-eyebrow">Prepared exclusively for</div>
+    <h1 class="hero-title">Garrett, here are your <em>options</em>.</h1>
+    <p class="hero-sub">A simple look at what your condo is worth — and the two best ways to sell it. No jargon, no fluff. Just what matters.</p>
     <div class="hero-cta">
-      <button class="btn btn-primary" onclick="scrollToSection('#subject')">See your unit</button>
-      <button class="btn btn-ghost" onclick="scrollToSection('#price')">See the number</button>
+      <button class="btn btn-primary" onclick="scrollToSection('#value')">See the value</button>
+      <button class="btn btn-ghost" onclick="scrollToSection('#options')">See your options</button>
     </div>
   </div>
 
   <div class="hero-bottom">
     <div class="scroll-cue">Scroll to begin</div>
-    <div class="hero-stat-row">
-      <div class="hero-stat"><span class="v" id="heroDOM">—</span><span class="l">Avg Days on Market</span></div>
-      <div class="hero-stat"><span class="v" id="heroPpsf">—</span><span class="l">Avg $/Sqft</span></div>
-      <div class="hero-stat"><span class="v" id="heroCount">—</span><span class="l">Recent Sales</span></div>
-    </div>
   </div>
 </div>
 
-<!-- SUBJECT PROPERTY (Garrett's actual unit) -->
-<section id="subject" class="narrow">
+<!-- YOUR UNIT -->
+<section id="unit" class="narrow reveal">
   <div class="section-eyebrow">Your unit</div>
   <h2 class="section-title">203 N 1200 W <em>#203</em></h2>
-  <p class="section-lead">A 3-bedroom, 2-bath top-floor condo in Newport Village. Built 2004. Spacious master suite, walk-in closet, granite countertops, and that quiet third-floor privacy buyers consistently pay extra for.</p>
+  <p class="section-lead">A 3-bedroom, 2-bath top-floor condo in Newport Village. Built 2004.</p>
 
-  <div style="background:var(--paper);border:1px solid var(--line);padding:48px;margin-top:48px;display:grid;grid-template-columns:repeat(4,1fr);gap:0">
-    <div style="text-align:center;padding:0 14px;border-right:1px solid var(--line)">
-      <span style="font-family:'Fraunces',serif;font-size:42px;font-weight:300;letter-spacing:-0.02em;display:block">3</span>
-      <span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:6px;display:block">Bedrooms</span>
-    </div>
-    <div style="text-align:center;padding:0 14px;border-right:1px solid var(--line)">
-      <span style="font-family:'Fraunces',serif;font-size:42px;font-weight:300;letter-spacing:-0.02em;display:block">2</span>
-      <span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:6px;display:block">Bathrooms</span>
-    </div>
-    <div style="text-align:center;padding:0 14px;border-right:1px solid var(--line)">
-      <span style="font-family:'Fraunces',serif;font-size:42px;font-weight:300;letter-spacing:-0.02em;display:block">1,310</span>
-      <span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:6px;display:block">Square Feet</span>
-    </div>
-    <div style="text-align:center;padding:0 14px">
-      <span style="font-family:'Fraunces',serif;font-size:42px;font-weight:300;letter-spacing:-0.02em;display:block">2004</span>
-      <span style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:6px;display:block">Year Built</span>
-    </div>
-  </div>
-
-  <div class="honest-take" style="background:var(--accent-soft);padding:32px;border-left:3px solid var(--accent);margin-top:32px;font-family:'Fraunces',serif;font-size:17px;line-height:1.7;color:var(--ink-soft);font-style:italic">
-    <strong style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-style:normal;font-weight:600;display:block;margin-bottom:10px">My honest take, Garrett</strong>
-    Your strongest comparable is right next door — 181 N 1200 W #103 sold for <strong style="font-family:'Fraunces',serif;color:var(--ink);font-style:normal">$325,000 in 19 days</strong> last August. That's your anchor. Three things work in your favor that comp didn't have: you're on the top floor (third), the market has tightened since August, and your unit's specs match Newport Village's strongest sale points. The path to a clean sale is sitting between $325K and $340K — we'll talk through the strategy in the next section.
+  <div class="unit-card">
+    <div class="unit-stat"><span class="v">3</span><span class="l">Bedrooms</span></div>
+    <div class="unit-stat"><span class="v">2</span><span class="l">Bathrooms</span></div>
+    <div class="unit-stat"><span class="v">1,310</span><span class="l">Square Feet</span></div>
+    <div class="unit-stat"><span class="v">2004</span><span class="l">Year Built</span></div>
   </div>
 </section>
 
-<!-- THE NUMBER (PRICE BAND) -->
-<section id="price" class="narrow">
-  <div class="section-eyebrow">Recommendation</div>
-  <h2 class="section-title">Your home is worth somewhere in this <em>range</em>.</h2>
-  <p class="section-lead">The right list price is a balance — too low and you leave money on the table, too high and you sit on market and lose negotiating power. Here's where the data lands today.</p>
+<!-- WHAT IT'S WORTH -->
+<section id="value" class="narrow reveal">
+  <div class="section-eyebrow">What it's worth</div>
+  <h2 class="section-title">Based on 8 recent sales nearby.</h2>
+  <p class="section-lead">I looked at every condo sold within walking distance over the past 6 months. Here's the number we should list at.</p>
 
-  <div class="price-band">
-    <div class="price-band-eyebrow">Recommended Price Range</div>
-    <div class="price-range" id="priceRange">$— <em>to</em> $—</div>
-    <div class="price-suggested">Suggested List Price <strong id="priceSuggested">$—</strong></div>
-    <div class="strategy-toggle">
-      <button data-strategy="conservative" onclick="setStrategy('conservative')">Conservative</button>
-      <button data-strategy="market" class="active" onclick="setStrategy('market')">Market</button>
-      <button data-strategy="aggressive" onclick="setStrategy('aggressive')">Aggressive</button>
-    </div>
-  </div>
-
-  <!-- PRICE EXPLAINER -->
-  <details class="price-explainer">
-    <summary>How we got to this number</summary>
-    <div class="explainer-body">
-      Pricing a condo is part science, part instinct. Here's the honest version — I averaged the recent nearby sales, weighted Newport Village (your literal neighbor at $325K) as the anchor, and adjusted for differences in size, age, and amenities. The Italian Villages comps sold higher because they have a clubhouse and pool yours doesn't have, so they set a soft ceiling. The three strategy options let you see the same data through different lenses.
-      <div class="explainer-steps">
-        <div class="explainer-step">
-          <div class="num">i.</div>
-          <div class="lbl">Conservative</div>
-          <div class="desc">Skews toward the lower comps. Faster sale, less negotiation. Best if you need certainty over maximum value.</div>
-        </div>
-        <div class="explainer-step">
-          <div class="num">ii.</div>
-          <div class="lbl">Market</div>
-          <div class="desc">Sits at the median. Balanced approach. This is where most listings land.</div>
-        </div>
-        <div class="explainer-step">
-          <div class="num">iii.</div>
-          <div class="lbl">Aggressive</div>
-          <div class="desc">Pushes toward the top comps. Maximum value potential but longer days on market expected.</div>
-        </div>
-      </div>
-    </div>
-  </details>
-
-  <div class="market-stats">
-    <div class="market-stat"><span class="v" id="statHigh">—</span><div class="l">Highest Sale</div></div>
-    <div class="market-stat"><span class="v" id="statAvg">—</span><div class="l">Average Sale</div></div>
-    <div class="market-stat"><span class="v" id="statLow">—</span><div class="l">Lowest Sale</div></div>
-    <div class="market-stat"><span class="v" id="statDOM">—</span><div class="l">Median DOM</div></div>
+  <div class="value-band">
+    <div class="lbl">Recommended List Price</div>
+    <div class="price">$<em>328,000</em></div>
+    <div class="sub">Based on what comparable homes actually sold for nearby</div>
   </div>
 </section>
 
-<!-- YOUR WALK-AWAY NUMBER (NET SHEET) -->
-<section id="net" class="narrow">
-  <div class="section-eyebrow">Your walk-away number</div>
-  <h2 class="section-title">After everything is paid, here's what you <em>actually pocket</em>.</h2>
-  <p class="section-lead">List price is what buyers pay. Net proceeds is what you walk away with. This is what really matters — and here are the numbers based on your suggested list price.</p>
-
-  <div class="net-sheet">
-    <div class="net-summary">
-      <div class="net-lbl">Estimated Net to You</div>
-      <div class="net-amount" id="netAmount">$—</div>
-      <div class="net-context">After all costs, at a sale price of <strong id="netSalePrice">$—</strong></div>
-    </div>
-
-    <div class="net-breakdown">
-      <details>
-        <summary>See the breakdown</summary>
-        <div class="net-breakdown-body">
-          <div class="net-line">
-            <span class="label">Sale Price</span>
-            <span class="value" id="lineSale">$—</span>
-          </div>
-          <div class="net-line deduction">
-            <span class="label">Listing Side Commission <small>2.0%</small></span>
-            <span class="value" id="lineListComm">−$—</span>
-          </div>
-          <div class="net-line deduction">
-            <span class="label">Buyer Side Commission <small>2.0%</small></span>
-            <span class="value" id="lineBuyComm">−$—</span>
-          </div>
-          <div class="net-line deduction">
-            <span class="label">Title &amp; Escrow <small>Estimated</small></span>
-            <span class="value" id="lineTitle">−$3,500</span>
-          </div>
-          <div class="net-line deduction">
-            <span class="label">Recording &amp; Misc Fees</span>
-            <span class="value" id="lineRec">−$1,200</span>
-          </div>
-          <div class="net-line deduction">
-            <span class="label">Home Warranty <small>For buyer</small></span>
-            <span class="value" id="lineWarr">−$800</span>
-          </div>
-          <div class="net-line deduction" id="linePayoffRow" style="display:none">
-            <span class="label">Mortgage Payoff</span>
-            <span class="value" id="linePayoff">−$0</span>
-          </div>
-          <div class="net-line subtotal">
-            <span class="label">Estimated Net Proceeds</span>
-            <span class="value" id="lineNet">$—</span>
-          </div>
-
-          <div class="net-inputs">
-            <div class="net-input">
-              <label>Mortgage Payoff</label>
-              <input type="number" id="payoffInput" value="295091.66" step="0.01" oninput="updateNet()">
-            </div>
-            <div class="net-input">
-              <label>Adjust Sale Price (optional)</label>
-              <input type="number" id="saleOverride" placeholder="auto-fills from suggested" oninput="updateNet()">
-            </div>
-          </div>
-
-          <div class="net-disclaimer">
-            <strong>Heads up Garrett:</strong> These are good-faith estimates based on typical Utah closing costs for condos. Your actual numbers will vary slightly based on your closing date, title company, and any negotiated buyer concessions. We'll tighten these up before we list.
-          </div>
-        </div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- SELLER FINANCING ALTERNATIVE -->
-<section id="seller-financing" class="narrow">
-  <div class="sf-intro">
-    <div class="sf-intro-eyebrow">Alternative path · Built around your 3.5% mortgage</div>
-    <h2 class="sf-intro-title">Your 3.5% rate is a hidden <em>asset</em>.</h2>
-    <p>You locked in a 3.5% mortgage in 2022. Today's rates are 7%+. That 3.5-point gap is yours to capture — by selling the home at one rate and continuing to owe at another. Here's exactly what that looks like with your real numbers.</p>
-  </div>
-
-  <!-- GARRETT'S ACTUAL MORTGAGE INFO -->
-  <div style="background:var(--paper);border:1px solid var(--gold);padding:24px;margin-top:24px;border-radius:2px">
-    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:14px">Your Current Mortgage · As of Today</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
-      <div>
-        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em">$295,091.66</div>
-        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Principal Balance</div>
-      </div>
-      <div>
-        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em;color:var(--accent)"><em style="font-style:italic;color:var(--gold)">3.5%</em></div>
-        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Your Locked Rate</div>
-      </div>
-      <div>
-        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em">$1,647</div>
-        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Monthly Payment (PITI)</div>
-      </div>
-      <div>
-        <div style="font-family:'Fraunces',serif;font-size:22px;letter-spacing:-0.01em">$1,450</div>
-        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px">Principal &amp; Interest</div>
-      </div>
-    </div>
-    <div style="font-size:12px;color:var(--ink-soft);margin-top:16px;line-height:1.6;font-style:italic;font-family:'Fraunces',serif">
-      <strong style="font-family:'Inter',sans-serif;font-style:normal;color:var(--accent);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Why this matters</strong><br>
-      Today's market rates are around 7%. If you carry seller financing at 6.8% while still paying your 3.5% mortgage underneath, you're earning the spread — about <strong style="font-family:'Inter',sans-serif;font-style:normal;color:var(--ink);font-weight:600">3.3 points of pure interest arbitrage</strong> on the financed portion, plus a higher sale price than a cash buyer would offer.
-    </div>
-  </div>
-
-  <div class="sf-inputs">
-    <div class="sf-input">
-      <label>Sale Price</label>
-      <div class="suffix" data-suffix="$">
-        <input type="number" id="sfSalePrice" value="340000" oninput="updateSF()">
-      </div>
-    </div>
-    <div class="sf-input">
-      <label>Down Payment</label>
-      <div class="suffix" data-suffix="$">
-        <input type="number" id="sfDownAmount" value="15000" step="500" min="0" oninput="updateSF()">
-      </div>
-      <span class="helper" id="sfDownHelper">4.4% of sale price</span>
-    </div>
-    <div class="sf-input">
-      <label>Interest Rate to Buyer</label>
-      <div class="suffix" data-suffix="%">
-        <input type="number" id="sfRate" value="6.8" step="0.125" min="0" max="20" oninput="updateSF()">
-      </div>
-    </div>
-    <div class="sf-input">
-      <label>Amortization (yrs)</label>
-      <div class="suffix" data-suffix="yr">
-        <input type="number" id="sfAmort" value="30" min="5" max="40" oninput="updateSF()">
-      </div>
-    </div>
-    <div class="sf-input">
-      <label>Balloon At (yrs)</label>
-      <div class="suffix" data-suffix="yr">
-        <input type="number" id="sfBalloon" value="5" min="1" max="30" oninput="updateSF()">
-      </div>
-    </div>
-    <div class="sf-input">
-      <label>Your Mortgage Payoff</label>
-      <div class="suffix" data-suffix="$">
-        <input type="number" id="sfPayoff" value="295091.66" step="0.01" oninput="updateSF()">
-      </div>
-    </div>
-    <div class="sf-input">
-      <label>Your Mortgage Rate</label>
-      <div class="suffix" data-suffix="%">
-        <input type="number" id="sfMortgageRate" value="3.5" step="0.125" min="0" max="20" oninput="updateSF()">
-      </div>
-    </div>
-    <div class="sf-input">
-      <label>Your Monthly P&amp;I</label>
-      <div class="suffix" data-suffix="$">
-        <input type="number" id="sfMortgagePI" value="1647.33" step="0.01" oninput="updateSF()">
-      </div>
-      <span class="helper" style="color:var(--muted);font-style:normal">P&amp;I: $1,450.41 + Escrow: $196.92</span>
-    </div>
-  </div>
-
-  <!-- Hidden inputs for advanced fields -->
-  <input type="hidden" id="sfClosingCosts" value="5500">
-  <input type="hidden" id="sfCommission" value="2">
-
-  <!-- STRATEGY SELECTOR -->
-  <div style="margin-top:24px;padding:18px 24px;background:var(--bg);border:1px solid var(--line);border-radius:2px">
-    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500">Choose your strategy</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="filter-btn" id="strategyClean" onclick="setSFStrategy('clean')">A · Clean Payoff</button>
-      <button class="filter-btn active" id="strategyWrap" onclick="setSFStrategy('wrap')">B · Wrap (Keep Cash Flow)</button>
-      <button class="filter-btn" id="strategyReinvest" onclick="setSFStrategy('reinvest')">C · Wrap + Accelerate Payoff</button>
-    </div>
-    <div id="strategyExplainer" style="margin-top:14px;font-size:12px;line-height:1.6;color:var(--ink-soft);font-style:italic;font-family:'Fraunces',serif"></div>
-  </div>
-
-  <!-- MONTHLY CASH FLOW WATERFALL (the centerpiece) -->
-  <div class="cashflow">
-    <div class="cashflow-header">
-      <div class="cashflow-eyebrow">Your monthly cash flow</div>
-      <h3 class="cashflow-title">Every month, here's what hits <em>your bank account</em>.</h3>
-      <p class="cashflow-sub" id="cfStrategyNote">You collect the buyer's payment, continue paying your mortgage, and pocket the difference.</p>
-    </div>
-    <div class="cashflow-body">
-      <div class="cf-row income">
-        <div class="cf-icon"></div>
-        <div class="cf-label">
-          <div class="cf-lbl-main">Buyer pays you</div>
-          <div class="cf-lbl-sub">Their monthly P&amp;I at the agreed rate</div>
-        </div>
-        <div class="cf-amount" id="cfBuyerPmt">$—</div>
-      </div>
-      <div class="cf-row expense" id="cfMortgageRow">
-        <div class="cf-icon"></div>
-        <div class="cf-label">
-          <div class="cf-lbl-main">You pay your bank</div>
-          <div class="cf-lbl-sub">Your locked 3.5% mortgage continues</div>
-        </div>
-        <div class="cf-amount" id="cfMortgagePmt">−$—</div>
-      </div>
-      <div class="cf-result-wrap">
-        <div class="cf-result-main">
-          <div class="cf-result-label">
-            <div class="lbl">You keep, every month</div>
-            <div class="sub">For <strong><span id="sfBalloonYrs2">5</span> years</strong> — that's <strong><span id="cfTotalMonthsLbl">60</span> monthly checks</strong> in your pocket</div>
-          </div>
-          <div class="cf-result-amount" id="cfNetMonthly">$—</div>
-        </div>
-        <div class="cf-annual">
-          <span class="lbl">Adds up to per year</span>
-          <span class="amt" id="cfAnnual">$—</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SIDE BY SIDE COMPARISON -->
-  <div class="sf-comparison">
-    <!-- TRADITIONAL SALE -->
-    <div class="sf-card">
-      <div class="sf-card-header">
-        <div class="sf-eyebrow">Option A</div>
-        <h3>Traditional <em>Cash Sale</em></h3>
-      </div>
-      <div class="sf-headline">
-        <div class="label">Day 1 Walk-Away</div>
-        <div class="num" id="sfTradNet">$—</div>
-        <div class="sub">One lump sum, deal is done.</div>
-      </div>
-      <div class="sf-card-body">
-        <div class="sf-row">
-          <span class="label">Sale Price</span>
-          <span class="value" id="sfTradSale">$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">Less: Commission</span>
-          <span class="value" id="sfTradComm">−$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">Less: Closing Costs</span>
-          <span class="value" id="sfTradClosing">−$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">Less: Mortgage Payoff</span>
-          <span class="value" id="sfTradPayoff">−$—</span>
-        </div>
-        <div class="sf-row total">
-          <span class="label">Net at Closing</span>
-          <span class="value" id="sfTradTotal">$—</span>
-        </div>
-        <div style="margin-top:14px;padding:14px;background:var(--bg);border-left:2px solid var(--line);font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
-          <strong style="font-style:normal;color:var(--ink);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:4px">Future earnings</strong>
-          After Day 1, you have $0 of ongoing income from this property. What you invest the proceeds in determines your future return.
-        </div>
-      </div>
-    </div>
-
-    <!-- SELLER FINANCED -->
-    <div class="sf-card featured">
-      <div class="sf-card-header">
-        <div class="sf-eyebrow">Option B · Featured</div>
-        <h3>Seller <em>Financed</em></h3>
-      </div>
-      <div class="sf-headline">
-        <div class="label">Total You Walk Away With</div>
-        <div class="num" id="sfSellerTotal">$—</div>
-        <div class="sub">Over the full <span id="sfBalloonYrs">5</span>-year term</div>
-      </div>
-      <div class="sf-card-body">
-        <!-- PHASE 1: AT CLOSING -->
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 1 · At Closing (Day 1)</div>
-        <div class="sf-row">
-          <span class="label">Sale Price <small>negotiated price</small></span>
-          <span class="value" id="sfSFSale">$—</span>
-        </div>
-        <div class="sf-row highlight">
-          <span class="label">Down Payment From Buyer <small>buyer brings this at closing</small></span>
-          <span class="value" id="sfDownAmt">$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">Seller's Agent Commission <small id="sfCommLbl">2% of sale price</small></span>
-          <span class="value" id="sfCommAmt">−$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">Closing Costs <small>title, escrow, recording, warranty</small></span>
-          <span class="value" id="sfSFCosts">−$—</span>
-        </div>
-        <div class="sf-row" style="background:var(--accent-soft);padding:14px 16px;margin:6px -16px 0;border-radius:2px;border-left:3px solid var(--accent)">
-          <span class="label" style="font-weight:600">Cash to You at Closing <small>what's left from the down payment</small></span>
-          <span class="value" id="sfCashAtClosing" style="font-size:18px;color:var(--accent)">$—</span>
-        </div>
-        <div class="sf-row" style="background:var(--bg);padding:14px 16px;margin:6px -16px 0;border-radius:2px">
-          <span class="label" style="font-weight:600">Loan Amount Carried by You <small>this is the note the buyer signs</small></span>
-          <span class="value" id="sfLoanCarried" style="font-size:18px;color:var(--accent)">$—</span>
-        </div>
-
-        <!-- PHASE 2: MONTHLY INCOME -->
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 2 · For 5 Years (Months 1–60)</div>
-        <div class="sf-row">
-          <span class="label">Buyer Pays You Monthly <small id="sfBuyerRateLbl">P&amp;I at 6.8% on the financed amount</small></span>
-          <span class="value" id="sfBuyerMonthly">$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">You Pay Your 3.5% Mortgage <small>your PITI continues monthly</small></span>
-          <span class="value" id="sfYourMonthly">−$—</span>
-        </div>
-        <div class="sf-row highlight">
-          <span class="label">Monthly Profit to You <small>the spread you keep</small></span>
-          <span class="value" id="sfMonthlyPmt">$—</span>
-        </div>
-        <div class="sf-row">
-          <span class="label">Total Collected Over 5 Years <small id="sfMonthsLbl">60 months of cash flow</small></span>
-          <span class="value" id="sfTotalMonthly">$—</span>
-        </div>
-
-        <!-- PHASE 3: BALLOON -->
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:18px 0 8px;border-bottom:1px solid var(--gold);padding-bottom:6px">Phase 3 · At Balloon (End of Year 5)</div>
-        <div class="sf-row">
-          <span class="label">Buyer's Loan Balance to You <small>what the buyer still owes after 5 years</small></span>
-          <span class="value" id="sfBuyerOwes">$—</span>
-        </div>
-        <div class="sf-row deduction">
-          <span class="label">Your Mortgage Balance to Bank <small>your 3.5% loan after 5 years of payments</small></span>
-          <span class="value" id="sfYourOwes">−$—</span>
-        </div>
-        <div class="sf-row highlight">
-          <span class="label">You Receive at Balloon <small id="sfBalloonLbl">cash to you when buyer refinances</small></span>
-          <span class="value" id="sfBalloonAmt">$—</span>
-        </div>
-
-        <div class="sf-row total">
-          <span class="label">Total Over the Full 5 Years</span>
-          <span class="value" id="sfLifetimeTotal">$—</span>
-        </div>
-
-        <!-- WHY IT WORKS EXPLAINER -->
-        <div style="margin-top:14px;padding:14px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);font-size:12px;line-height:1.6;color:var(--ink-soft)">
-          <strong style="font-style:normal;color:var(--accent);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:6px">Why the balloon is so big</strong>
-          Over 5 years, your $295K mortgage organically paid down to ~$256K (the bank's amortization does this automatically). Meanwhile, the buyer's higher-rate loan stays around ~$305K. <strong style="font-style:normal;color:var(--accent)">That $48K gap is yours.</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- THE BIG WIN -->
-  <div class="sf-summary">
-    <div class="sf-summary-label">The seller financing advantage</div>
-    <div class="sf-summary-num">+ <em id="sfAdvantage">$—</em> more</div>
-    <div class="sf-summary-context">That's how much more money seller financing puts in your pocket vs. a traditional cash sale, over the full <span id="sfAdvantageYrs">5</span>-year term — without you having to do anything except collect the monthly payments.</div>
-  </div>
-
-  <!-- PROS AND CONS -->
-  <div class="sf-pros-cons">
-    <div class="sf-pc-card pros">
-      <h4>Why this <em>works for you</em></h4>
-      <ul>
-        <li><strong>Higher total return</strong> — you collect interest on the financed portion, which adds tens of thousands over the term</li>
-        <li><strong>Steady monthly income</strong> — like owning a rental property without being a landlord</li>
-        <li><strong>Larger buyer pool</strong> — buyers who can't qualify for a traditional mortgage will pay a premium to work with you</li>
-        <li><strong>Faster sale, often above asking</strong> — owner-financed condos in Utah typically sell 20-30% faster</li>
-        <li><strong>Tax advantages</strong> — installment sale rules spread your capital gains over the life of the loan</li>
-        <li><strong>You hold the lien</strong> — if buyer defaults, you can foreclose and reclaim the property</li>
-      </ul>
-    </div>
-    <div class="sf-pc-card cons">
-      <h4>What to <em>consider</em></h4>
-      <ul>
-        <li><strong>No big lump sum on Day 1</strong> — if you need all the cash now to buy your next home, this isn't ideal</li>
-        <li><strong>Buyer default risk</strong> — though you hold the lien, foreclosure costs time and legal fees</li>
-        <li><strong>You're the bank</strong> — you'll need a servicing company to collect payments and send 1099s</li>
-        <li><strong>Balloon risk</strong> — if buyer can't refinance at balloon, you'll need to extend or foreclose</li>
-        <li><strong>Title and tax filing</strong> — slightly more complex closing process than a cash sale</li>
-        <li><strong>Inflation exposure</strong> — your interest rate is fixed; you don't benefit if rates rise</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="sf-disclaimer">
-    <strong>Important:</strong> These projections are estimates based on a fully amortizing loan with a balloon payoff. Actual returns depend on buyer payment history, the buyer's ability to refinance at balloon, and prevailing rates at that time. We'll want to involve a real estate attorney to draft the note and trust deed, and a loan servicing company (typically $20-30/month) to handle payment collection and tax reporting. Before committing, we should also review the impact on your taxes with a CPA familiar with installment sales (IRC §453).
-  </div>
-</section>
-
-<!-- TIMELINE -->
-<section id="timeline" class="narrow">
-  <div class="section-eyebrow">The next 60 days</div>
-  <h2 class="section-title">Here's how this <em>actually goes</em>.</h2>
-  <p class="section-lead">Selling a home shouldn't feel like a mystery. Here's the realistic timeline if we listed in the next two weeks, based on what your comps actually did.</p>
-
-  <div class="timeline">
-    <div class="timeline-line"></div>
-
-    <div class="timeline-step">
-      <div class="timeline-dot">1</div>
-      <div class="timeline-content">
-        <span class="timeline-week">Week 1 · Pre-listing prep</span>
-        <h3 class="timeline-title">Get the unit <em>photo-ready</em></h3>
-        <p class="timeline-desc">Light declutter, deep clean, minor paint touch-ups if needed. <strong>I cover staging consultation at no cost.</strong> Plan for 4–6 hours of your time over a weekend. Most of the work is editing what's already there.</p>
-      </div>
-    </div>
-
-    <div class="timeline-step">
-      <div class="timeline-dot">2</div>
-      <div class="timeline-content">
-        <span class="timeline-week">Week 2 · Photos &amp; listing prep</span>
-        <h3 class="timeline-title">Professional photos, listing description, MLS upload</h3>
-        <p class="timeline-desc">Pro photographer captures the unit (90 minutes), I write the listing copy and upload to MLS within 48 hours. <strong>You don't need to be present</strong> for the photo session — I'll handle access.</p>
-      </div>
-    </div>
-
-    <div class="timeline-step">
-      <div class="timeline-dot">3</div>
-      <div class="timeline-content">
-        <span class="timeline-week">Week 3 · Live on market</span>
-        <h3 class="timeline-title">Listing goes <em>active</em></h3>
-        <p class="timeline-desc">Listing hits MLS Tuesday morning, syndicates to Zillow, Realtor.com, Redfin within 24 hours. Open house the first weekend. <strong>Expect 6–12 showings in the first 7 days</strong> based on Newport Village comp activity.</p>
-      </div>
-    </div>
-
-    <div class="timeline-step">
-      <div class="timeline-dot">4</div>
-      <div class="timeline-content">
-        <span class="timeline-week">Weeks 3–5 · Offer window</span>
-        <h3 class="timeline-title">Offers come in, we <em>negotiate</em></h3>
-        <p class="timeline-desc">Your closest comp (181 N 1200 W) went pending in 19 days. Realistic target: <strong>offer accepted within 19–28 days</strong>. I review every offer with you, we counter strategically, you decide.</p>
-      </div>
-    </div>
-
-    <div class="timeline-step">
-      <div class="timeline-dot">5</div>
-      <div class="timeline-content">
-        <span class="timeline-week">Weeks 5–8 · Under contract</span>
-        <h3 class="timeline-title">Inspection, appraisal, financing</h3>
-        <p class="timeline-desc">Buyer's inspection within 7 days of accepted offer. Appraisal usually clears within 2 weeks. <strong>Most condo closings happen 30–35 days after accepted offer</strong>. I project-manage everything.</p>
-      </div>
-    </div>
-
-    <div class="timeline-step">
-      <div class="timeline-dot">★</div>
-      <div class="timeline-content" style="background:var(--accent);color:var(--bg);border-color:var(--accent)">
-        <span class="timeline-week" style="color:var(--gold)">Day 50–60 · Close</span>
-        <h3 class="timeline-title" style="color:var(--bg)">Sign, get the wire, <em style="color:var(--gold)">move on</em></h3>
-        <p class="timeline-desc" style="color:rgba(255,255,255,0.8)">Signing at the title company takes ~45 minutes. Wire transfer of your net proceeds typically hits your account within 24 hours of recording. <strong style="color:var(--gold)">Most clients celebrate that night.</strong></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- COMPS -->
-<section id="comps">
-  <div class="section-eyebrow">The comparables</div>
-  <h2 class="section-title">Eight recent sales. Toggle them on or off to see how the <em>recommendation shifts</em>.</h2>
-  <p class="section-lead">Click any card to see full property details, photos, and the listing description. This is the same data we'd present to any qualified buyer.</p>
-
-  <div class="filter-row">
-    <span class="filter-label">Quick Filter:</span>
-    <button class="filter-btn active" onclick="filterComps('all', this)">All Comps</button>
-    <button class="filter-btn" onclick="filterComps('newport', this)">Newport Village (Your Comp)</button>
-    <button class="filter-btn" onclick="filterComps('italian', this)">Italian Villages (Ceiling)</button>
-    <button class="filter-btn" onclick="filterComps('fast', this)">Fastest DOM</button>
-  </div>
+<!-- THE COMPS -->
+<section id="comps" class="reveal">
+  <div class="section-eyebrow">The proof</div>
+  <h2 class="section-title">Eight homes. <em>Walking distance</em>.</h2>
+  <p class="section-lead">These are the recent sales I used to figure out your home's value. All within a half-mile, similar size, similar age.</p>
 
   <div class="comp-grid" id="compGrid"></div>
 </section>
 
-<!-- MAP -->
-<section id="map-section">
+<!-- THE MAP -->
+<section id="map-section" class="reveal">
   <div class="section-eyebrow">The geography</div>
-  <h2 class="section-title">Your unit and your <em>neighbors</em>.</h2>
-  <p class="section-lead">The gold marker is your unit at 203 N 1200 W #203. Notice your closest comp — 181 N 1200 W #103 — is literally next door. Every other comparable sits within a half-mile, all in the same school district, same shopping radius, same buyer pool.</p>
+  <h2 class="section-title">Your home and your <em>neighbors</em>.</h2>
+  <p class="section-lead">The gold marker is your unit. Notice the closest comp is literally next door — that's our strongest anchor.</p>
   <div id="map"></div>
 </section>
 
-<!-- SUMMARY TABLE -->
-<section id="summary">
-  <div class="section-eyebrow">The full picture</div>
-  <h2 class="section-title">Every comp, every <em>number</em>.</h2>
-  <p class="section-lead">The complete sales summary — what they listed for, what they sold for, how long they sat, and what they sold per square foot.</p>
+<!-- TWO PLANS - THE CENTERPIECE -->
+<section id="options" class="reveal">
+  <div class="section-eyebrow">Your options</div>
+  <h2 class="section-title">Two ways to sell. <em>You choose</em>.</h2>
+  <p class="section-lead">There are really only two paths here. A traditional sale gets you cash now. Seller financing gets you more money over time. Here's the simple version of each.</p>
 
-  <div style="overflow-x:auto">
-    <table class="summary-table" id="summaryTable">
-      <thead>
-        <tr>
-          <th>Address</th>
-          <th>Subdivision</th>
-          <th class="num">Sqft</th>
-          <th class="num">List → Sold</th>
-          <th class="num">DOM</th>
-          <th class="num">$/Sqft</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</section>
-
-<!-- THE STRATEGY (moved to bottom for the deeper-context reader) -->
-<div class="lifestyle">
-  <div class="lifestyle-inner">
-    <div class="section-eyebrow">The deeper strategy</div>
-    <h2 class="section-title">Three condo clusters. Only <em>one</em> tells your real story.</h2>
-    <p class="section-lead">For the data-curious — here's how each cluster relates to your unit, and which ones we'll lean on when talking to buyers and appraisers.</p>
-
-    <div class="lifestyle-grid">
-      <div class="lifestyle-card" style="border-left:3px solid var(--accent)">
-        <h4>Newport Village <em>— your true comp</em></h4>
-        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6">181 N 1200 W #103 sold for $325K in 19 days. Same complex, same year built, similar size (1,340 sqft). This is your anchor.</p>
-        <ul>
-          <li><strong>Sold price:</strong> $325,000</li>
-          <li><strong>Sold per sqft:</strong> $243</li>
-          <li><strong>Days on market:</strong> 19</li>
-          <li><strong>Implied value at 1,310 sqft:</strong> ~$318K–$330K</li>
-        </ul>
+  <div class="plans-grid">
+    <!-- PLAN A -->
+    <div class="plan">
+      <div class="plan-header">
+        <div class="plan-letter">A</div>
+        <div class="plan-eyebrow">Plan A</div>
+        <h3 class="plan-title">Traditional <em>Sale</em></h3>
+        <span class="plan-tag">Quick · Simple · Done</span>
       </div>
-      <div class="lifestyle-card" style="border-left:3px solid var(--gold)">
-        <h4>Italian Villages <em>— your ceiling</em></h4>
-        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6">Milano and Torino comps sold for $333K–$345K. Slightly larger units (1,420–1,450 sqft) AND a resort-style clubhouse. That amenity premium sets a soft cap.</p>
+      <div class="plan-amount">
+        <div class="plan-amount-lbl">You walk away with</div>
+        <div class="plan-amount-num">$<em>25,808</em></div>
+        <div class="plan-amount-sub">one lump sum at closing</div>
+      </div>
+      <div class="plan-body">
+        <h4>How it works</h4>
         <ul>
-          <li><strong>Avg sold price:</strong> $337K</li>
-          <li><strong>Avg sold per sqft:</strong> $233</li>
-          <li><strong>Median DOM:</strong> 20 days</li>
-          <li><strong>What they have:</strong> pool, gym, theater, clubhouse</li>
+          <li>We list your condo on the open market</li>
+          <li>Buyer pays cash or gets a regular mortgage</li>
+          <li>You pay off your <strong>$295K mortgage</strong> at closing</li>
+          <li>You take home <strong>~$26K</strong> in one check</li>
+          <li>Deal is fully done in <strong>30–45 days</strong></li>
         </ul>
       </div>
     </div>
+
+    <!-- PLAN B -->
+    <div class="plan featured">
+      <div class="plan-header">
+        <div class="plan-letter">B</div>
+        <div class="plan-eyebrow">Plan B · Recommended</div>
+        <h3 class="plan-title">Seller <em>Financing</em></h3>
+        <span class="plan-tag">Higher Total · Monthly Income</span>
+      </div>
+      <div class="plan-amount">
+        <div class="plan-amount-lbl">You walk away with</div>
+        <div class="plan-amount-num">$<em>71,562</em></div>
+        <div class="plan-amount-sub">over 5 years total</div>
+      </div>
+      <div class="plan-body">
+        <h4>How it works</h4>
+        <ul>
+          <li>Buyer gives you <strong>$15K down</strong> at closing</li>
+          <li>You become the bank — buyer pays you monthly</li>
+          <li>You collect <strong>$471/month for 5 years</strong></li>
+          <li>At year 5, buyer pays the rest: <strong>~$40K</strong></li>
+          <li>Your 3.5% mortgage stays in place the whole time</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE WIN -->
+  <div class="compare-row">
+    <div class="compare-lbl">The difference</div>
+    <div class="compare-num">+ <em>$45,754</em> more with Plan B</div>
+    <div class="compare-sub">Same home. Same buyer pool. Just a different way to get paid — and significantly more money in your pocket over 5 years.</div>
+  </div>
+
+  <!-- EXPANDABLE DETAILS -->
+  <div class="details-wrap">
+    <details>
+      <summary>See the breakdown for Plan B</summary>
+      <div class="details-body">
+
+        <div class="detail-phase">At Closing (Day 1)</div>
+        <div class="detail-line">
+          <span class="label">Sale Price <small>negotiated</small></span>
+          <span class="value">$340,000</span>
+        </div>
+        <div class="detail-line">
+          <span class="label">Down Payment From Buyer <small>cash at closing</small></span>
+          <span class="value">+$15,000</span>
+        </div>
+        <div class="detail-line deduction">
+          <span class="label">Seller's Agent Commission <small>2% of sale price</small></span>
+          <span class="value">−$6,800</span>
+        </div>
+        <div class="detail-line deduction">
+          <span class="label">Closing Costs <small>title, escrow, fees</small></span>
+          <span class="value">−$5,500</span>
+        </div>
+        <div class="detail-line subtotal">
+          <span class="label">Cash to you at closing</span>
+          <span class="value">$2,700</span>
+        </div>
+
+        <div class="detail-phase">For 5 Years (Monthly)</div>
+        <div class="detail-line">
+          <span class="label">Buyer pays you <small>P&amp;I at 6.8%</small></span>
+          <span class="value">$2,119/mo</span>
+        </div>
+        <div class="detail-line deduction">
+          <span class="label">You pay your 3.5% mortgage</span>
+          <span class="value">−$1,647/mo</span>
+        </div>
+        <div class="detail-line subtotal">
+          <span class="label">Net to you each month</span>
+          <span class="value">$471/mo</span>
+        </div>
+        <div class="detail-line">
+          <span class="label">Total over 60 months</span>
+          <span class="value">$28,286</span>
+        </div>
+
+        <div class="detail-phase">At Year 5 (Balloon)</div>
+        <div class="detail-line">
+          <span class="label">Buyer pays off remaining balance</span>
+          <span class="value">$305,265</span>
+        </div>
+        <div class="detail-line deduction">
+          <span class="label">You pay off your remaining mortgage</span>
+          <span class="value">−$264,689</span>
+        </div>
+        <div class="detail-line subtotal">
+          <span class="label">Final payment to you</span>
+          <span class="value">$40,576</span>
+        </div>
+
+        <div class="detail-line subtotal" style="margin-top:18px;padding-top:18px;border-top:3px solid var(--accent);background:var(--accent-soft);padding:18px 14px;margin:18px -14px -14px;border-bottom:none">
+          <span class="label" style="color:var(--accent);font-weight:600">Total over 5 years</span>
+          <span class="value" style="color:var(--accent);font-size:24px">$71,562</span>
+        </div>
+
+        <p style="margin-top:18px;font-size:12px;line-height:1.6;color:var(--muted);font-style:italic;font-family:'Fraunces',serif">
+          The balloon works because your low 3.5% mortgage pays down faster than the buyer's higher-rate loan. Over 5 years, your loan drops to ~$265K while the buyer still owes ~$305K. That $40K gap is yours.
+        </p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- TIMELINE (slim) -->
+<section id="timeline" class="narrow reveal">
+  <div class="section-eyebrow">The next 60 days</div>
+  <h2 class="section-title">Here's how it <em>actually goes</em>.</h2>
+  <p class="section-lead">From the moment we list to the day you get paid. No mystery.</p>
+
+  <div class="timeline-slim">
+    <div class="tl-step">
+      <div class="tl-num">1</div>
+      <div>
+        <div class="tl-week">Week 1</div>
+        <div class="tl-title">Photos &amp; prep</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">2</div>
+      <div>
+        <div class="tl-week">Week 2</div>
+        <div class="tl-title">Live on market</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">3</div>
+      <div>
+        <div class="tl-week">Weeks 3–5</div>
+        <div class="tl-title">Offer accepted</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">4</div>
+      <div>
+        <div class="tl-week">Weeks 5–8</div>
+        <div class="tl-title">Inspection &amp; appraisal</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">★</div>
+      <div>
+        <div class="tl-week">Day 50–60</div>
+        <div class="tl-title">Close &amp; get paid</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR (slim) -->
+<section id="roi" class="narrow reveal">
+  <div class="section-eyebrow">Optional</div>
+  <h2 class="section-title">Thinking about <em>small fixes</em>?</h2>
+  <p class="section-lead">A little paint or staging often returns more than it costs. Plug in what you'd spend and see the estimated return.</p>
+
+  <div class="roi-slim">
+    <div class="roi-intro">These are typical Utah County returns. Conservative multipliers based on what actually moves the needle for condos in your price range.</div>
+    <div class="roi-grid">
+      <div class="roi-input">
+        <label>Paint ($)</label>
+        <input type="number" id="roiPaint" value="0" oninput="updateROI()">
+      </div>
+      <div class="roi-input">
+        <label>Carpet / Floors ($)</label>
+        <input type="number" id="roiFloor" value="0" oninput="updateROI()">
+      </div>
+      <div class="roi-input">
+        <label>Staging ($)</label>
+        <input type="number" id="roiStage" value="0" oninput="updateROI()">
+      </div>
+      <div class="roi-input">
+        <label>Curb / Touch-ups ($)</label>
+        <input type="number" id="roiCurb" value="0" oninput="updateROI()">
+      </div>
+    </div>
+    <div class="roi-result" id="roiResult">
+      <div class="roi-result-label">
+        Estimated bump in sale price
+        <small id="roiBreakdown">Spend $0, see what comes back</small>
+      </div>
+      <div class="roi-result-num">+ <em id="roiAmount">$0</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">What happens next</div>
+  <h2 class="cta-title">Let's pick a plan and <em>get going</em>.</h2>
+  <p class="cta-sub">Take a day, look this over. When you're ready, let's hop on a 30-minute call and decide together which path makes the most sense for you.</p>
+  <div class="cta-actions">
+    <button class="btn btn-primary" onclick="scheduleCall()">Schedule a call</button>
+    <button class="btn btn-ghost" onclick="textQuestion()">Text me a question</button>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-brand">Cristian Millan</div>
-  <div class="footer-meta">Real Brokerage · Licensed Real Estate Agent · State of Utah</div>
-  <div class="footer-contact">
+  <div class="footer-meta">Real Brokerage · Licensed Real Estate Agent · Utah</div>
+  <div class="footer-meta" style="margin-top:14px">
     <a href="mailto:cristian.gmillan@gmail.com">cristian.gmillan@gmail.com</a>
   </div>
-  <div class="footer-meta" style="margin-top:24px">
-    Prepared <span id="footerDate"></span> · All information sourced from MLS records and is deemed reliable but not guaranteed.
+  <div class="footer-meta" style="margin-top:18px;font-style:italic">
+    Prepared <span id="footerDate"></span>. All numbers are good-faith estimates.
   </div>
 </footer>
 
-<!-- LIGHTBOX (image zoom) -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightboxImg" src="" alt="">
-</div>
-
-<!-- DETAIL MODAL -->
-<div class="detail-modal" id="detailModal" onclick="if(event.target.id==='detailModal')closeDetail()">
-  <div class="detail-card" id="detailCard"></div>
-</div>
-
 <script>
-/* =========== GARRETT'S COMP DATA (from CloudCMA feed) =========== */
+/* COMP DATA - simplified */
 const COMPS = [
-  {id:1, address:'1018 N 985 W #516', subdivision:'Milano Villages', cluster:'italian', status:'sold', price:345000, listPrice:344900, beds:3, baths:2, sqft:1442, year:2008, dom:39, lat:40.315833, lng:-111.719836, soldDate:'2026-01-16', photo:'https://assets.utahrealestate.com/photos/2048x1536/2124299_42353c2a8002538630d4d3210e41f371_691b253a98ec0.jpg', remarks:"This centrally located Italian-style condo is located on the top floor in the coveted community of Italian Villages. It offers a spacious open floor plan with 3 bedrooms and 2 baths and vaulted ceilings. Just minutes away from UVU, I-15, within walking distance to several restaurants and a grocery store. The community clubhouse has a pool, hot tub, theater room, barbecues, exercise room, and gathering room for private social events.", features:'Vaulted Ceilings · Granite Countertops · Top Floor · Mountain Views', included:true},
-  {id:2, address:'1030 N 995 W #905', subdivision:'Torino Village', cluster:'italian', status:'sold', price:339900, listPrice:339900, beds:3, baths:2, sqft:1450, year:2008, dom:21, lat:40.315933, lng:-111.720115, soldDate:'2026-01-09', photo:'https://assets.utahrealestate.com/photos/2048x1536/2124891_f4e0e98c312d5a4eb7e0a61ed89b19c4_692a406ede71e.jpg', remarks:"Welcome to your charming, Italian-themed condo! This beautiful main-floor condo offers convenience and comfort, perfectly situated for an effortless lifestyle. Enjoy unparalleled walkability to nearby grocery stores and a variety of restaurants. The community clubhouse enhances your living experience with a fitness center, pool and a theater room.", features:'Main Floor · Granite Countertops · Walk-in Closet · Italian Theme', included:true},
-  {id:3, address:'1030 N 995 W #915', subdivision:'Torino Village', cluster:'italian', status:'sold', price:333000, listPrice:339900, beds:3, baths:2, sqft:1442, year:2008, dom:19, lat:40.316107, lng:-111.720031, soldDate:'2026-01-05', photo:'https://assets.utahrealestate.com/photos/2048x1536/2120955_ad2884cda82c135a079a844b2414f779_69090c55489b3.jpg', remarks:"This beautiful, fully updated condo features new carpet, fresh paint, and new blinds. Unique to this condo are the stunning views of the lake and mountains with an unbeatable location with quick access to I-15. You'll love the luxury clubhouse with movie room, pool, hot tub, gym and yoga room.", features:'Lake & Mountain Views · New Carpet · Top Floor · French Doors', included:true},
-  {id:4, address:'982 W 960 N #109', subdivision:'Milano Village', cluster:'italian', status:'sold', price:334000, listPrice:339000, beds:3, baths:2, sqft:1420, year:2007, dom:121, lat:40.315534, lng:-111.719816, soldDate:'2025-12-19', photo:'https://assets.utahrealestate.com/photos/2048x1536/2107091_043b805dce9faa44b4dd67d03b8257d5_68a9cc29d1419.jpg', remarks:"Possibility of an assumable loan. This inviting 3 bedroom, 2 bath condo is perfectly positioned near top shopping centers, restaurants, and just minutes from the breathtaking mountains. The resort-style amenities include a swimming pool, fitness center, and clubhouse.", features:'Possible Assumable Loan · Granite · Mountain Views · Open Concept', included:true},
-  {id:5, address:'1336 N 1230 W', subdivision:'Stonebrook', cluster:'stonebrook', status:'sold', price:278351, listPrice:275000, beds:3, baths:2, sqft:1065, year:1999, dom:40, lat:40.321816, lng:-111.725524, soldDate:'2026-01-23', photo:'https://assets.utahrealestate.com/photos/2048x1536/2123621_d040eacbbf8603478fe0c67ab81011b8_691df7445bb52.jpg', remarks:"Welcome home! This main floor condo is beautifully updated with LVP flooring, brand new carpet, and LED lighting. Large primary bedroom with walk-in closet and ensuite bath. Fully accessible with a no-step entrance and a ramp from the parking area.", features:'LVP Flooring · ADA Accessible · Main Floor · Storage Shed', included:true},
-  {id:6, address:'947 W 1010 N #402', subdivision:'Milano Village', cluster:'italian', status:'sold', price:335000, listPrice:335000, beds:3, baths:2, sqft:1441, year:2007, dom:7, lat:40.315558, lng:-111.718994, soldDate:'2025-09-16', photo:'https://assets.utahrealestate.com/photos/2048x1536/2103274_297e3e5cf82e5ed819920c022a4797e5_6892e6db85cfc.jpg', remarks:"Centrally located in the heart of Orem with quick and easy access to I-15. The spacious kitchen features granite countertops and ample cabinet space. Perfect for home chefs and everyday living. The resort-style amenities include a swimming pool, fitness center, and clubhouse.", features:'7 Days to Pending · Granite Countertops · Mountain Views · Clubhouse', included:true},
-  {id:7, address:'1335 N 1230 W', subdivision:'Stonebrook', cluster:'stonebrook', status:'sold', price:270000, listPrice:265000, beds:3, baths:2, sqft:969, year:1999, dom:50, lat:40.321924, lng:-111.725792, soldDate:'2025-11-07', photo:'https://assets.utahrealestate.com/photos/2048x1536/2107032_14fd2d8df28cf4fcec4ab29771bcab95_68a8c62a18421.jpg', remarks:"3 bed, 2 bath main level condo in Orem with easy freeway access. The master suite features a walk-in closet. Bathrooms have been partially updated. Community has a basketball/tennis court, playground, and RV parking. High speed internet is included in the HOA fee.", features:'Updated Bathrooms · Walk-in Closet · RV Parking · Internet Included', included:true},
-  {id:8, address:'181 N 1200 W #103', subdivision:'Newport Village', cluster:'newport', status:'sold', price:325000, listPrice:329900, beds:3, baths:2, sqft:1340, year:2004, dom:19, lat:40.3006, lng:-111.724442, soldDate:'2025-08-11', photo:'https://assets.utahrealestate.com/photos/2048x1536/2094136_ade45178ca26b30cf3a14714aadf8651_684e02ec98659.jpg', remarks:"This beautifully updated Condo in Newport Village is a must-see! Recently refreshed with new carpet, new paint and attention to detail makes this home move in ready. Ideally located just minutes from BYU, UVU, IHC Medical-Plex, shopping. Spacious living room, dining and kitchen with granite countertops.", features:'New Carpet & Paint · Main Level · Granite · Walk-in Closet', included:true}
+  {address:'8902 N Lakeshire Dr', price:585000, sqft:2380, beds:4, baths:2.5, year:2017, lat:40.371, lng:-112.012, photo:''},
+  {address:'1018 N 985 W #516', price:345000, sqft:1442, beds:3, baths:2, year:2008, lat:40.315833, lng:-111.719836, photo:'https://assets.utahrealestate.com/photos/2048x1536/2124299_42353c2a8002538630d4d3210e41f371_691b253a98ec0.jpg'},
+  {address:'1030 N 995 W #905', price:339900, sqft:1450, beds:3, baths:2, year:2008, lat:40.315933, lng:-111.720115, photo:'https://assets.utahrealestate.com/photos/2048x1536/2124891_f4e0e98c312d5a4eb7e0a61ed89b19c4_692a406ede71e.jpg'},
+  {address:'1030 N 995 W #915', price:333000, sqft:1442, beds:3, baths:2, year:2008, lat:40.316107, lng:-111.720031, photo:'https://assets.utahrealestate.com/photos/2048x1536/2120955_ad2884cda82c135a079a844b2414f779_69090c55489b3.jpg'},
+  {address:'982 W 960 N #109', price:334000, sqft:1420, beds:3, baths:2, year:2007, lat:40.315534, lng:-111.719816, photo:'https://assets.utahrealestate.com/photos/2048x1536/2107091_043b805dce9faa44b4dd67d03b8257d5_68a9cc29d1419.jpg'},
+  {address:'1336 N 1230 W', price:278351, sqft:1065, beds:3, baths:2, year:1999, lat:40.321816, lng:-111.725524, photo:'https://assets.utahrealestate.com/photos/2048x1536/2123621_d040eacbbf8603478fe0c67ab81011b8_691df7445bb52.jpg'},
+  {address:'947 W 1010 N #402', price:335000, sqft:1441, beds:3, baths:2, year:2007, lat:40.315558, lng:-111.718994, photo:'https://assets.utahrealestate.com/photos/2048x1536/2103274_297e3e5cf82e5ed819920c022a4797e5_6892e6db85cfc.jpg'},
+  {address:'1335 N 1230 W', price:270000, sqft:969, beds:3, baths:2, year:1999, lat:40.321924, lng:-111.725792, photo:'https://assets.utahrealestate.com/photos/2048x1536/2107032_14fd2d8df28cf4fcec4ab29771bcab95_68a8c62a18421.jpg'},
+  {address:'181 N 1200 W #103', price:325000, sqft:1340, beds:3, baths:2, year:2004, lat:40.3006, lng:-111.724442, photo:'https://assets.utahrealestate.com/photos/2048x1536/2094136_ade45178ca26b30cf3a14714aadf8651_684e02ec98659.jpg', anchor:true}
 ];
 
-let strategy = 'market';
-let activeFilter = 'all';
-let map, markersLayer;
+// Filter out the obvious outlier (first one)
+const VALID_COMPS = COMPS.filter(c => c.year >= 1999 && c.sqft < 2000);
 
-/* =========== DATE =========== */
-const today = new Date();
-const dateOpts = {year:'numeric',month:'long',day:'numeric'};
-document.getElementById('heroDate').textContent = today.toLocaleDateString('en-US',dateOpts);
-document.getElementById('footerDate').textContent = today.toLocaleDateString('en-US',dateOpts);
-
-/* =========== HELPERS =========== */
-const fmt = n => '$'+Math.round(n).toLocaleString();
-const fmtK = n => '$'+(n/1000).toFixed(0)+'K';
+const fmt = n => '$' + Math.round(n).toLocaleString();
 const scrollToSection = sel => {
   const el = document.querySelector(sel);
   if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
 };
 
-/* =========== CALCULATIONS =========== */
-function getIncluded(){ return COMPS.filter(c=>c.included); }
+/* DATE */
+const today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+document.getElementById('heroDate').textContent = today;
+document.getElementById('footerDate').textContent = today;
 
-function calculate(){
-  const inc = getIncluded();
-  if(inc.length === 0) return null;
-  const prices = inc.map(c=>c.price).sort((a,b)=>a-b);
-  const low = prices[0];
-  const high = prices[prices.length-1];
-  const median = prices[Math.floor(prices.length/2)];
-  const avg = prices.reduce((s,p)=>s+p,0)/prices.length;
-  const ppsfs = inc.map(c=>c.price/c.sqft);
-  const avgPpsf = ppsfs.reduce((s,p)=>s+p,0)/ppsfs.length;
-  const doms = inc.map(c=>c.dom).sort((a,b)=>a-b);
-  const medianDOM = doms[Math.floor(doms.length/2)];
-
-  let suggested;
-  if(strategy === 'conservative') suggested = (low + median)/2;
-  else if(strategy === 'aggressive') suggested = (median + high)/2;
-  else suggested = (median + avg)/2;
-
-  return {
-    low:Math.round(low/1000)*1000,
-    high:Math.round(high/1000)*1000,
-    suggested:Math.round(suggested/1000)*1000,
-    median:Math.round(median/1000)*1000,
-    avg:Math.round(avg/1000)*1000,
-    avgPpsf:Math.round(avgPpsf),
-    medianDOM,
-    count:inc.length
-  };
-}
-
-/* =========== RENDER =========== */
-function renderAll(){
-  const r = calculate();
-  if(!r) return;
-
-  // Hero stats
-  document.getElementById('heroDOM').textContent = r.medianDOM + ' days';
-  document.getElementById('heroPpsf').textContent = '$' + r.avgPpsf;
-  document.getElementById('heroCount').textContent = r.count;
-
-  // Price band
-  document.getElementById('priceRange').innerHTML = `${fmtK(r.low)} <em>to</em> ${fmtK(r.high)}`;
-  document.getElementById('priceSuggested').textContent = fmt(r.suggested);
-
-  // Market stats
-  document.getElementById('statHigh').textContent = fmtK(r.high);
-  document.getElementById('statAvg').textContent = fmtK(r.avg);
-  document.getElementById('statLow').textContent = fmtK(r.low);
-  document.getElementById('statDOM').textContent = r.medianDOM + ' days';
-
-  renderComps();
-  renderTable();
-  updateNet();
-  updateSF();
-  if(map) updateMap();
-}
-
-/* =========== SELLER FINANCING CALCULATION =========== */
-let sfStrategy = 'wrap'; // 'clean' = pay off mortgage at closing; 'wrap' = keep mortgage and capture the spread
-
-function setSFStrategy(s){
-  sfStrategy = s;
-  document.getElementById('strategyClean').classList.toggle('active', s==='clean');
-  document.getElementById('strategyWrap').classList.toggle('active', s==='wrap');
-  const reinvestBtn = document.getElementById('strategyReinvest');
-  if(reinvestBtn) reinvestBtn.classList.toggle('active', s==='reinvest');
-
-  const explainer = document.getElementById('strategyExplainer');
-  if(s === 'clean'){
-    explainer.innerHTML = '<strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--accent);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Clean Payoff:</strong> You pay off your 3.5% mortgage at closing using the down payment and possibly bringing additional funds. You then carry a new note to the buyer at 7.5%. <strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--ink);font-weight:600">Safer, simpler, no due-on-sale risk.</strong>';
-  } else if(s === 'wrap'){
-    explainer.innerHTML = '<strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--warn);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Wrap-Around (Keep Cash Flow):</strong> Keep your 3.5% mortgage in place. Collect from buyer, pay your mortgage, <strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--ink);font-weight:600">pocket the $471/month difference for everyday expenses</strong>. Your balloon gain comes from the natural mortgage amortization spread.';
-  } else if(s === 'reinvest'){
-    explainer.innerHTML = '<strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--gold);font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase">Wrap + Accelerate (Reinvest):</strong> Same as B, but instead of pocketing the $471/month, you apply it as <strong style="font-family:Inter,sans-serif;font-style:normal;color:var(--ink);font-weight:600">extra principal payments on your 3.5% mortgage</strong> — paying it off faster so your balloon proceeds are larger. <em style="font-style:italic">Spoiler: only modestly better since your rate is so low.</em>';
-  }
-  updateSF();
-}
-
-function updateSF(){
-  // Null-safe DOM text setter
-  const safeSetText = (id, text) => {
-    const el = document.getElementById(id);
-    if(el) el.textContent = text;
-  };
-
-  const salePrice = parseFloat(document.getElementById('sfSalePrice').value) || 0;
-  const downAmount = parseFloat(document.getElementById('sfDownAmount').value) || 0;
-  const buyerRate = parseFloat(document.getElementById('sfRate').value) || 0;
-  const amortYears = parseFloat(document.getElementById('sfAmort').value) || 30;
-  const balloonYears = parseFloat(document.getElementById('sfBalloon').value) || 5;
-  const mortgagePayoff = parseFloat(document.getElementById('sfPayoff').value) || 0;
-  const mortgageRate = parseFloat(document.getElementById('sfMortgageRate').value) || 0;
-  const mortgagePI = parseFloat(document.getElementById('sfMortgagePI').value) || 0;
-  const closingCosts = parseFloat(document.getElementById('sfClosingCosts').value) || 0;
-  const commissionPct = parseFloat(document.getElementById('sfCommission').value) || 0;
-
-  if(!salePrice) return;
-
-  const commission = salePrice * (commissionPct/100);
-  const totalSellingCosts = commission + closingCosts;
-
-  // ===== OPTION A: Traditional sale =====
-  // Traditional: commission + closing costs come out of sale proceeds
-  // Note: traditional uses 4% (2% listing + 2% buyer side) since buyer agent commission applies
-  const tradCommission = salePrice * 0.04;
-  const tradNet = salePrice - tradCommission - closingCosts - mortgagePayoff;
-
-  // ===== OPTION B: Seller financing =====
-  // For SF: down payment covers seller agent commission + closing costs first
-  // Whatever remains of the down payment goes to Garrett at closing
-  // The financed amount the buyer signs a note for = full sale price minus the down payment
-  const downPct = (downAmount / salePrice) * 100;
-  const cashFromDown = downAmount - commission - closingCosts; // what Garrett actually pockets at closing
-
-  let financedAmount;
-  let netCashAtClosing;
-  let monthlyToGarrett;
-
-  if(sfStrategy === 'clean'){
-    financedAmount = salePrice - downAmount;
-    netCashAtClosing = cashFromDown - mortgagePayoff;
-  } else {
-    financedAmount = salePrice - downAmount;
-    netCashAtClosing = cashFromDown;
-  }
-
-  // Buyer's monthly P&I to Garrett
-  const buyerMonthlyRate = (buyerRate/100) / 12;
-  const totalPayments = amortYears * 12;
-  const balloonMonths = balloonYears * 12;
-
-  let buyerMonthlyPmt = 0;
-  if(buyerMonthlyRate > 0){
-    buyerMonthlyPmt = financedAmount * (buyerMonthlyRate * Math.pow(1+buyerMonthlyRate, totalPayments)) /
-                      (Math.pow(1+buyerMonthlyRate, totalPayments) - 1);
-  } else {
-    buyerMonthlyPmt = financedAmount / totalPayments;
-  }
-
-  // Garrett's effective monthly cash flow
-  if(sfStrategy === 'clean'){
-    monthlyToGarrett = buyerMonthlyPmt;
-  } else if(sfStrategy === 'reinvest'){
-    // Option C: $0 in pocket monthly; the spread auto-applies to mortgage paydown
-    monthlyToGarrett = 0;
-  } else {
-    monthlyToGarrett = buyerMonthlyPmt - mortgagePI;
-  }
-
-  // Buyer's remaining balance at balloon
-  let buyerBalloonBalance = 0;
-  if(buyerMonthlyRate > 0){
-    buyerBalloonBalance = financedAmount * Math.pow(1+buyerMonthlyRate, balloonMonths) -
-                          buyerMonthlyPmt * (Math.pow(1+buyerMonthlyRate, balloonMonths) - 1) / buyerMonthlyRate;
-  } else {
-    buyerBalloonBalance = financedAmount - (buyerMonthlyPmt * balloonMonths);
-  }
-
-  // Garrett's underlying mortgage balance at balloon (if wrap or reinvest)
-  let garrettMortgageAtBalloon = 0;
-  if((sfStrategy === 'wrap' || sfStrategy === 'reinvest') && mortgagePayoff > 0){
-    const garrettMonthlyRate = (mortgageRate/100) / 12;
-    const truePI = (garrettMonthlyRate > 0)
-      ? mortgagePayoff * (garrettMonthlyRate * Math.pow(1+garrettMonthlyRate, 360)) /
-        (Math.pow(1+garrettMonthlyRate, 360) - 1)
-      : mortgagePayoff / 360;
-
-    if(sfStrategy === 'reinvest'){
-      // Month-by-month amortization with extra principal applied each month
-      const monthlyExtra = buyerMonthlyPmt - mortgagePI; // the spread becomes extra principal
-      let bal = mortgagePayoff;
-      for(let m = 0; m < balloonMonths; m++){
-        const interest = bal * garrettMonthlyRate;
-        const principal = truePI - interest;
-        bal -= principal;
-        bal -= monthlyExtra; // apply extra payment
-        if(bal < 0){ bal = 0; break; }
-      }
-      garrettMortgageAtBalloon = bal;
-    } else {
-      // Standard wrap: just normal amortization
-      if(garrettMonthlyRate > 0){
-        garrettMortgageAtBalloon = mortgagePayoff * Math.pow(1+garrettMonthlyRate, balloonMonths) -
-                                    truePI * (Math.pow(1+garrettMonthlyRate, balloonMonths) - 1) / garrettMonthlyRate;
-      } else {
-        garrettMortgageAtBalloon = mortgagePayoff - (truePI * balloonMonths);
-      }
-    }
-    if(garrettMortgageAtBalloon < 0) garrettMortgageAtBalloon = 0;
-  }
-
-  const totalMonthlyCollected = monthlyToGarrett * balloonMonths;
-  const netBalloonProceeds = buyerBalloonBalance - garrettMortgageAtBalloon;
-  const lifetimeTotal = netCashAtClosing + totalMonthlyCollected + netBalloonProceeds;
-  const advantage = lifetimeTotal - tradNet;
-  const annualCashFlow = monthlyToGarrett * 12;
-
-  // ===== UPDATE DOM =====
-  // Traditional column
-  safeSetText('sfTradNet', fmt(tradNet));
-  safeSetText('sfTradSale', fmt(salePrice));
-  safeSetText('sfTradComm', '−' + fmt(commission));
-  safeSetText('sfTradClosing', '−' + fmt(closingCosts));
-  safeSetText('sfTradPayoff', '−' + fmt(mortgagePayoff));
-  safeSetText('sfTradTotal', fmt(tradNet));
-
-  // Seller financed column
-  safeSetText('sfSellerTotal', fmt(lifetimeTotal));
-
-  // PHASE 1: At Closing
-  safeSetText('sfSFSale', fmt(salePrice));
-  safeSetText('sfDownAmt', fmt(downAmount));
-  safeSetText('sfCommAmt', '−' + fmt(commission));
-  safeSetText('sfCommLbl', `${commissionPct}% of sale price`);
-  safeSetText('sfSFCosts', '−' + fmt(closingCosts));
-  safeSetText('sfCashAtClosing', fmt(cashFromDown));
-  // Loan carried by Garrett = what he finances to the buyer (sale price - down payment)
-  safeSetText('sfLoanCarried', fmt(financedAmount));
-
-  // PHASE 2: Monthly cash flow during the 5 years
-  safeSetText('sfBuyerMonthly', fmt(buyerMonthlyPmt));
-  safeSetText('sfYourMonthly', '−' + fmt(mortgagePI));
-  safeSetText('sfMonthlyPmt', fmt(monthlyToGarrett));
-  safeSetText('sfTotalMonthly', fmt(totalMonthlyCollected));
-
-  // PHASE 3: At Balloon
-  safeSetText('sfBuyerOwes', fmt(buyerBalloonBalance));
-  safeSetText('sfYourOwes', '−' + fmt(garrettMortgageAtBalloon));
-  safeSetText('sfBalloonAmt', fmt(netBalloonProceeds));
-
-  // Total
-  safeSetText('sfLifetimeTotal', fmt(lifetimeTotal));
-
-  // Dynamic interest rate label in Phase 2
-  safeSetText('sfBuyerRateLbl', `P&I at ${buyerRate}% on the financed amount`);
-
-  // Legacy/unused but kept for safety (in case any old code refs them)
-  safeSetText('sfBalloonKeeps', fmt(netBalloonProceeds));
-  safeSetText('sfSFPayoff', sfStrategy === 'clean' ? '−' + fmt(mortgagePayoff) : '$0 (stays in place)');
-
-  // Labels (with null safety)
-  safeSetText('sfMonthsLbl', `over ${balloonMonths} months`);
-  safeSetText('sfBalloonLbl', `end of year ${balloonYears}`);
-  safeSetText('sfBalloonYrs', balloonYears);
-  safeSetText('sfBalloonYrs2', balloonYears);
-  safeSetText('sfTermSummary', balloonYears + (balloonYears === 1 ? ' year' : ' years'));
-  safeSetText('sfAdvantage', fmt(advantage));
-  safeSetText('sfAdvantageYrs', balloonYears);
-
-  // ===== CASH FLOW WATERFALL =====
-  // Always visible whether clean or wrap, but shows different math
-  const cfBuyerPmt = document.getElementById('cfBuyerPmt');
-  const cfMortgagePmt = document.getElementById('cfMortgagePmt');
-  const cfNetMonthly = document.getElementById('cfNetMonthly');
-  const cfAnnual = document.getElementById('cfAnnual');
-  const cfMortgageRow = document.getElementById('cfMortgageRow');
-  const cfStrategyNote = document.getElementById('cfStrategyNote');
-
-  if(cfBuyerPmt) cfBuyerPmt.textContent = fmt(buyerMonthlyPmt);
-  if(cfMortgagePmt){
-    if(sfStrategy === 'reinvest'){
-      // Show: normal payment + extra principal
-      cfMortgagePmt.textContent = '−' + fmt(buyerMonthlyPmt);
-    } else {
-      cfMortgagePmt.textContent = '−' + fmt(mortgagePI);
-    }
-  }
-  if(cfNetMonthly) cfNetMonthly.textContent = fmt(monthlyToGarrett);
-  if(cfAnnual) cfAnnual.textContent = fmt(annualCashFlow);
-  const cfTotalMonthsLbl = document.getElementById('cfTotalMonthsLbl');
-  if(cfTotalMonthsLbl) cfTotalMonthsLbl.textContent = balloonMonths;
-
-  // Update labels for reinvest scenario
-  const cfMortgageRowLbl = document.querySelector('#cfMortgageRow .cf-lbl-main');
-  const cfMortgageRowSub = document.querySelector('#cfMortgageRow .cf-lbl-sub');
-  if(cfMortgageRowLbl && cfMortgageRowSub){
-    if(sfStrategy === 'reinvest'){
-      cfMortgageRowLbl.textContent = 'You pay your bank (extra principal)';
-      cfMortgageRowSub.textContent = `Your normal $${Math.round(mortgagePI).toLocaleString()} + extra $${Math.round(buyerMonthlyPmt - mortgagePI).toLocaleString()} = paid off faster`;
-    } else {
-      cfMortgageRowLbl.textContent = 'You pay your bank';
-      cfMortgageRowSub.textContent = 'Your locked 3.5% mortgage continues';
-    }
-  }
-
-  if(cfMortgageRow){
-    cfMortgageRow.style.display = (sfStrategy === 'wrap' || sfStrategy === 'reinvest') ? 'grid' : 'none';
-  }
-  if(cfStrategyNote){
-    if(sfStrategy === 'wrap'){
-      cfStrategyNote.textContent = `You collect $${Math.round(buyerMonthlyPmt).toLocaleString()} from the buyer each month, continue paying $${Math.round(mortgagePI).toLocaleString()} to your bank, and pocket the $${Math.round(buyerMonthlyPmt - mortgagePI).toLocaleString()} difference. That's the spread you can spend, save, or invest.`;
-    } else if(sfStrategy === 'reinvest'){
-      cfStrategyNote.textContent = `You collect $${Math.round(buyerMonthlyPmt).toLocaleString()} from the buyer each month and apply the entire amount toward your mortgage — your normal $${Math.round(mortgagePI).toLocaleString()} payment plus an extra $${Math.round(buyerMonthlyPmt - mortgagePI).toLocaleString()} as extra principal. Your bigger payday comes at balloon.`;
-    } else {
-      cfStrategyNote.textContent = `Your 3.5% mortgage is paid off at closing, so the entire $${Math.round(buyerMonthlyPmt).toLocaleString()} monthly payment from the buyer goes directly to you.`;
-    }
-  }
-
-  // Down payment helper text - shows the percentage equivalent
-  const downHelper = document.getElementById('sfDownHelper');
-  if(downHelper){
-    downHelper.textContent = `${downPct.toFixed(1)}% of sale price`;
-  }
-}
-
-/* =========== NET SHEET CALCULATION =========== */
-function updateNet(){
-  const r = calculate();
-  if(!r) return;
-
-  // Check for sale price override, otherwise use suggested
-  const overrideEl = document.getElementById('saleOverride');
-  const override = overrideEl ? parseFloat(overrideEl.value) : NaN;
-  const salePrice = (!isNaN(override) && override > 0) ? override : r.suggested;
-
-  // Fixed-rate inputs (Utah condo defaults)
-  const listCommPct = 2.0;
-  const buyCommPct = 2.0;
-  const titleEscrow = 3500;
-  const recordingMisc = 1200;
-  const homeWarranty = 800;
-
-  // Payoff (optional input from Garrett)
-  const payoffEl = document.getElementById('payoffInput');
-  const payoff = payoffEl ? (parseFloat(payoffEl.value) || 0) : 0;
-
-  // Calculations
-  const listComm = salePrice * (listCommPct/100);
-  const buyComm = salePrice * (buyCommPct/100);
-  const totalDeductions = listComm + buyComm + titleEscrow + recordingMisc + homeWarranty + payoff;
-  const net = salePrice - totalDeductions;
-
-  // Update DOM
-  document.getElementById('netAmount').textContent = fmt(net);
-  document.getElementById('netSalePrice').textContent = fmt(salePrice);
-  document.getElementById('lineSale').textContent = fmt(salePrice);
-  document.getElementById('lineListComm').textContent = '−' + fmt(listComm);
-  document.getElementById('lineBuyComm').textContent = '−' + fmt(buyComm);
-  document.getElementById('lineTitle').textContent = '−' + fmt(titleEscrow);
-  document.getElementById('lineRec').textContent = '−' + fmt(recordingMisc);
-  document.getElementById('lineWarr').textContent = '−' + fmt(homeWarranty);
-  document.getElementById('lineNet').textContent = fmt(net);
-
-  // Show/hide payoff row based on input
-  const payoffRow = document.getElementById('linePayoffRow');
-  if(payoff > 0){
-    payoffRow.style.display = 'flex';
-    document.getElementById('linePayoff').textContent = '−' + fmt(payoff);
-  } else {
-    payoffRow.style.display = 'none';
-  }
-}
-
+/* COMP CARDS */
 function renderComps(){
   const grid = document.getElementById('compGrid');
-  grid.innerHTML = COMPS.map(c=>{
+  grid.innerHTML = VALID_COMPS.map(c => {
     const ppsf = Math.round(c.price/c.sqft);
-    const isAnchor = c.cluster === 'newport';
-    const anchorBadge = isAnchor
-      ? `<div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);padding:5px 14px;background:var(--gold);color:var(--ink);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;border-radius:2px;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.2)">Your Anchor Comp</div>`
-      : '';
     return `
-      <div class="comp-card ${c.included?'':'excluded'}" data-id="${c.id}" data-cluster="${c.cluster}" style="${isAnchor?'border-color:var(--gold);border-width:2px':''}">
+      <div class="comp-card">
         <div class="photo">
-          <img src="${c.photo}" alt="${c.address}" onerror="this.style.display='none'">
-          ${anchorBadge}
-          <span class="status-badge">Sold</span>
-          <span class="include-toggle" onclick="event.stopPropagation();toggleComp(${c.id})"></span>
+          ${c.photo ? `<img src="${c.photo}" alt="${c.address}" onerror="this.style.display='none'">` : ''}
+          <span class="badge">Sold</span>
         </div>
-        <div class="body" onclick="openDetail(${c.id})">
-          <div class="subdivision">${c.subdivision}</div>
+        <div class="body">
           <div class="addr">${c.address}</div>
           <div class="meta">
             <span>${c.beds}bd · ${c.baths}ba</span>
             <span>${c.sqft.toLocaleString()} sqft</span>
             <span>Built ${c.year}</span>
           </div>
-          <div class="price-row">
-            <div>
-              <span class="sold-price">${fmt(c.price)}</span>
-              <span class="sold-label">$${ppsf}/sqft</span>
-            </div>
-            <div class="dom-badge">
-              <strong>${c.dom}</strong>
-              <span>days</span>
-            </div>
+          <div class="price">
+            ${fmt(c.price)}
+            <span class="ppsf">$${ppsf}/sqft</span>
           </div>
         </div>
       </div>
     `;
   }).join('');
 }
+renderComps();
 
-function renderTable(){
-  const tbody = document.querySelector('#summaryTable tbody');
-  tbody.innerHTML = COMPS.map(c=>{
-    const ppsf = Math.round(c.price/c.sqft);
-    const dropOrGain = c.price - c.listPrice;
-    const arrow = dropOrGain >= 0 ? '↑' : '↓';
-    const color = dropOrGain >= 0 ? 'var(--accent)' : 'var(--warn)';
-    return `
-      <tr class="${c.included?'':'excluded'}">
-        <td><strong>${c.address}</strong></td>
-        <td><span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold)">${c.subdivision}</span></td>
-        <td class="num">${c.sqft.toLocaleString()}</td>
-        <td class="num">${fmtK(c.listPrice)} → <strong>${fmtK(c.price)}</strong> <span style="color:${color};font-size:11px">${arrow}</span></td>
-        <td class="num">${c.dom}</td>
-        <td class="num"><strong>$${ppsf}</strong></td>
-      </tr>
-    `;
-  }).join('');
-}
-
-/* =========== INTERACTIONS =========== */
-function toggleComp(id){
-  const c = COMPS.find(x=>x.id===id);
-  if(c){ c.included = !c.included; renderAll(); }
-}
-
-function setStrategy(s){
-  strategy = s;
-  document.querySelectorAll('.strategy-toggle button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.strategy===s);
-  });
-  renderAll();
-  // Visual feedback: flash the updated numbers
-  if(typeof flashElement === 'function'){
-    flashElement('priceRange');
-    flashElement('priceSuggested');
-    flashElement('netAmount');
-  }
-}
-
-function filterComps(filter, btn){
-  activeFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-
-  if(filter === 'all'){
-    COMPS.forEach(c=>c.included = true);
-  } else if(filter === 'newport'){
-    COMPS.forEach(c=>c.included = c.cluster === 'newport');
-  } else if(filter === 'italian'){
-    COMPS.forEach(c=>c.included = c.cluster === 'italian');
-  } else if(filter === 'high'){
-    const sorted = [...COMPS].sort((a,b)=>b.price-a.price);
-    const topPrices = sorted.slice(0,5).map(c=>c.id);
-    COMPS.forEach(c=>c.included = topPrices.includes(c.id));
-  } else if(filter === 'fast'){
-    COMPS.forEach(c=>c.included = c.dom <= 30);
-  }
-  renderAll();
-}
-
-/* =========== DETAIL MODAL =========== */
-function openDetail(id){
-  const c = COMPS.find(x=>x.id===id);
-  if(!c) return;
-  const ppsf = Math.round(c.price/c.sqft);
-  document.getElementById('detailCard').innerHTML = `
-    <button class="detail-close" onclick="closeDetail()">✕</button>
-    <img class="detail-photo" src="${c.photo}" alt="${c.address}" onclick="openLightbox('${c.photo}')">
-    <div class="detail-body">
-      <div class="subdivision">${c.subdivision} · Sold ${new Date(c.soldDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
-      <h3>${c.address}</h3>
-      <div class="detail-grid">
-        <div class="item"><span class="v">${fmt(c.price)}</span><span class="l">Sold Price</span></div>
-        <div class="item"><span class="v">$${ppsf}</span><span class="l">Per Sqft</span></div>
-        <div class="item"><span class="v">${c.dom}</span><span class="l">Days on Market</span></div>
-        <div class="item"><span class="v">${c.beds}</span><span class="l">Beds</span></div>
-        <div class="item"><span class="v">${c.baths}</span><span class="l">Baths</span></div>
-        <div class="item"><span class="v">${c.year}</span><span class="l">Year Built</span></div>
-      </div>
-      <div class="detail-features">
-        <h4>Highlights</h4>
-        <p>${c.features}</p>
-      </div>
-      <div class="detail-features">
-        <h4>From the listing</h4>
-        <p class="detail-remarks">"${c.remarks}"</p>
-      </div>
-      <div style="text-align:right;font-size:11px;color:var(--muted);margin-top:20px">Listed at ${fmt(c.listPrice)} · Sold at ${fmt(c.price)}</div>
-    </div>
-  `;
-  document.getElementById('detailModal').classList.add('active');
-}
-function closeDetail(){ document.getElementById('detailModal').classList.remove('active'); }
-
-function openLightbox(src){
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightbox').classList.add('active');
-}
-function closeLightbox(){ document.getElementById('lightbox').classList.remove('active'); }
-
-/* =========== MAP =========== */
+/* MAP */
+let map;
 function initMap(){
-  map = L.map('map',{scrollWheelZoom:false}).setView([40.318,-111.722],14);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-    attribution:'&copy; OpenStreetMap &copy; CARTO',
-    maxZoom:19
+  if(!document.getElementById('map')) return;
+  map = L.map('map', {scrollWheelZoom: false}).setView([40.31, -111.722], 14);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    maxZoom: 19
   }).addTo(map);
-  markersLayer = L.layerGroup().addTo(map);
-  updateMap();
-}
-function updateMap(){
-  if(!map) return;
-  markersLayer.clearLayers();
+
   const bounds = [];
 
-  // Garrett's subject property marker (gold, distinct)
-  const subjLat = 40.3023;
-  const subjLng = -111.7245;
+  // Subject property
+  const subjLat = 40.3023, subjLng = -111.7245;
   const subjIcon = L.divIcon({
-    className:'',
-    html:`<div style="position:relative"><div style="width:42px;height:42px;background:#a88b56;color:#0e0e0e;border:3px solid #fff;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:10px;font-weight:600;letter-spacing:0.05em">YOU</div></div>`,
-    iconSize:[42,42],iconAnchor:[21,21]
+    className: '',
+    html: `<div style="width:38px;height:38px;background:#a88b56;color:#0e0e0e;border:3px solid #fff;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:10px;font-weight:600;letter-spacing:0.05em">YOU</div>`,
+    iconSize: [38,38], iconAnchor: [19,19]
   });
-  L.marker([subjLat,subjLng],{icon:subjIcon,zIndexOffset:1000})
-    .bindPopup(`<div style="font-family:Inter,sans-serif"><strong style="font-family:Fraunces,serif;font-size:16px">203 N 1200 W #203</strong><br><span style="color:#a88b56;font-size:10px;letter-spacing:0.15em;text-transform:uppercase">Newport Village · Your Unit</span><br><br>3 bd / 2 ba · 1,310 sqft · Built 2004</div>`)
-    .addTo(markersLayer);
-  bounds.push([subjLat,subjLng]);
+  L.marker([subjLat, subjLng], {icon: subjIcon, zIndexOffset: 1000})
+    .bindPopup(`<strong>Your Unit · 203 N 1200 W #203</strong><br>Newport Village`)
+    .addTo(map);
+  bounds.push([subjLat, subjLng]);
 
-  getIncluded().forEach(c=>{
+  // Comp markers
+  VALID_COMPS.forEach(c => {
     const icon = L.divIcon({
-      className:'',
-      html:`<div style="width:32px;height:32px;background:#1a3a2e;color:#fff;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:11px;font-weight:600">${Math.round(c.price/1000)}K</div>`,
-      iconSize:[32,32],iconAnchor:[16,16]
+      className: '',
+      html: `<div style="width:28px;height:28px;background:#1a3a2e;color:#fff;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:10px;font-weight:600">${Math.round(c.price/1000)}K</div>`,
+      iconSize: [28,28], iconAnchor: [14,14]
     });
-    L.marker([c.lat,c.lng],{icon})
-      .bindPopup(`<div style="font-family:Inter,sans-serif"><strong style="font-family:Fraunces,serif;font-size:15px">${c.address}</strong><br><span style="color:#a88b56;font-size:10px;letter-spacing:0.15em;text-transform:uppercase">${c.subdivision}</span><br><br>Sold ${fmt(c.price)} · ${c.dom} days<br>${c.beds}bd / ${c.baths}ba · ${c.sqft.toLocaleString()} sqft</div>`)
-      .addTo(markersLayer);
-    bounds.push([c.lat,c.lng]);
+    L.marker([c.lat, c.lng], {icon})
+      .bindPopup(`<strong>${c.address}</strong><br>${fmt(c.price)} · ${c.beds}bd/${c.baths}ba · ${c.sqft.toLocaleString()} sqft`)
+      .addTo(map);
+    bounds.push([c.lat, c.lng]);
   });
-  if(bounds.length > 0) map.fitBounds(bounds,{padding:[60,60],maxZoom:15});
-}
 
-/* =========== ACTIONS =========== */
-function exportPDF(){
-  window.print();
+  if(bounds.length > 0) map.fitBounds(bounds, {padding: [50,50], maxZoom: 14});
 }
-function scheduleClick(){
-  window.location.href = 'mailto:cristian.gmillan@gmail.com?subject=Garrett CMA - Ready to talk&body=Hi Cristian, I reviewed the analysis. Let\'s schedule a call.';
-}
-
-/* =========== INIT =========== */
-renderAll();
 setTimeout(initMap, 200);
 
-/* =========== SCROLL REVEAL ANIMATIONS =========== */
-const revealObserver = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
+/* REVEAL ANIMATIONS */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
       revealObserver.unobserve(entry.target);
     }
   });
-},{threshold:0.12, rootMargin:'0px 0px -60px 0px'});
+}, {threshold: 0.12, rootMargin: '0px 0px -60px 0px'});
 
-// Tag sections and key elements for reveal
-function attachReveals(){
-  document.querySelectorAll('.section-eyebrow,.section-title,.section-lead,.price-band,.price-explainer,.market-stats,.net-sheet,.timeline,.comp-grid,#map,.summary-table,.lifestyle-grid,.honest-take,.sf-intro,.sf-inputs,.sf-comparison,.sf-summary,.sf-pros-cons').forEach(el=>{
-    el.classList.add('reveal');
-    revealObserver.observe(el);
-  });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  // Stagger groups
-  document.querySelectorAll('.comp-grid,.market-stats,.lifestyle-grid').forEach(grid=>{
-    grid.classList.add('reveal-stagger');
-  });
+/* ROI CALCULATOR */
+const roiMultipliers = {paint:1.6, floor:1.4, stage:3.0, curb:2.2};
+function updateROI(){
+  const paint = parseFloat(document.getElementById('roiPaint').value) || 0;
+  const floor = parseFloat(document.getElementById('roiFloor').value) || 0;
+  const stage = parseFloat(document.getElementById('roiStage').value) || 0;
+  const curb = parseFloat(document.getElementById('roiCurb').value) || 0;
 
-  // Timeline gets its own observer trigger
-  const timeline = document.querySelector('.timeline');
-  if(timeline) revealObserver.observe(timeline);
-}
-attachReveals();
-setSFStrategy('wrap'); // initialize as wrap-around (Garrett's most powerful play)
-// Defensive: ensure all SF numbers populate even if there's a timing issue
-setTimeout(()=>{ updateSF(); }, 100);
+  const totalSpend = paint + floor + stage + curb;
+  const totalReturn = paint*roiMultipliers.paint + floor*roiMultipliers.floor + stage*roiMultipliers.stage + curb*roiMultipliers.curb;
+  const netGain = totalReturn - totalSpend;
 
-/* =========== FLASH NUMBER ON CHANGE =========== */
-function flashElement(id){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.classList.remove('flash');
-  void el.offsetWidth; // trigger reflow
-  el.classList.add('flash');
-}
+  const result = document.getElementById('roiResult');
+  const amount = document.getElementById('roiAmount');
+  const breakdown = document.getElementById('roiBreakdown');
 
-// Flash net amount when user types in inputs
-['payoffInput','saleOverride'].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el){
-    el.addEventListener('input',()=>{
-      clearTimeout(window._netFlashTimer);
-      window._netFlashTimer = setTimeout(()=>flashElement('netAmount'),200);
-    });
+  if(totalSpend > 0){
+    result.classList.add('active');
+    amount.textContent = fmt(netGain);
+    breakdown.textContent = `Spend ${fmt(totalSpend)} → estimated ${fmt(totalReturn)} added to sale price · ${Math.round((netGain/totalSpend)*100)}% return`;
+  } else {
+    result.classList.remove('active');
+    amount.textContent = '$0';
+    breakdown.textContent = 'Spend $0, see what comes back';
   }
-});
+}
 
-// Flash SF numbers when user types in seller financing inputs
-['sfSalePrice','sfDownAmount','sfRate','sfAmort','sfBalloon','sfPayoff','sfCommission','sfClosingCosts','sfMortgageRate','sfMortgagePI'].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el){
-    el.addEventListener('input',()=>{
-      clearTimeout(window._sfFlashTimer);
-      window._sfFlashTimer = setTimeout(()=>{
-        flashElement('sfSellerTotal');
-        flashElement('sfAdvantage');
-        flashElement('sfTradNet');
-      },200);
-    });
-  }
-});
+/* ACTIONS */
+function scheduleCall(){
+  window.location.href = "mailto:cristian.gmillan@gmail.com?subject=Garrett's CMA — Ready to talk&body=Hi Cristian, I reviewed the analysis. Let's schedule a call to talk through it.";
+}
+function textQuestion(){
+  window.location.href = "mailto:cristian.gmillan@gmail.com?subject=Question about my CMA&body=Hi Cristian, I had a question about my CMA:";
+}
 </script>
 </body>
 </html>
