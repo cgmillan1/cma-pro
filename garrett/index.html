@@ -260,7 +260,7 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
 <!-- YOUR UNIT -->
 <section id="unit" class="narrow reveal">
   <div class="section-eyebrow">Your unit</div>
-  <h2 class="section-title">203 N 1200 W <em>#203</em></h2>
+  <h2 class="section-title">203 N 1200 W <em>#201</em></h2>
   <p class="section-lead">A 3-bedroom, 2-bath top-floor condo in Newport Village. Built 2004.</p>
 
   <div class="unit-card">
@@ -371,6 +371,36 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
     <details>
       <summary>See the breakdown for Plan B</summary>
       <div class="details-body">
+
+        <div class="detail-phase">Your Current Mortgage</div>
+        <div class="detail-line">
+          <span class="label">Current Principal Balance</span>
+          <span class="value">$295,091.66</span>
+        </div>
+        <div class="detail-line">
+          <span class="label">Closing Date <small>when you got the loan</small></span>
+          <span class="value">Jan 25, 2022</span>
+        </div>
+        <div class="detail-line">
+          <span class="label">Interest Rate</span>
+          <span class="value">3.5%</span>
+        </div>
+        <div class="detail-line subtotal">
+          <span class="label">Monthly Payment <small>your total monthly cost</small></span>
+          <span class="value">$1,647.33</span>
+        </div>
+        <div class="detail-line" style="padding-left:14px;font-size:13px;color:var(--muted)">
+          <span class="label">↳ Principal portion</span>
+          <span class="value" style="font-size:14px">$588.01</span>
+        </div>
+        <div class="detail-line" style="padding-left:14px;font-size:13px;color:var(--muted)">
+          <span class="label">↳ Interest portion</span>
+          <span class="value" style="font-size:14px">$862.40</span>
+        </div>
+        <div class="detail-line" style="padding-left:14px;font-size:13px;color:var(--muted)">
+          <span class="label">↳ Escrow <small>taxes &amp; insurance</small></span>
+          <span class="value" style="font-size:14px">$196.92</span>
+        </div>
 
         <div class="detail-phase">At Closing (Day 1)</div>
         <div class="detail-line">
@@ -584,7 +614,7 @@ function initMap(){
     iconSize: [38,38], iconAnchor: [19,19]
   });
   L.marker([subjLat, subjLng], {icon: subjIcon, zIndexOffset: 1000})
-    .bindPopup(`<strong>Your Unit · 203 N 1200 W #203</strong><br>Newport Village`)
+    .bindPopup(`<strong>Your Unit · 203 N 1200 W #201</strong><br>Newport Village`)
     .addTo(map);
   bounds.push([subjLat, subjLng]);
 
