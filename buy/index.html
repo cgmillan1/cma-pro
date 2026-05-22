@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>203 N 1200 W #201 · Three Ways to Buy</title>
+<meta name="description" content="A condo in Newport Village, Orem — with three flexible ways to purchase, including an assumable 3.5% loan. Presented by Cristian Millan, Real Brokerage Utah.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf8f4; --ink:#0e0e0e; --ink-soft:#3a3a3a; --muted:#8a8680;
+  --line:#e6e1d8; --paper:#ffffff; --accent:#1a3a2e; --accent-soft:#e8efea;
+  --warn:#a3502a; --gold:#a88b56;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+em{font-style:italic;color:var(--gold);font-weight:300}
+.eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease-out,transform 0.7s ease-out}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}.reveal{opacity:1;transform:none}}
+
+/* TOOLBAR */
+.toolbar{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--line);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;z-index:50;gap:14px;flex-wrap:wrap}
+.toolbar-brand{font-family:'Fraunces',serif;font-size:16px;font-style:italic}
+.toolbar-brand strong{color:var(--gold);font-style:italic;font-weight:400}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;border-radius:2px;cursor:pointer;font-family:inherit;border:1px solid;transition:all .2s;background:transparent;text-decoration:none}
+.btn-primary{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.btn-primary:hover{background:transparent;color:var(--gold)}
+.btn-ghost{border-color:rgba(250,248,244,0.3);color:var(--bg)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-dark{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn-dark:hover{opacity:0.85}
+
+/* HERO */
+.hero{background:var(--ink);color:var(--bg);min-height:85vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.15;pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+.brand-block{display:flex;align-items:center;gap:14px;animation:fadeUp 0.9s ease-out 0.2s both}
+.brand-mark{width:48px;height:48px;border-radius:50%;background:rgba(168,139,86,0.15);border:1px solid rgba(168,139,86,0.3);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--gold)}
+.brand-name{font-family:'Fraunces',serif;font-size:17px;letter-spacing:-0.01em}
+.brand-name span{font-style:italic;color:var(--gold)}
+.brand-meta{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(250,248,244,0.5);margin-top:2px}
+.hero-center{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:920px;margin:60px 0;position:relative;z-index:2}
+.hero-eyebrow{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;animation:fadeUp 0.9s ease-out 0.3s both}
+.hero-title{font-family:'Fraunces',serif;font-size:clamp(44px,8vw,92px);line-height:0.98;letter-spacing:-0.04em;font-weight:300;margin-bottom:24px;animation:fadeUp 1s ease-out 0.4s both}
+.hero-title em{color:var(--gold)}
+.hero-sub{font-family:'Fraunces',serif;font-size:clamp(18px,2.5vw,24px);font-weight:300;line-height:1.5;color:rgba(250,248,244,0.75);max-width:680px;letter-spacing:-0.01em;animation:fadeUp 1s ease-out 0.6s both}
+.hero-cta{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;animation:fadeUp 1s ease-out 0.8s both}
+.hero-bottom{position:relative;z-index:2;animation:fadeUp 1s ease-out 1s both}
+.scroll-cue{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(250,248,244,0.5);display:flex;align-items:center;gap:10px}
+.scroll-cue::before{content:'';width:40px;height:1px;background:rgba(250,248,244,0.3)}
+@media(max-width:640px){.hero{padding:28px 20px;min-height:auto}}
+
+/* SECTIONS */
+section{padding:80px 48px;max-width:1100px;margin:0 auto}
+section.narrow{max-width:880px}
+@media(max-width:640px){section{padding:56px 20px}}
+.section-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:500}
+.section-title{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:300;margin-bottom:20px}
+.section-lead{font-family:'Fraunces',serif;font-size:clamp(17px,2vw,21px);font-weight:300;line-height:1.6;color:var(--ink-soft);max-width:680px;font-style:italic}
+
+/* PROPERTY SNAPSHOT */
+.snapshot{background:var(--paper);border:1px solid var(--line);padding:40px;margin-top:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.snap-stat{text-align:center;padding:0 14px;border-right:1px solid var(--line)}
+.snap-stat:last-child{border-right:none}
+.snap-stat .v{font-family:'Fraunces',serif;font-size:36px;font-weight:300;letter-spacing:-0.02em;display:block;line-height:1}
+.snap-stat .l{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:8px;display:block}
+@media(max-width:640px){.snapshot{padding:24px;grid-template-columns:repeat(2,1fr);gap:24px 0}.snap-stat{border-right:none}.snap-stat:nth-child(odd){border-right:1px solid var(--line)}.snap-stat .v{font-size:28px}}
+
+/* THE THREE PATHS */
+.paths-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+@media(max-width:900px){.paths-grid{grid-template-columns:1fr;gap:20px}}
+.path{background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.path.featured{border-color:var(--gold);border-width:2px;box-shadow:0 8px 30px rgba(168,139,86,0.12)}
+.path-header{padding:28px;border-bottom:1px solid var(--line);position:relative}
+.path.featured .path-header{background:linear-gradient(135deg,var(--gold) 0%,#8a6d3f 100%);color:var(--ink)}
+.path-num{font-family:'Fraunces',serif;font-size:13px;font-style:italic;color:var(--gold);margin-bottom:8px;letter-spacing:0.05em}
+.path.featured .path-num{color:var(--ink)}
+.path-name{font-family:'Fraunces',serif;font-size:26px;letter-spacing:-0.01em;font-weight:400;line-height:1.15}
+.path-name em{color:var(--gold);font-style:italic}
+.path.featured .path-name em{color:var(--paper)}
+.path-tag{display:inline-block;margin-top:8px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.path.featured .path-tag{color:rgba(14,14,14,0.65)}
+
+.path-highlight{padding:24px 28px;text-align:center;background:var(--bg);border-bottom:1px solid var(--line)}
+.path-highlight .ph-num{font-family:'Fraunces',serif;font-size:34px;font-weight:300;letter-spacing:-0.02em;line-height:1}
+.path-highlight .ph-num em{color:var(--gold);font-style:italic}
+.path-highlight .ph-lbl{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+.path-body{padding:24px 28px;flex:1}
+.path-body .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.path-body .row:last-of-type{border-bottom:none}
+.path-body .row .k{color:var(--muted)}
+.path-body .row .v{font-family:'Fraunces',serif;font-size:15px;letter-spacing:-0.005em}
+.path-note{margin-top:16px;padding:14px;background:var(--accent-soft);border-left:2px solid var(--accent);font-size:12px;line-height:1.6;color:var(--ink-soft);font-style:italic;font-family:'Fraunces',serif}
+.path.featured .path-note{background:rgba(168,139,86,0.1);border-left-color:var(--gold)}
+
+/* SAVINGS CALLOUT */
+.savings{background:linear-gradient(135deg,var(--accent) 0%,var(--ink) 100%);color:var(--bg);padding:56px 48px;text-align:center;border-radius:2px;margin-top:48px;position:relative;overflow:hidden}
+.savings::after{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,var(--gold) 0%,transparent 70%);opacity:0.15;pointer-events:none}
+.savings-lbl{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;position:relative;z-index:1;font-weight:600}
+.savings-num{font-family:'Fraunces',serif;font-size:clamp(40px,7vw,64px);letter-spacing:-0.02em;font-weight:300;line-height:1.1;position:relative;z-index:1}
+.savings-num em{color:var(--gold);font-style:italic}
+.savings-sub{font-size:14px;color:rgba(250,248,244,0.75);margin-top:16px;font-style:italic;font-family:'Fraunces',serif;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.5;position:relative;z-index:1}
+
+/* COMPARISON TABLE */
+.compare-table{width:100%;border-collapse:collapse;margin-top:36px;background:var(--paper);border:1px solid var(--line);font-size:13px;overflow:hidden;border-radius:2px}
+.compare-table th{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:16px;border-bottom:1px solid var(--line);font-weight:500;background:var(--bg)}
+.compare-table th:not(:first-child){text-align:center}
+.compare-table td{padding:16px;border-bottom:1px solid var(--line);vertical-align:middle}
+.compare-table td:not(:first-child){text-align:center;font-feature-settings:"tnum"}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .feature{font-weight:500;color:var(--ink-soft)}
+.compare-table .highlight-col{background:rgba(168,139,86,0.06);font-family:'Fraunces',serif;font-size:15px}
+.compare-table thead .highlight-col{background:rgba(168,139,86,0.12);color:var(--gold);font-weight:600}
+@media(max-width:768px){
+  .compare-table{font-size:11px}
+  .compare-table th,.compare-table td{padding:10px 8px}
+}
+
+/* FAQ */
+.faq{margin-top:36px}
+.faq details{background:var(--paper);border:1px solid var(--line);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.faq summary{padding:20px 24px;cursor:pointer;font-family:'Fraunces',serif;font-size:18px;letter-spacing:-0.01em;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:background .15s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{background:var(--accent-soft)}
+.faq summary::after{content:'+';font-family:'Fraunces',serif;font-size:24px;color:var(--gold);font-weight:300;line-height:1;flex-shrink:0}
+.faq details[open] summary::after{content:'−'}
+.faq-body{padding:0 24px 22px;font-size:14px;line-height:1.7;color:var(--ink-soft)}
+
+/* CTA */
+.cta-block{background:var(--ink);color:var(--bg);padding:80px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.12;pointer-events:none}
+.cta-eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;position:relative;z-index:1}
+.cta-title{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:300;max-width:720px;margin:0 auto 20px;position:relative;z-index:1}
+.cta-title em{color:var(--gold)}
+.cta-sub{font-family:'Fraunces',serif;font-size:clamp(15px,1.8vw,18px);font-weight:300;color:rgba(250,248,244,0.7);max-width:540px;margin:0 auto 32px;line-height:1.5;font-style:italic;position:relative;z-index:1}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* DISCLAIMER */
+.disclaimer{max-width:880px;margin:0 auto;padding:0 48px 60px;font-size:12px;line-height:1.6;color:var(--muted);font-style:italic}
+@media(max-width:640px){.disclaimer{padding:0 20px 48px}}
+
+/* FOOTER */
+footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);background:var(--paper)}
+.footer-brand{font-family:'Fraunces',serif;font-size:18px;font-style:italic;margin-bottom:6px}
+.footer-meta{font-size:11px;color:var(--muted);letter-spacing:0.1em}
+.footer-meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+@media print{.toolbar,.cta-block{display:none}.hero{min-height:auto}section{padding:24px}}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-brand">203 N 1200 W <strong>#201</strong></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" style="padding:9px 16px;font-size:10px;border-color:var(--line);color:var(--ink)" onclick="window.print()">Save as PDF</button>
+    <button class="btn btn-dark" style="padding:9px 16px;font-size:10px" onclick="inquire()">Request a Showing</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-top">
+    <div class="brand-block">
+      <div class="brand-mark">CM</div>
+      <div>
+        <div class="brand-name">Cristian <span>Millan</span></div>
+        <div class="brand-meta">Real Brokerage · Utah</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-center">
+    <div class="hero-eyebrow">Newport Village · Orem, Utah</div>
+    <h1 class="hero-title">Three ways to <em>own</em> this home.</h1>
+    <p class="hero-sub">A 3-bed, 2-bath top-floor condo — with flexible purchase options most listings can't offer. Including the chance to take over a <em>3.5% mortgage</em> in a 7% world.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="scrollToSection('#paths')">See the options</button>
+      <button class="btn btn-ghost" onclick="scrollToSection('#assumable')">The 3.5% loan</button>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="scroll-cue">Scroll to explore</div>
+  </div>
+</div>
+
+<!-- PROPERTY SNAPSHOT -->
+<section id="property" class="narrow reveal">
+  <div class="section-eyebrow">The property</div>
+  <h2 class="section-title">203 N 1200 W <em>#201</em></h2>
+  <p class="section-lead">Top-floor unit in Newport Village. Granite counters, walk-in closet, and a quiet third-floor setting. Minutes to UVU, BYU, shopping, and I-15.</p>
+
+  <div class="snapshot">
+    <div class="snap-stat"><span class="v">3</span><span class="l">Bedrooms</span></div>
+    <div class="snap-stat"><span class="v">2</span><span class="l">Bathrooms</span></div>
+    <div class="snap-stat"><span class="v">1,310</span><span class="l">Square Feet</span></div>
+    <div class="snap-stat"><span class="v">$340K</span><span class="l">List Price</span></div>
+  </div>
+</section>
+
+<!-- THE THREE PATHS -->
+<section id="paths" class="reveal">
+  <div class="section-eyebrow">Your options</div>
+  <h2 class="section-title">Pick the path that <em>fits you</em>.</h2>
+  <p class="section-lead">Most homes give you one way to buy. This one gives you three — each suited to a different kind of buyer and a different financial situation.</p>
+
+  <div class="paths-grid">
+    <!-- PATH 1: TRADITIONAL -->
+    <div class="path">
+      <div class="path-header">
+        <div class="path-num">Option 1</div>
+        <h3 class="path-name">Traditional <em>Purchase</em></h3>
+        <span class="path-tag">Standard · Familiar</span>
+      </div>
+      <div class="path-highlight">
+        <div class="ph-num">~$<em>2,036</em>/mo</div>
+        <div class="ph-lbl">Est. payment at today's rates</div>
+      </div>
+      <div class="path-body">
+        <div class="row"><span class="k">Down payment (10%)</span><span class="v">$34,000</span></div>
+        <div class="row"><span class="k">Loan amount</span><span class="v">$306,000</span></div>
+        <div class="row"><span class="k">Interest rate</span><span class="v">~7.0%</span></div>
+        <div class="row"><span class="k">Monthly P&amp;I</span><span class="v">$2,036</span></div>
+        <div class="path-note">You bring your own financing through any lender. Simple and familiar — but you pay today's higher rates.</div>
+      </div>
+    </div>
+
+    <!-- PATH 2: ASSUMABLE (FEATURED) -->
+    <div class="path featured">
+      <div class="path-header">
+        <div class="path-num">Option 2 · Best Value</div>
+        <h3 class="path-name">Assume the <em>3.5% Loan</em></h3>
+        <span class="path-tag">Lowest Payment · Subject to Approval</span>
+      </div>
+      <div class="path-highlight">
+        <div class="ph-num">~$<em>1,450</em>/mo</div>
+        <div class="ph-lbl">By taking over the existing loan</div>
+      </div>
+      <div class="path-body">
+        <div class="row"><span class="k">Cash to seller (equity)</span><span class="v">$44,908</span></div>
+        <div class="row"><span class="k">Loan you assume</span><span class="v">$295,092</span></div>
+        <div class="row"><span class="k">Interest rate</span><span class="v">3.5%</span></div>
+        <div class="row"><span class="k">Monthly P&amp;I</span><span class="v">$1,450</span></div>
+        <div class="path-note">You take over the seller's existing 3.5% mortgage at its locked-in rate. You bring the equity gap in cash, then keep the low payment. <strong style="font-style:normal;color:var(--accent);font-weight:600">Subject to lender approval and buyer qualification.</strong></div>
+      </div>
+    </div>
+
+    <!-- PATH 3: SELLER FINANCING -->
+    <div class="path">
+      <div class="path-header">
+        <div class="path-num">Option 3</div>
+        <h3 class="path-name">Seller <em>Financing</em></h3>
+        <span class="path-tag">Low Down · Flexible Qualifying</span>
+      </div>
+      <div class="path-highlight">
+        <div class="ph-num">~$<em>2,119</em>/mo</div>
+        <div class="ph-lbl">Seller carries the financing</div>
+      </div>
+      <div class="path-body">
+        <div class="row"><span class="k">Down payment</span><span class="v">$15,000</span></div>
+        <div class="row"><span class="k">Amount financed</span><span class="v">$325,000</span></div>
+        <div class="row"><span class="k">Interest rate</span><span class="v">6.8%</span></div>
+        <div class="row"><span class="k">Monthly P&amp;I</span><span class="v">$2,119</span></div>
+        <div class="path-note">The seller acts as your bank — no traditional mortgage needed. Great if you're self-employed, building credit, or want a lower down payment. Balloon due in 5 years.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSUMABLE DEEP DIVE -->
+<section id="assumable" class="narrow reveal">
+  <div class="section-eyebrow">The standout option</div>
+  <h2 class="section-title">Why the <em>3.5% assumption</em> is special.</h2>
+  <p class="section-lead">In a market where new loans cost 7%, taking over an existing 3.5% loan is like finding money on the ground. Here's what it saves you.</p>
+
+  <div class="savings">
+    <div class="savings-lbl">You save vs. a new loan</div>
+    <div class="savings-num">$<em>585</em>/month</div>
+    <div class="savings-sub">That's about $7,000 every year, or $35,000 over five years — just from the lower interest rate. Same home, dramatically lower cost of ownership.</div>
+  </div>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>New Loan @ 7%</th>
+        <th class="highlight-col">Assume @ 3.5%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="feature">Interest rate</td><td>7.0%</td><td class="highlight-col">3.5%</td></tr>
+      <tr><td class="feature">Monthly P&amp;I</td><td>$2,036</td><td class="highlight-col">$1,450</td></tr>
+      <tr><td class="feature">Cash needed up front</td><td>$34,000</td><td class="highlight-col">$44,908</td></tr>
+      <tr><td class="feature">Monthly savings</td><td>—</td><td class="highlight-col">$585</td></tr>
+      <tr><td class="feature">5-year savings</td><td>—</td><td class="highlight-col">$35,000</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:20px;font-size:13px;color:var(--ink-soft);line-height:1.7;font-style:italic;font-family:'Fraunces',serif">
+    The trade-off: you bring more cash up front (you're buying the seller's equity), but your monthly payment is far lower and stays that way for the life of the loan. If you have the down payment, this is the smartest long-term play.
+  </p>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="narrow reveal">
+  <div class="section-eyebrow">Common questions</div>
+  <h2 class="section-title">What buyers usually <em>ask</em>.</h2>
+
+  <div class="faq">
+    <details>
+      <summary>What does "assumable loan" actually mean?</summary>
+      <div class="faq-body">It means you legally take over the seller's existing mortgage — same balance, same interest rate, same terms. Instead of getting a brand-new loan at today's rates, you step into their 3.5% loan. You pay the seller their equity (the difference between the sale price and the loan balance) in cash, and from then on the loan is yours.</div>
+    </details>
+    <details>
+      <summary>Do I have to qualify for the assumption?</summary>
+      <div class="faq-body">Yes. The lender that holds the original loan has to approve you, and you'll need to meet their income and credit requirements — similar to qualifying for a normal mortgage. The difference is you're qualifying to take over an existing loan, not to originate a new one. This option is subject to lender approval.</div>
+    </details>
+    <details>
+      <summary>Why is the cash needed higher for the assumption?</summary>
+      <div class="faq-body">Because you're buying the seller's equity. The home is listed at $340,000 and the existing loan balance is about $295,000. The roughly $45,000 difference is the seller's equity, which you pay in cash at closing. In exchange, you get a payment that's about $585/month lower than a new loan would be.</div>
+    </details>
+    <details>
+      <summary>What's the difference between assumption and seller financing?</summary>
+      <div class="faq-body">With an assumption, you take over the seller's actual bank loan and deal with their lender going forward. With seller financing, the seller becomes your lender directly — no bank involved. Assumption gets you the lowest rate (3.5%) but needs lender approval and more cash down. Seller financing is more flexible on qualifying and down payment, but at a higher rate (6.8%) with a balloon payment due in 5 years.</div>
+    </details>
+    <details>
+      <summary>How do I know which option is right for me?</summary>
+      <div class="faq-body">It comes down to your cash on hand and your financial situation. If you have ~$45K for a down payment and can qualify with the lender, the 3.5% assumption saves you the most money long-term. If you have less cash or have trouble qualifying traditionally, seller financing gives you a path in with just $15K down. And if you prefer the simplicity of your own lender, a traditional purchase always works. Let's talk it through.</div>
+    </details>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">Interested?</div>
+  <h2 class="cta-title">Let's find the <em>right path</em> for you.</h2>
+  <p class="cta-sub">Whether you want to tour the home, run your numbers, or figure out which financing option fits — I'm here to help. No pressure, just answers.</p>
+  <div class="cta-actions">
+    <button class="btn btn-primary" onclick="inquire()">Request a showing</button>
+    <button class="btn btn-ghost" onclick="askQuestion()">Ask a question</button>
+  </div>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  All figures are estimates for illustration only and are not an offer of credit or a commitment to lend. Loan assumption is subject to the existing lender's approval and buyer qualification; not all loans are assumable. Seller financing terms are negotiable and subject to a written agreement. Monthly payment estimates reflect principal and interest only and do not include property taxes, insurance, or HOA dues. Buyers should consult their own lender, attorney, and tax advisor before making any decision. Information deemed reliable but not guaranteed.
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Cristian Millan</div>
+  <div class="footer-meta">Real Brokerage · Licensed Real Estate Agent · Utah</div>
+  <div class="footer-meta" style="margin-top:14px"><a href="mailto:cristian.gmillan@gmail.com">cristian.gmillan@gmail.com</a></div>
+</footer>
+
+<script>
+const scrollToSection = sel => {
+  const el = document.querySelector(sel);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+};
+function inquire(){
+  window.location.href = "mailto:cristian.gmillan@gmail.com?subject=Showing Request — 203 N 1200 W %23201&body=Hi Cristian, I'm interested in seeing 203 N 1200 W %23201 in Orem. I'd like to learn more about the purchase options.";
+}
+function askQuestion(){
+  window.location.href = "mailto:cristian.gmillan@gmail.com?subject=Question — 203 N 1200 W %23201&body=Hi Cristian, I had a question about the property at 203 N 1200 W %23201:";
+}
+
+/* REVEAL */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){ entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); }
+  });
+}, {threshold: 0.12, rootMargin: '0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>
