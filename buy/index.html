@@ -39,8 +39,11 @@ em{font-style:italic;color:var(--gold);font-weight:300}
 .btn-dark:hover{opacity:0.85}
 
 /* HERO */
-.hero{background:var(--ink);color:var(--bg);min-height:85vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.15;pointer-events:none}
+.hero{background:var(--ink);color:var(--bg);min-height:90vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:0.42}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,14,14,0.55) 0%,rgba(14,14,14,0.35) 40%,rgba(14,14,14,0.75) 100%)}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--gold) 0%,transparent 60%);opacity:0.15;pointer-events:none;z-index:1}
 .hero-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
 .brand-block{display:flex;align-items:center;gap:14px;animation:fadeUp 0.9s ease-out 0.2s both}
 .brand-mark{width:48px;height:48px;border-radius:50%;background:rgba(168,139,86,0.15);border:1px solid rgba(168,139,86,0.3);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--gold)}
@@ -73,6 +76,36 @@ section.narrow{max-width:880px}
 .snap-stat .v{font-family:'Fraunces',serif;font-size:36px;font-weight:300;letter-spacing:-0.02em;display:block;line-height:1}
 .snap-stat .l{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:8px;display:block}
 @media(max-width:640px){.snapshot{padding:24px;grid-template-columns:repeat(2,1fr);gap:24px 0}.snap-stat{border-right:none}.snap-stat:nth-child(odd){border-right:1px solid var(--line)}.snap-stat .v{font-size:28px}}
+
+/* PHOTO GALLERY */
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:36px}
+.gallery a{display:block;position:relative;overflow:hidden;border-radius:2px;cursor:pointer;background:var(--accent-soft)}
+.gallery a img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;aspect-ratio:4/3}
+.gallery a:hover img{transform:scale(1.05)}
+.gallery a.wide{grid-column:span 2;grid-row:span 2}
+.gallery a.wide img{aspect-ratio:1/1}
+.gallery .more-overlay{position:absolute;inset:0;background:rgba(14,14,14,0.6);display:flex;align-items:center;justify-content:center;color:var(--bg);font-family:'Fraunces',serif;font-size:20px;font-style:italic}
+@media(max-width:768px){
+  .gallery{grid-template-columns:repeat(2,1fr);gap:8px}
+  .gallery a.wide{grid-column:span 2;grid-row:auto}
+  .gallery a.wide img{aspect-ratio:4/3}
+}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(14,14,14,0.94);z-index:200;display:none;align-items:center;justify-content:center;padding:40px}
+.lightbox.active{display:flex}
+.lightbox img{max-width:92%;max-height:84vh;object-fit:contain;border-radius:2px}
+.lightbox-close{position:absolute;top:24px;right:32px;color:var(--bg);font-size:40px;cursor:pointer;font-weight:200;line-height:1;background:none;border:none;font-family:'Fraunces',serif}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);color:var(--bg);font-size:48px;cursor:pointer;background:none;border:none;font-family:'Fraunces',serif;font-weight:200;padding:20px;opacity:0.7;transition:opacity .2s}
+.lightbox-nav:hover{opacity:1}
+.lightbox-prev{left:16px}
+.lightbox-next{right:16px}
+.lightbox-counter{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:rgba(250,248,244,0.7);font-size:12px;letter-spacing:0.15em}
+
+/* FLOORPLAN */
+.floorplan{margin-top:36px;background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:32px;text-align:center}
+.floorplan img{max-width:100%;height:auto;display:block;margin:0 auto;cursor:pointer}
+@media(max-width:640px){.floorplan{padding:18px}}
 
 /* THE THREE PATHS */
 .paths-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
@@ -163,12 +196,13 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
   <div class="toolbar-brand">203 N 1200 W <strong>#201</strong></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
     <button class="btn" style="padding:9px 16px;font-size:10px;border-color:var(--line);color:var(--ink)" onclick="window.print()">Save as PDF</button>
-    <button class="btn btn-dark" style="padding:9px 16px;font-size:10px" onclick="inquire()">Request a Showing</button>
+    <button class="btn btn-dark" style="padding:9px 16px;font-size:10px" onclick="textForDetails()">Text for Details</button>
   </div>
 </div>
 
 <!-- HERO -->
 <div class="hero">
+  <div class="hero-bg"><img src="photos/exterior-twilight.jpg" alt="203 N 1200 W #201 at twilight"></div>
   <div class="hero-top">
     <div class="brand-block">
       <div class="brand-mark">CM</div>
@@ -205,6 +239,34 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
     <div class="snap-stat"><span class="v">2</span><span class="l">Bathrooms</span></div>
     <div class="snap-stat"><span class="v">1,310</span><span class="l">Square Feet</span></div>
     <div class="snap-stat"><span class="v">$340K</span><span class="l">List Price</span></div>
+  </div>
+</section>
+
+<!-- PHOTO GALLERY -->
+<section id="gallery" class="reveal">
+  <div class="section-eyebrow">Take a look</div>
+  <h2 class="section-title">Inside <em>#201</em>.</h2>
+  <p class="section-lead">Granite counters, stainless appliances, fresh paint, and a private balcony overlooking mature trees. Move-in ready.</p>
+
+  <div class="gallery">
+    <a class="wide" onclick="openLightbox(0)"><img src="photos/living-room.jpg" alt="Living room with balcony"></a>
+    <a onclick="openLightbox(1)"><img src="photos/kitchen.jpg" alt="Kitchen"></a>
+    <a onclick="openLightbox(2)"><img src="photos/living-dining.jpg" alt="Open living and dining"></a>
+    <a onclick="openLightbox(3)"><img src="photos/primary-bedroom.jpg" alt="Primary bedroom"></a>
+    <a onclick="openLightbox(4)"><img src="photos/bathroom.jpg" alt="Bathroom"></a>
+    <a onclick="openLightbox(5)"><img src="photos/kitchen-dining.jpg" alt="Kitchen and dining"></a>
+    <a onclick="openLightbox(6)"><img src="photos/primary-closet.jpg" alt="Primary bedroom walk-in closet"></a>
+    <a onclick="openLightbox(7)"><img src="photos/laundry.jpg" alt="Laundry room"></a>
+    <a onclick="openLightbox(8)">
+      <img src="photos/bathroom-2.jpg" alt="Second bathroom">
+      <div class="more-overlay">+ more</div>
+    </a>
+  </div>
+
+  <!-- FLOOR PLAN -->
+  <div class="floorplan">
+    <div class="section-eyebrow" style="margin-bottom:18px">The layout</div>
+    <img src="photos/floorplan.jpg" alt="Floor plan of 203 N 1200 W #201" onclick="openLightbox(12)">
   </div>
 </section>
 
@@ -346,8 +408,11 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
   <h2 class="cta-title">Let's find the <em>right path</em> for you.</h2>
   <p class="cta-sub">Whether you want to tour the home, run your numbers, or figure out which financing option fits — I'm here to help. No pressure, just answers.</p>
   <div class="cta-actions">
-    <button class="btn btn-primary" onclick="inquire()">Request a showing</button>
-    <button class="btn btn-ghost" onclick="askQuestion()">Ask a question</button>
+    <button class="btn btn-primary" onclick="textForDetails()">Text for details</button>
+    <button class="btn btn-ghost" onclick="inquire()">Request a showing</button>
+  </div>
+  <div style="margin-top:24px;position:relative;z-index:1">
+    <a href="tel:+18017194237" style="color:rgba(250,248,244,0.75);text-decoration:none;font-size:14px;letter-spacing:0.05em;font-family:'Fraunces',serif;font-style:italic">or call/text directly: <span style="color:var(--gold)">(801) 719-4237</span></a>
   </div>
 </div>
 
@@ -360,19 +425,75 @@ footer{padding:36px 48px;text-align:center;border-top:1px solid var(--line);back
 <footer>
   <div class="footer-brand">Cristian Millan</div>
   <div class="footer-meta">Real Brokerage · Licensed Real Estate Agent · Utah</div>
-  <div class="footer-meta" style="margin-top:14px"><a href="mailto:cristian.gmillan@gmail.com">cristian.gmillan@gmail.com</a></div>
+  <div class="footer-meta" style="margin-top:14px"><a href="tel:+18017194237">(801) 719-4237</a> · <a href="mailto:cristian.gmillan@gmail.com">cristian.gmillan@gmail.com</a></div>
 </footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1, event)">‹</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1, event)">›</button>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
 
 <script>
 const scrollToSection = sel => {
   const el = document.querySelector(sel);
   if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
 };
+
+/* LIGHTBOX */
+const lightboxPhotos = [
+  'photos/living-room.jpg',
+  'photos/kitchen.jpg',
+  'photos/living-dining.jpg',
+  'photos/primary-bedroom.jpg',
+  'photos/bathroom.jpg',
+  'photos/kitchen-dining.jpg',
+  'photos/primary-closet.jpg',
+  'photos/laundry.jpg',
+  'photos/bathroom-2.jpg',
+  'photos/dining-kitchen2.jpg',
+  'photos/exterior-front.jpg',
+  'photos/exterior-twilight.jpg',
+  'photos/floorplan.jpg'
+];
+let currentLightbox = 0;
+
+function openLightbox(i){
+  currentLightbox = i;
+  document.getElementById('lightboxImg').src = lightboxPhotos[i];
+  document.getElementById('lightboxCounter').textContent = `${i+1} / ${lightboxPhotos.length}`;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e){
+  if(e.target.id === 'lightbox' || e.target.classList.contains('lightbox-close')){
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+function lightboxNav(dir, e){
+  e.stopPropagation();
+  currentLightbox = (currentLightbox + dir + lightboxPhotos.length) % lightboxPhotos.length;
+  document.getElementById('lightboxImg').src = lightboxPhotos[currentLightbox];
+  document.getElementById('lightboxCounter').textContent = `${currentLightbox+1} / ${lightboxPhotos.length}`;
+}
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('lightbox').classList.contains('active')) return;
+  if(e.key === 'Escape'){ document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow=''; }
+  if(e.key === 'ArrowLeft') lightboxNav(-1, e);
+  if(e.key === 'ArrowRight') lightboxNav(1, e);
+});
 function inquire(){
   window.location.href = "mailto:cristian.gmillan@gmail.com?subject=Showing Request — 203 N 1200 W %23201&body=Hi Cristian, I'm interested in seeing 203 N 1200 W %23201 in Orem. I'd like to learn more about the purchase options.";
 }
 function askQuestion(){
   window.location.href = "mailto:cristian.gmillan@gmail.com?subject=Question — 203 N 1200 W %23201&body=Hi Cristian, I had a question about the property at 203 N 1200 W %23201:";
+}
+function textForDetails(){
+  window.location.href = "sms:+18017194237?&body=Hi Cristian, I'm interested in 203 N 1200 W %23201 in Orem. Can you send me more details?";
 }
 
 /* REVEAL */
